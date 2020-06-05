@@ -11,17 +11,14 @@ const User = require("../models/User");
 // ! @access  Public
 router.post(
   "/",
-  [
-    check("email").isEmail(),
-    check("password").isLength({ min: 5, max: 32 })
-  ],
+  [check("email").isEmail(), check("password").isLength({ min: 5, max: 32 })],
   async (req, res) => {
-    console.log(req.body);
-    
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
+
     const { email, password } = req.body;
 
     try {
