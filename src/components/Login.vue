@@ -8,7 +8,7 @@
       </div>
       <label for="password">Password</label>
       <div>
-        <input id="password" type="text" v-model="email" autofocus />
+        <input id="password" type="text" v-model="email" />
       </div>
       <button type="submit" @click="handleSubmit">Login</button>
     </form>

@@ -31,7 +31,7 @@ router.post(
     let token = jwt.sign({ id: user.id }, process.env.SECRET, {
       expiresIn: 36000
     });
-    res.status(200).send({ token });
+    res.status(200).send({ token, user });
   }
 );
 
