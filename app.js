@@ -10,9 +10,6 @@ const router = express.Router();
 connectDB();
 
 // Middleware
-router.use(bodyParser.urlencoded({ extended: false }));
-router.use(bodyParser.json());
-
 const allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', '*');
@@ -20,16 +17,13 @@ const allowCrossDomain = function(req, res, next) {
   next();
 }
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(allowCrossDomain);
 
-// Define routes
-router.post('/register', function(res, res) {
-  // TODO: Write logic
-});
-
-router.post('/login', (req, res) => {
-  // TODO: Write logic
-});
+// Connect routes
+app.use('/api/user', require('./routes/user'));
+app.use('/api/auth', require('./routes/auth'));
 
 // Start server
 const PORT = process.env.PORT || 3000;
