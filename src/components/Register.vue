@@ -9,7 +9,7 @@
       <div>
         <input id="password" type="text" v-model="password" />
       </div>
-      <label for="password-confirm">Password</label>
+      <label for="password-confirm">Verify Password</label>
       <div>
         <input id="password-confirm" type="text" v-model="password_confirmation" />
       </div>
@@ -26,7 +26,7 @@ export default {
   props: ["nextUrl"],
   data: function() {
     return {
-      name: "",
+      email: "",
       password: "",
       password_confirmation: ""
     };
@@ -43,7 +43,7 @@ export default {
 
         this.$http
           .post(url, {
-            name: this.name,
+            email: this.email,
             password: this.password
           })
           .then(res => {
