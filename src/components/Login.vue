@@ -1,7 +1,7 @@
 <template>
   <div>
     <h4>Login</h4>
-    <form>
+    <form @submit.prevent="handleSubmit">
       <label for="email">Email</label>
       <div>
         <input id="email" type="text" v-model="email" autofocus />
@@ -10,7 +10,7 @@
       <div>
         <input id="password" type="text" v-model="password" />
       </div>
-      <button type="submit" @click="handleSubmit">Login</button>
+      <button type="submit">Login</button>
     </form>
   </div>
 </template>
@@ -26,33 +26,37 @@ export default {
     };
   },
   methods: {
-    handleSubmit(e) {
-      e.preventDefault();
+    handleSubmit: function() {
+      const email = this.email;
+      const password = this.password;
 
-      if (this.password.length > 0) {
-        this.$http
-          .post("http://localhost:3000/api/auth/login", {
-            email: this.email,
-            password: this.password
-          })
-          .then(res => {
-            localStorage.setItem("user", JSON.stringify(res.data.user));
-            localStorage.setItem("jwt", res.data.token);
+      this.$store.dispatch("login", { email, password }).then(() => {
+        this.$router.push("/dashboard").catch(err => console.error(err));
+      });
+      //   if (this.password.length > 0) {
+      //     this.$http
+      //       .post("http://localhost:3000/api/auth/login", {
+      //         email: this.email,
+      //         password: this.password
+      //       })
+      //       .then(res => {
+      //         localStorage.setItem("user", JSON.stringify(res.data.user));
+      //         localStorage.setItem("jwt", res.data.token);
 
-            if (localStorage.getItem("jwt") != null) {
-              this.$emit("loggedIn");
+      //         if (localStorage.getItem("jwt") != null) {
+      //           this.$emit("loggedIn");
 
-              if (this.$route.params.nextUrl != null) {
-                this.$router.push(this.$route.params.nextUrl);
-              } else {
-                this.$router.push("dashboard");
-              }
-            }
-          })
-          .catch(err => {
-            console.error(err);
-          });
-      }
+      //           if (this.$route.params.nextUrl != null) {
+      //             this.$router.push(this.$route.params.nextUrl);
+      //           } else {
+      //             this.$router.push("dashboard");
+      //           }
+      //         }
+      //       })
+      //       .catch(err => {
+      //         console.error(err);
+      //       });
+      //   }
     }
   }
 };
