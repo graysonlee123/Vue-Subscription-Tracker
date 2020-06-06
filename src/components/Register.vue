@@ -15,7 +15,7 @@
       </div>
 
       <div>
-        <button type="submit" @click="handleSubmit">Register</button>
+        <button type="submit">Register</button>
       </div>
     </form>
   </div>
@@ -23,7 +23,6 @@
 
 <script>
 export default {
-  props: ["nextUrl"],
   data: function() {
     return {
       email: "",
@@ -33,48 +32,21 @@ export default {
   },
   methods: {
     handleSubmit: function() {
-      let data = {
-        email: this.email,
-        password: this.password
-      };
+      if (this.password !== this.password_confirmation) {
+        this.password = "";
+        this.password_confirmation = "";
 
-      this.$store.dispatch("register", data).then(() => {
-        this.$router.push("/dashboard").catch(err => console.error(err));
-      });
-      // if (
-      //   this.password === this.password_confirmation &&
-      //   this.password.length > 0
-      // ) {
-      //   let url = "http://localhost:3000/api/user";
+        return alert("Passwords do not match!");
+      } else {
+        let data = {
+          email: this.email,
+          password: this.password
+        };
 
-      //   this.$http
-      //     .post(url, {
-      //       email: this.email,
-      //       password: this.password
-      //     })
-      //     .then(res => {
-      //       localStorage.setItem("user", JSON.stringify(res.data.user));
-      //       localStorage.setItem("jwt", res.data.token);
-
-      //       if (localStorage.getItem("jwt") != null) {
-      //         this.$emit("loggedIn");
-
-      //         if (this.$route.params.nextUrl != null) {
-      //           this.$router.push(this.$route.params.nextUrl);
-      //         } else {
-      //           this.$router.push("/dashboard");
-      //         }
-      //       }
-      //     })
-      //     .catch(err => {
-      //       console.error(err);
-      //     });
-      // } else {
-      //   this.password = "";
-      //   this.password_confirmation = "";
-
-      //   return alert("Passwords do not match!");
-      // }
+        this.$store.dispatch("register", data).then(() => {
+          this.$router.push("/dashboard").catch(err => console.error(err));
+        });
+      }
     }
   }
 };

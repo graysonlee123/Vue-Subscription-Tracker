@@ -16,8 +16,6 @@
 </template>
 
 <script>
-const axios = require("axios");
-
 export default {
   data: function() {
     return {
@@ -27,36 +25,11 @@ export default {
   },
   methods: {
     handleSubmit: function() {
-      const email = this.email;
-      const password = this.password;
+      const { email, password } = this;
 
       this.$store.dispatch("login", { email, password }).then(() => {
         this.$router.push("/dashboard").catch(err => console.error(err));
       });
-      //   if (this.password.length > 0) {
-      //     this.$http
-      //       .post("http://localhost:3000/api/auth/login", {
-      //         email: this.email,
-      //         password: this.password
-      //       })
-      //       .then(res => {
-      //         localStorage.setItem("user", JSON.stringify(res.data.user));
-      //         localStorage.setItem("jwt", res.data.token);
-
-      //         if (localStorage.getItem("jwt") != null) {
-      //           this.$emit("loggedIn");
-
-      //           if (this.$route.params.nextUrl != null) {
-      //             this.$router.push(this.$route.params.nextUrl);
-      //           } else {
-      //             this.$router.push("dashboard");
-      //           }
-      //         }
-      //       })
-      //       .catch(err => {
-      //         console.error(err);
-      //       });
-      //   }
     }
   }
 };

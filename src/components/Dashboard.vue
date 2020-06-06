@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
-    <h1>Welcome to the dashboard</h1>
-    <h2>{{msg}}</h2>
+    <h1>Dashboard</h1>
+    <h2>Welcome to your dashboard, {{email}}</h2>
   </div>
 </template>
 
@@ -10,6 +10,11 @@ export default {
   data: function() {
     return {
       msg: 'the commoners'
+    }
+  },
+  computed: {
+    email() {
+      return this.$store.state.user.email;
     }
   }
 }

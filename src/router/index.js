@@ -4,6 +4,7 @@ import HelloWorld from "@/components/HelloWorld";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
 import Dashboard from "@/components/Dashboard";
+import store from "../store";
 
 Vue.use(Router);
 
@@ -18,18 +19,12 @@ let router = new Router({
     {
       path: "/login",
       name: "login",
-      component: Login,
-      meta: {
-        guest: true
-      }
+      component: Login
     },
     {
       path: "/register",
       name: "register",
-      component: Register,
-      meta: {
-        guest: true
-      }
+      component: Register
     },
     {
       path: "/dashboard",
@@ -49,31 +44,13 @@ let router = new Router({
 // @param from  where the user is coming from
 // @param next  a callback function that continues the process
 router.beforeEach((to, from, next) => {
+  // If the to param is going somewhere that requires auth...
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (localStorage.getItem("jwt") == null) {
-      next({
-        path: "/login",
-        params: { nextUrl: to.fullPath }
-      });
-    } else {
-      let user = JSON.parse(localStorage.getItem("user"));
-
-      if (to.matched.some(record => record.meta.is_admin)) {
-        if (user.is_admin == 1) {
-          next();
-        } else {
-          next({ name: "dashboard" });
-        }
-      } else {
-        next();
-      }
-    }
-  } else if (to.matched.some(record => record.meta.guest)) {
-    if (localStorage.getItem("jwt") == null) {
+    if (store.getters.isLoggedIn) {
       next();
-    } else {
-      next({ name: "dashboard" });
+      return;
     }
+    next("/login");
   } else {
     next();
   }

@@ -19,19 +19,24 @@ router.post(
       return res.status(422).json({ errors: errors.array() });
     }
 
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    try {
+      const { email, password } = req.body;
+      const user = await User.findOne({ email });
 
-    if (!user) return res.status(404).send("No user found");
+      if (!user) return res.status(404).send("No user found");
 
-    let passwordIsValid = await bcrypt.compare(password, user.password);
+      let passwordIsValid = await bcrypt.compare(password, user.password);
+      if (!passwordIsValid) return res.status(401).send({ token: null });
 
-    if (!passwordIsValid) return res.status(401).send({ token: null });
+      let token = jwt.sign({ id: user.id }, process.env.SECRET, {
+        expiresIn: 36000
+      });
 
-    let token = jwt.sign({ id: user.id }, process.env.SECRET, {
-      expiresIn: 36000
-    });
-    res.status(200).send({ token, user });
+      res.status(200).send({ token, user });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Server Error");
+    }
   }
 );
 

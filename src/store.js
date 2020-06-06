@@ -15,7 +15,7 @@ export default new Vuex.Store({
     auth_request(state) {
       state.status = "loading";
     },
-    auth_success(state, token, user) {
+    auth_success(state, { token, user }) {
       state.status = "success";
       state.token = token;
       state.user = user;
@@ -45,9 +45,9 @@ export default new Vuex.Store({
             localStorage.setItem("token", token);
 
             // Sets the header auth header for future axios requests
-            axios.defaults.headers.common["Authorization"] = token;
+            axios.defaults.headers.common["x-auth-token"] = token;
 
-            commit("auth_success", token, user);
+            commit("auth_success", { token, user });
             resolve(res);
           })
           .catch(err => {
@@ -58,6 +58,7 @@ export default new Vuex.Store({
       });
     },
     register({ commit }, user) {
+      console.log('Dispatch registration data:', user);
       return new Promise((resolve, reject) => {
         commit("auth_request");
         axios({
@@ -70,7 +71,7 @@ export default new Vuex.Store({
 
             localStorage.setItem("token", token);
 
-            axios.defaults.headers.common["Authorization"] = token;
+            axios.defaults.headers.common["x-auth-token"] = token;
 
             commit("auth_success", token, user);
             resolve(res);
@@ -86,7 +87,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit("logout");
         localStorage.removeItem("token");
-        delete axios.defaults.headers.common["Authorization"];
+        delete axios.defaults.headers.common["x-auth-token"];
         resolve();
       });
     }

@@ -2,10 +2,15 @@
   <div id="app">
     <nav>
       <router-link to="/dashboard">Dashboard</router-link>|
-      <router-link to="/home">Home</router-link>
+      <router-link to="/">Home</router-link>
       <span v-if="isLoggedIn">
         |
         <a @click="logout">Logout</a>
+      </span>
+      <span v-else>
+        |
+        <router-link to="/login">Login</router-link>|
+        <router-link to="/register">Register</router-link>
       </span>
     </nav>
     <img src="./assets/logo.png" />
@@ -22,10 +27,38 @@ export default {
   },
   methods: {
     logout: function() {
-      this.$store.dispatch("logout").then(() => {
-        this.$router.push("/login");
-      });
+      this.$store
+        .dispatch("logout")
+        .then(() => {
+          this.$router.push("/login");
+        })
+        .catch(err => {
+          console.error(err);
+        });
     }
+  },
+  created: function() {
+    // When the app is first created (or the page is refreshed),
+    // we need to determine if the user has a token loaded,
+    // and attach it to Axios
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      this.$http.defaults.headers.common['x-auth-token'] = token;
+    } else {
+      delete this.$http.defaults.headers.common['x-auth-token'];
+    }
+
+    // Intercepting axios calls to determine if we get 401 unauthorized
+    // If we do, logout the user
+    this.$http.interceptors.response.use(undefined, function(err) {
+      return new Promise(function(resolve, reject) {
+        if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+          this.$store.dispatch(logout);
+        }
+        throw err;
+      });
+    });
   }
 };
 </script>
