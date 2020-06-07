@@ -91,20 +91,23 @@ export default new Vuex.Store({
       });
     },
     verifyToken({ commit }) {
-      commit("auth_request");
-      axios({
-        url: "http://localhost:3000/api/auth",
-        method: "GET"
-      })
-        .then(res => {
-          const { token, user } = res.data;
-          commit("auth_success", { token, user });
+      return new Promise((resolve, reject) => {
+        commit("auth_request");
+        axios({
+          url: "http://localhost:3000/api/auth",
+          method: "GET"
         })
-        .catch(err => {
-          commit("auth_error", err);
-          localStorage.removeItem("token");
-          reject(err);
-        });
+          .then(res => {
+            const { token, user } = res.data;
+            commit("auth_success", { token, user });
+            resolve(res);
+          })
+          .catch(err => {
+            commit("auth_error", err);
+            localStorage.removeItem("token");
+            reject(err);
+          });
+      });
     }
   },
   // Use a vuex getter to get a value of vuex state
