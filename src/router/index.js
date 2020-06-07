@@ -1,9 +1,13 @@
 import Vue from "vue";
 import Router from "vue-router";
+
+// Components
 import HelloWorld from "@/components/HelloWorld";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
 import Dashboard from "@/components/Dashboard";
+import catchAll from "@/components/404";
+
 import store from "../store";
 
 Vue.use(Router);
@@ -33,6 +37,11 @@ let router = new Router({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: "*",
+      name: "404",
+      component: catchAll
     }
   ]
 });
