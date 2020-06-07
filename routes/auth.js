@@ -12,10 +12,10 @@ const User = require("../models/User");
 // ! @access  Private
 router.get("/", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.userId).select('-password');
-    const token = req.headers['x-auth-token'];
+    const user = await User.findById(req.userId).select("-password");
+    const token = req.headers["x-auth-token"];
 
-    res.json({user, token});
+    res.json({ user, token });
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");

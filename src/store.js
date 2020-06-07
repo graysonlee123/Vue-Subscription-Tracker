@@ -6,26 +6,33 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    status: "",
+    isAuthenticated: false,
+    isLoading: false,
     token: localStorage.getItem("token") || "",
     user: {}
   },
   // Vuex mutations are used to change the state of the vuex store
   mutations: {
     auth_request(state) {
-      state.status = "loading";
+      state.isLoading = true;
     },
     auth_success(state, { token, user }) {
-      state.status = "success";
       state.token = token;
       state.user = user;
+      state.isAuthenticated = true,
+      state.isLoading = false
     },
     auth_error(state) {
-      state.status = "error";
+      state.isLoading = false,
+      state.isAuthenticated = false,
+      state.token = null,
+      state.user = {}
     },
     logout(state) {
-      state.status = "";
-      state.token = "";
+      state.token = null;
+      state.user = {};
+      state.isAuthenticated = false,
+      state.isLoading = false
     }
   },
   // Vuex actions are used to commit mutations to the vuex store
@@ -69,7 +76,6 @@ export default new Vuex.Store({
             const { token, user } = res.data;
 
             localStorage.setItem("token", token);
-
             axios.defaults.headers.common["x-auth-token"] = token;
 
             commit("auth_success", { token, user });
@@ -112,7 +118,7 @@ export default new Vuex.Store({
   },
   // Use a vuex getter to get a value of vuex state
   getters: {
-    isLoggedIn: state => !!state.token,
-    authStatus: state => state.status
+    isAuthenticated: state => state.isAuthenticated,
+    isLoading: state => state.isLoading
   }
 });

@@ -44,16 +44,27 @@ let router = new Router({
 // @param from  where the user is coming from
 // @param next  a callback function that continues the process
 router.beforeEach((to, from, next) => {
-  // If the to param is going somewhere that requires auth...
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters.isLoggedIn) {
-      next();
-      return;
-    }
-    next("/login");
-  } else {
-    next();
+  // TODO: Figure out a better way to load pages after checking for authentication
+  function checkIsLoading() {
+    setTimeout(() => {
+      if (store.getters.isLoading) checkIsLoading();
+      else {
+        // If the to param is going somewhere that requires auth...
+        if (to.matched.some(record => record.meta.requiresAuth)) {
+          if (store.getters.isAuthenticated) {
+            next();
+            return;
+          } else {
+            next("/login");
+          }
+        } else {
+          next();
+        }
+      }
+    }, 10);
   }
+
+  checkIsLoading();
 });
 
 export default router;

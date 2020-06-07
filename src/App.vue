@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <nav>
-      <router-link to="/dashboard">Dashboard</router-link> |
+      <router-link to="/dashboard">Dashboard</router-link>|
       <router-link to="/">Home</router-link>
       <span v-if="isLoggedIn">
         |
@@ -9,7 +9,7 @@
       </span>
       <span v-else>
         |
-        <router-link to="/login">Login</router-link> |
+        <router-link to="/login">Login</router-link>|
         <router-link to="/register">Register</router-link>
       </span>
     </nav>
@@ -22,7 +22,7 @@
 export default {
   computed: {
     isLoggedIn: function() {
-      return this.$store.getters.isLoggedIn;
+      return this.$store.getters.isAuthenticated;
     }
   },
   methods: {
@@ -37,24 +37,28 @@ export default {
         });
     }
   },
-  created: function() {
+  beforeCreate: function() {
     // When the app is first created (or the page is refreshed),
     // we need to determine if the user has a token loaded,
     // and attach it to Axios
     const token = localStorage.getItem("token");
 
     if (token) {
-      this.$http.defaults.headers.common['x-auth-token'] = token;
+      this.$http.defaults.headers.common["x-auth-token"] = token;
 
       // Now, verify the token with the backend
-      this.$store.dispatch("verifyToken").catch((err)=> {
-        console.error(err);
-        this.$router.push("/login");
-      })
+      this.$store
+        .dispatch("verifyToken")
+        .then(() => {})
+        .catch(err => {
+          console.error(err);
+          this.$router.push("/login");
+        });
     } else {
-      delete this.$http.defaults.headers.common['x-auth-token'];
+      delete this.$http.defaults.headers.common["x-auth-token"];
     }
-
+  },
+  created: function() {
     // Intercepting axios calls to determine if we get 401 unauthorized
     // If we do, logout the user
     this.$http.interceptors.response.use(undefined, function(err) {
