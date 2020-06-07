@@ -5,7 +5,10 @@ import Router from "vue-router";
 import HelloWorld from "@/components/HelloWorld";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
-import Dashboard from "@/components/Dashboard";
+import MainApp from "@/components/MainApp/MainApp";
+import Dashboard from "@/components/MainApp/Dashboard";
+import Account from "@/components/MainApp/Account";
+import Settings from "@/components/MainApp/Settings";
 import catchAll from "@/components/404";
 
 import store from "../store";
@@ -21,6 +24,11 @@ let router = new Router({
       component: HelloWorld
     },
     {
+      path: "/about",
+      name: "about",
+      component: HelloWorld
+    },
+    {
       path: "/login",
       name: "login",
       component: Login
@@ -31,12 +39,27 @@ let router = new Router({
       component: Register
     },
     {
-      path: "/dashboard",
-      name: "dashboard",
-      component: Dashboard,
+      path: "/app",
+      name: "app",
+      component: MainApp,
       meta: {
         requiresAuth: true
-      }
+      },
+      children: [
+        {
+          path: "dashboard",
+          alias: "",
+          component: Dashboard
+        },
+        {
+          path: "account",
+          component: Account
+        },
+        {
+          path: "settings",
+          component: Settings
+        }
+      ]
     },
     {
       path: "*",

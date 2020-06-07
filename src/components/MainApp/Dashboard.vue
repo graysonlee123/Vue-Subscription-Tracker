@@ -2,6 +2,7 @@
   <div class="hello">
     <h1>Dashboard</h1>
     <h2>Welcome to your dashboard, {{email}}</h2>
+    <p>Here, you will see all of your subscriptions. Sort, edit, and more</p>
   </div>
 </template>
 

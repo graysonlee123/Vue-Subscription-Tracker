@@ -1,19 +1,5 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/dashboard">Dashboard</router-link>|
-      <router-link to="/">Home</router-link>
-      <span v-if="isLoggedIn">
-        |
-        <a @click="logout">Logout</a>
-      </span>
-      <span v-else>
-        |
-        <router-link to="/login">Login</router-link>|
-        <router-link to="/register">Register</router-link>
-      </span>
-    </nav>
-    <img src="./assets/logo.png" />
     <router-view />
   </div>
 </template>
@@ -74,12 +60,21 @@ export default {
 </script>
 
 <style>
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
