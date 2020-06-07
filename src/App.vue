@@ -47,7 +47,10 @@ export default {
       this.$http.defaults.headers.common['x-auth-token'] = token;
 
       // Now, verify the token with the backend
-      this.$store.dispatch("verifyToken")
+      this.$store.dispatch("verifyToken").catch((err)=> {
+        console.error(err);
+        this.$router.push("/login");
+      })
     } else {
       delete this.$http.defaults.headers.common['x-auth-token'];
     }
