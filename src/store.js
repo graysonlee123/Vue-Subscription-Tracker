@@ -58,7 +58,6 @@ export default new Vuex.Store({
       });
     },
     register({ commit }, user) {
-      console.log('Dispatch registration data:', user);
       return new Promise((resolve, reject) => {
         commit("auth_request");
         axios({
@@ -73,7 +72,7 @@ export default new Vuex.Store({
 
             axios.defaults.headers.common["x-auth-token"] = token;
 
-            commit("auth_success", token, user);
+            commit("auth_success", { token, user });
             resolve(res);
           })
           .catch(err => {
@@ -90,6 +89,22 @@ export default new Vuex.Store({
         delete axios.defaults.headers.common["x-auth-token"];
         resolve();
       });
+    },
+    verifyToken({ commit }) {
+      commit("auth_request");
+      axios({
+        url: "http://localhost:3000/api/auth",
+        method: "GET"
+      })
+        .then(res => {
+          const { token, user } = res.data;
+          commit("auth_success", { token, user });
+        })
+        .catch(err => {
+          commit("auth_error", err);
+          localStorage.removeItem("token");
+          reject(err);
+        });
     }
   },
   // Use a vuex getter to get a value of vuex state

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <nav>
-      <router-link to="/dashboard">Dashboard</router-link>|
+      <router-link to="/dashboard">Dashboard</router-link> |
       <router-link to="/">Home</router-link>
       <span v-if="isLoggedIn">
         |
@@ -9,7 +9,7 @@
       </span>
       <span v-else>
         |
-        <router-link to="/login">Login</router-link>|
+        <router-link to="/login">Login</router-link> |
         <router-link to="/register">Register</router-link>
       </span>
     </nav>
@@ -45,6 +45,9 @@ export default {
 
     if (token) {
       this.$http.defaults.headers.common['x-auth-token'] = token;
+
+      // Now, verify the token with the backend
+      this.$store.dispatch("verifyToken")
     } else {
       delete this.$http.defaults.headers.common['x-auth-token'];
     }

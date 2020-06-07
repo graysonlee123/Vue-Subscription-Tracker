@@ -1,10 +1,26 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../utils/auth");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { check, validationResult } = require("express-validator");
 
 const User = require("../models/User");
+
+// * @route   GET api/auth
+// ? @desc    Check a user's token
+// ! @access  Private
+router.get("/", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('-password');
+    const token = req.headers['x-auth-token'];
+
+    res.json({user, token});
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
 
 // * @route   POST api/auth/login
 // ? @desc    Login a user

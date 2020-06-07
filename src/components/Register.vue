@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h4>Register</h4>
     <form @submit.prevent="handleSubmit">
       <label for="email">Email</label>
       <div>
