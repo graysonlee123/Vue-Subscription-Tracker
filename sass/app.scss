@@ -4,6 +4,7 @@
 // Variables
 $accent: #2e2ee4;
 $text: #333;
+$danger: #ff8585;
 
 $inputHeight: 40px;
 $inputRadius: 6px;
@@ -79,18 +80,6 @@ label {
   display: block;
   margin-bottom: 0.5rem;
 }
-
-.password-input {
-  position: relative;
-
-  .show-password-button {
-    position: absolute;
-    right: 6px;
-    bottom: 6px;
-    padding: 6px;
-    cursor: pointer;
-  }
-} 
 
 form button {
   height: $inputHeight;

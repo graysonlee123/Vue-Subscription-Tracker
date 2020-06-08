@@ -3,6 +3,9 @@
   min-height: 100vh;
   padding-top: 6rem;
 }
+.auth-wrapper div.field-wrapper {
+  margin-bottom: 1rem;
+}
 .auth-wrapper form {
   max-width: 400px;
   margin: 0 auto 6rem;
@@ -10,6 +13,16 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.07), 0 4px 8px rgba(0, 0, 0, 0.07), 0 8px 16px rgba(0, 0, 0, 0.07), 0 16px 32px rgba(0, 0, 0, 0.07), 0 32px 64px rgba(0, 0, 0, 0.07);
   text-align: center;
   border-radius: 6px;
+}
+.auth-wrapper form .input-wrapper.password {
+  position: relative;
+}
+.auth-wrapper form .input-wrapper.password .show-password-button {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  padding: 6px;
+  cursor: pointer;
 }
 .auth-wrapper form label {
   text-align: left;
@@ -20,9 +33,14 @@
   font-size: 4rem;
   font-weight: bold;
 }
-.auth-wrapper form p {
+.auth-wrapper form p:not([class=field-error]) {
   font-size: 0.75rem;
   font-weight: bold;
+}
+.auth-wrapper form p.field-error {
+  text-align: left;
+  padding: 1rem;
+  background-color: #ff8585;
 }
 
 body {
@@ -60,17 +78,6 @@ input[type=password]::placeholder {
 label {
   display: block;
   margin-bottom: 0.5rem;
-}
-
-.password-input {
-  position: relative;
-}
-.password-input .show-password-button {
-  position: absolute;
-  right: 6px;
-  bottom: 6px;
-  padding: 6px;
-  cursor: pointer;
 }
 
 form button {

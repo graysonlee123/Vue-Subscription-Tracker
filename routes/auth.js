@@ -27,6 +27,7 @@ router.get("/", auth, async (req, res) => {
 // ! @access  Public
 router.post(
   "/login",
+  // TODO: Add custom messages for checks
   [check("email").isEmail(), check("password").notEmpty()],
   async (req, res) => {
     const errors = validationResult(req);
@@ -39,7 +40,16 @@ router.post(
       const { email, password } = req.body;
       const user = await User.findOne({ email });
 
-      if (!user) return res.status(404).send("No user found");
+      if (!user)
+        return res.status(404).json({
+          errors: [
+            {
+              location: "body",
+              msg: "Invalid login credentials!",
+              param: "password"
+            }
+          ]
+        });
 
       let passwordIsValid = await bcrypt.compare(password, user.password);
       if (!passwordIsValid) return res.status(401).send({ token: null });
