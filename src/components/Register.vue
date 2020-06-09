@@ -2,6 +2,28 @@
   <div class="auth-wrapper">
     <form class="auth-form" @submit.prevent="handleSubmit">
       <h4>Register</h4>
+      <div class="inputs-2-col">
+        <div class="field-wrapper">
+          <label for="first-name">First Name</label>
+          <div class="input-wrapper">
+            <input id="first-name" type="text" v-model="first_name" autofocus />
+          </div>
+          <p
+            class="field-error"
+            v-if="formErrors.find(({param}) => param === 'first_name')"
+          >{{formErrors.find(({param}) => param ==='first_name').msg}}</p>
+        </div>
+        <div class="field-wrapper">
+          <label for="last-name">Last Name</label>
+          <div class="input-wrapper">
+            <input id="last-name" type="text" v-model="last_name" autofocus />
+          </div>
+          <p
+            class="field-error"
+            v-if="formErrors.find(({param}) => param === 'last_name')"
+          >{{formErrors.find(({param}) => param ==='last_name').msg}}</p>
+        </div>
+      </div>
       <div class="field-wrapper">
         <label for="email">Email</label>
         <div class="input-wrapper">
@@ -51,6 +73,8 @@ export default {
   data: function() {
     return {
       email: "",
+      first_name: "",
+      last_name: "",
       password: "",
       password_confirmation: "",
       showPassword: false,
@@ -62,14 +86,7 @@ export default {
       this.formErrors = [];
 
       // Preform some front-end validation
-      // TODO: Make better front-end validation
-
-      if (this.password.length <= 6) {
-        this.formErrors.push({
-          param: "password",
-          msg: "Password must be at least six characters long!"
-        });
-      } else if (this.password !== this.password_confirmation) {
+      if (this.password !== this.password_confirmation) {
         this.formErrors.push({
           param: "password-confirm",
           msg: "Passwords must match!"
@@ -77,14 +94,11 @@ export default {
 
         this.password = "";
         this.password_confirmation = "";
-      } else if (this.email.length < 1) {
-        this.formErrors.push({
-          param: "email",
-          msg: "You must provide an email!"
-        });
       } else {
         let data = {
           email: this.email,
+          first_name: this.first_name,
+          last_name: this.last_name,
           password: this.password
         };
 

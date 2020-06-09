@@ -11,7 +11,44 @@ const User = require("../models/User");
 // ! @access  Public
 router.post(
   "/",
-  [check("email").isEmail(), check("password").isLength({ min: 5, max: 32 })],
+  [
+    check("email")
+      .notEmpty()
+      .withMessage("Must provide an email")
+      .bail()
+      .normalizeEmail()
+      .isEmail()
+      .withMessage("Must be a valid email format")
+      .bail()
+      .custom(value => {
+        // Check to see if email is already in use 
+
+        return User.findOne({ email: value }).then(user => {
+          if (user) {
+            return Promise.reject("Email is already in use");
+          }
+        });
+      }),
+    check("first_name")
+      .notEmpty()
+      .withMessage("Must provide a first name")
+      .bail()
+      .isString()
+      .isAlpha()
+      .withMessage("Must be letters only")
+      .trim(),
+    check("last_name")
+      .notEmpty()
+      .withMessage("Must provide a last name")
+      .bail()
+      .isString()
+      .isAlpha()
+      .withMessage("Must be letters only")
+      .trim(),
+    check("password")
+      .isLength({ min: 6, max: 32 })
+      .withMessage("Must be between 6 and 32 characters")
+  ],
   async (req, res) => {
     const errors = validationResult(req);
 
@@ -19,33 +56,17 @@ router.post(
       return res.status(422).json({ errors: errors.array() });
     }
 
-    const { email, password } = req.body;
+    const { email, first_name, last_name, password } = req.body;
 
     try {
-      let user = await User.findOne({ email });
-
-      if (user) {
-        return res
-          .status(400)
-          .json({
-            errors: [
-              {
-                location: "body",
-                msg: "Email is already taken!",
-                param: "email",
-                value: email
-              }
-            ]
-          });
-      }
-
-      user = new User({
+      let user = new User({
         email,
+        first_name,
+        last_name,
         password
       });
 
       const salt = await bcrypt.genSalt(10);
-
       user.password = await bcrypt.hash(password, salt);
 
       await user.save();

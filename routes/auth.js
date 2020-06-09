@@ -27,8 +27,15 @@ router.get("/", auth, async (req, res) => {
 // ! @access  Public
 router.post(
   "/login",
-  // TODO: Add custom messages for checks
-  [check("email").isEmail(), check("password").notEmpty()],
+  [
+    check("email")
+      .notEmpty()
+      .isEmail()
+      .withMessage("Must be a valid email format"),
+    check("password")
+      .notEmpty()
+      .withMessage("Must provide a password")
+  ],
   async (req, res) => {
     const errors = validationResult(req);
 
@@ -37,7 +44,7 @@ router.post(
     }
 
     try {
-      const { email, password } = req.body;
+      const { email, first_name, last_name, password } = req.body;
       const user = await User.findOne({ email });
 
       if (!user)
