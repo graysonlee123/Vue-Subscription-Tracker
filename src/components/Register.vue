@@ -10,8 +10,8 @@
           </div>
           <p
             class="field-error"
-            v-if="formErrors.find(({param}) => param === 'first_name')"
-          >{{formErrors.find(({param}) => param ==='first_name').msg}}</p>
+            v-if="formErrors.find(({field}) => field === 'first_name')"
+          >{{formErrors.find(({field}) => field ==='first_name').msg}}</p>
         </div>
         <div class="field-wrapper">
           <label for="last-name">Last Name</label>
@@ -20,8 +20,8 @@
           </div>
           <p
             class="field-error"
-            v-if="formErrors.find(({param}) => param === 'last_name')"
-          >{{formErrors.find(({param}) => param ==='last_name').msg}}</p>
+            v-if="formErrors.find(({field}) => field === 'last_name')"
+          >{{formErrors.find(({field}) => field ==='last_name').msg}}</p>
         </div>
       </div>
       <div class="field-wrapper">
@@ -31,8 +31,8 @@
         </div>
         <p
           class="field-error"
-          v-if="formErrors.find(({param}) => param === 'email')"
-        >{{formErrors.find(({param}) => param ==='email').msg}}</p>
+          v-if="formErrors.find(({field}) => field === 'email')"
+        >{{formErrors.find(({field}) => field ==='email').msg}}</p>
       </div>
       <div class="field-wrapper">
         <label for="password">Password</label>
@@ -44,8 +44,8 @@
         </div>
         <p
           class="field-error"
-          v-if="formErrors.find(({param}) => param === 'password')"
-        >{{formErrors.find(({param}) => param ==='password').msg}}</p>
+          v-if="formErrors.find(({field}) => field === 'password')"
+        >{{formErrors.find(({field}) => field ==='password').msg}}</p>
       </div>
       <div class="field-wrapper">
         <label for="password-confirm">Verify Password</label>
@@ -54,8 +54,8 @@
         </div>
         <p
           class="field-error"
-          v-if="formErrors.find(({param}) => param === 'password-confirm')"
-        >{{formErrors.find(({param}) => param ==='password-confirm').msg}}</p>
+          v-if="formErrors.find(({field}) => field === 'password-confirm')"
+        >{{formErrors.find(({field}) => field ==='password-confirm').msg}}</p>
       </div>
       <div class="input-wrapper">
         <button type="submit">Register</button>
@@ -87,15 +87,12 @@ export default {
 
       // Preform some front-end validation
       if (this.password !== this.password_confirmation) {
-        this.formErrors.push({
-          param: "password-confirm",
-          msg: "Passwords must match!"
-        });
+        this.addFormError('password', 'Passwords must match')
 
         this.password = "";
         this.password_confirmation = "";
       } else {
-        let data = {
+        const data = {
           email: this.email,
           first_name: this.first_name,
           last_name: this.last_name,
@@ -105,19 +102,14 @@ export default {
         this.$store
           .dispatch("register", data)
           .then(() => {
-            this.$router.push("/dashboard");
+            this.$router.push("/app/dashboard");
           })
           .catch(err => {
             console.error(err);
             const errors = err.response.data.errors;
 
             if (errors)
-              err.response.data.errors.forEach(({ msg, param }) => {
-                this.formErrors.push({
-                  param,
-                  msg
-                });
-              });
+              errors.forEach(({ param, msg }) => this.addFormError(param, msg));
           });
       }
     },
@@ -141,6 +133,12 @@ export default {
         eyeEl.classList.remove("fa-eye");
         eyeEl.classList.add("fa-eye-slash");
       }
+    },
+    addFormError: function(field, msg) {
+      this.formErrors.push({
+        field,
+        msg
+      });
     }
   }
 };

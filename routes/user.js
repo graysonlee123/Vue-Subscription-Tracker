@@ -21,8 +21,6 @@ router.post(
       .withMessage("Must be a valid email format")
       .bail()
       .custom(value => {
-        // Check to see if email is already in use 
-
         return User.findOne({ email: value }).then(user => {
           if (user) {
             return Promise.reject("Email is already in use");

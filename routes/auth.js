@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require("../utils/auth");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { check, validationResult } = require("express-validator");
+const { check, validationResult, body } = require("express-validator");
 
 const User = require("../models/User");
 
@@ -30,37 +30,40 @@ router.post(
   [
     check("email")
       .notEmpty()
+      .withMessage("No email address provided")
+      .bail()
+      .normalizeEmail()
       .isEmail()
-      .withMessage("Must be a valid email format"),
+      .withMessage("Must be a valid email address format"),
     check("password")
       .notEmpty()
-      .withMessage("Must provide a password")
+      .withMessage("Must provide a password"),
+    body('password').custom(async (value, {req}) => {
+      const { email, password } = req.body;      
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        return Promise.reject('Invalid login')
+      }
+
+      const passwordIsValid = await bcrypt.compare(password, user.password);
+
+      if (!passwordIsValid) {
+        return Promise.reject('Invalid login')
+      }
+
+    })
   ],
   async (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array() });
     }
 
     try {
       const { email, first_name, last_name, password } = req.body;
       const user = await User.findOne({ email });
-
-      if (!user)
-        return res.status(404).json({
-          errors: [
-            {
-              location: "body",
-              msg: "Invalid login credentials!",
-              param: "password"
-            }
-          ]
-        });
-
-      let passwordIsValid = await bcrypt.compare(password, user.password);
-      if (!passwordIsValid) return res.status(401).send({ token: null });
-
       let token = jwt.sign({ id: user.id }, process.env.SECRET, {
         expiresIn: 36000
       });

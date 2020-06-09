@@ -8,8 +8,8 @@
         </div>
         <p
           class="field-error"
-          v-if="formErrors.find(({param}) => param === 'email')"
-        >{{formErrors.find(({param}) => param ==='email').msg}}</p>
+          v-if="formErrors.find(({field}) => field === 'email')"
+        >{{formErrors.find(({field}) => field ==='email').msg}}</p>
       </div>
       <div class="field-wrapper">
         <div class="input-wrapper password">
@@ -20,8 +20,8 @@
         </div>
         <p
           class="field-error"
-          v-if="formErrors.find(({param}) => param === 'password')"
-        >{{formErrors.find(({param}) => param ==='password').msg}}</p>
+          v-if="formErrors.find(({field}) => field === 'password')"
+        >{{formErrors.find(({field}) => field ==='password').msg}}</p>
       </div>
       <div class="field-wrapper">
         <button type="submit">Login</button>
@@ -48,37 +48,23 @@ export default {
     handleSubmit: function() {
       this.formErrors = [];
 
-      const { email, password } = this;
+      const data = {
+        email: this.email,
+        password: this.password
+      };
 
-      if (this.email.length < 1) {
-        this.formErrors.push({
-          param: "email",
-          msg: "You must provide an email!"
-        });
-      } else if (this.password.length < 1) {
-        this.formErrors.push({
-          param: "password",
-          msg: "You must provide a password!"
-        });
-      } else {
-        this.$store
-          .dispatch("login", { email, password })
-          .then(() => {
-            this.$router.push("/dashboard");
-          })
-          .catch(err => {
-            console.error(err);
-            const errors = err.response.data.errors;
+      this.$store
+        .dispatch("login", data)
+        .then(() => {
+          this.$router.push("/app/dashboard");
+        })
+        .catch(err => {
+          console.error(err);
+          const errors = err.response.data.errors;
 
-            if (errors)
-              err.response.data.errors.forEach(({ msg, param }) => {
-                this.formErrors.push({
-                  param,
-                  msg
-                });
-              });
-          });
-      }
+          if (errors)
+            errors.forEach(({ param, msg }) => this.addFormError(param, msg));
+        });
     },
     handleShowPassword: function() {
       const passEl = document.getElementById("password");
@@ -97,6 +83,12 @@ export default {
         eyeEl.classList.remove("fa-eye");
         eyeEl.classList.add("fa-eye-slash");
       }
+    },
+    addFormError: function(field, msg) {
+      this.formErrors.push({
+        field,
+        msg
+      });
     }
   }
 };
