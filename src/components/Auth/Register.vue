@@ -2,12 +2,14 @@
   <div class="auth-wrapper">
     <div class="auth-left"></div>
     <div class="auth-right">
-      <div class="top-left">
-        <language-select />
-      </div>
-      <div class="top-right">
-        Already have an account?
-        <router-link to="/login">Sign In</router-link>
+      <div class="top">
+        <div class="top-left">
+          <language-select />
+        </div>
+        <div class="top-right">
+          Already have an account?
+          <router-link to="/login">Sign In</router-link>
+        </div>
       </div>
       <form class="auth-form" @submit.prevent="handleSubmit">
         <h4>Register to get in control of your subscriptions</h4>
@@ -197,16 +199,14 @@ export default {
     justify-content: space-around;
     padding: 1rem;
 
-    .top-left,
-    .top-right {
+    .top {
       position: absolute;
       top: 1rem;
       left: 1rem;
-    }
-
-    .top-right {
-      left: unset;
       right: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
   }
 

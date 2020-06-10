@@ -2,12 +2,14 @@
   <div class="auth-wrapper">
     <div class="auth-left"></div>
     <div class="auth-right">
-      <div class="top-left">
-        <language-select/>
-      </div>
-      <div class="top-right">
-        Need to sign up? It's free!
-        <router-link to="/register">Register</router-link>
+      <div class="top">
+        <div>
+          <language-select />
+        </div>
+        <div>
+          Need to sign up? It's free!
+          <router-link to="/register">Register</router-link>
+        </div>
       </div>
       <form class="auth-form" @submit.prevent="handleSubmit">
         <h4>Login to your account to view, edit, and track your subscriptions</h4>
@@ -56,7 +58,7 @@
 </template>
 
 <script>
-import LanguageSelect from '../Global/LanguageSelect';
+import LanguageSelect from "../Global/LanguageSelect";
 
 export default {
   data: function() {
@@ -159,16 +161,14 @@ export default {
     justify-content: space-around;
     padding: 1rem;
 
-    .top-left,
-    .top-right {
+    .top {
       position: absolute;
       top: 1rem;
       left: 1rem;
-    }
-
-    .top-right {
-      left: unset;
       right: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
   }
 
