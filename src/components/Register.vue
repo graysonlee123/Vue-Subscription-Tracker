@@ -1,70 +1,85 @@
 <template>
   <div class="auth-wrapper">
-    <form class="auth-form" @submit.prevent="handleSubmit">
-      <h4>Register</h4>
-      <div class="inputs-2-col">
-        <div class="field-wrapper">
-          <label for="first-name">First Name</label>
-          <div class="input-wrapper">
-            <input id="first-name" type="text" v-model="first_name" autofocus />
-          </div>
-          <p
-            class="field-error"
-            v-if="formErrors.find(({field}) => field === 'first_name')"
-          >{{formErrors.find(({field}) => field ==='first_name').msg}}</p>
-        </div>
-        <div class="field-wrapper">
-          <label for="last-name">Last Name</label>
-          <div class="input-wrapper">
-            <input id="last-name" type="text" v-model="last_name" autofocus />
-          </div>
-          <p
-            class="field-error"
-            v-if="formErrors.find(({field}) => field === 'last_name')"
-          >{{formErrors.find(({field}) => field ==='last_name').msg}}</p>
-        </div>
-      </div>
-      <div class="field-wrapper">
-        <label for="email">Email</label>
-        <div class="input-wrapper">
-          <input id="email" type="text" v-model="email" autofocus />
-        </div>
-        <p
-          class="field-error"
-          v-if="formErrors.find(({field}) => field === 'email')"
-        >{{formErrors.find(({field}) => field ==='email').msg}}</p>
-      </div>
-      <div class="field-wrapper">
-        <label for="password">Password</label>
-        <div class="input-wrapper password">
-          <input id="password" type="password" v-model="password" />
-          <span class="show-password-button" @click="handleShowPassword">
-            <i id="password-icon" class="fas fa-eye"></i>
-          </span>
-        </div>
-        <p
-          class="field-error"
-          v-if="formErrors.find(({field}) => field === 'password')"
-        >{{formErrors.find(({field}) => field ==='password').msg}}</p>
-      </div>
-      <div class="field-wrapper">
-        <label for="password-confirm">Verify Password</label>
-        <div class="input-wrapper">
-          <input id="password-confirm" type="password" v-model="password_confirmation" />
-        </div>
-        <p
-          class="field-error"
-          v-if="formErrors.find(({field}) => field === 'password-confirm')"
-        >{{formErrors.find(({field}) => field ==='password-confirm').msg}}</p>
-      </div>
-      <div class="input-wrapper">
-        <button type="submit">Register</button>
-      </div>
-      <p>
+    <div class="auth-left"></div>
+    <div class="auth-right">
+      <div class="top-left">Language Select</div>
+      <div class="top-right">
         Already have an account?
-        <router-link to="/login">Log In</router-link>
-      </p>
-    </form>
+        <router-link to="/login">Sign In</router-link>
+      </div>
+      <form class="auth-form" @submit.prevent="handleSubmit">
+        <h4>Register to get in control of your subscriptions</h4>
+        <div class="inputs-2-col">
+          <div class="field-wrapper">
+            <label for="first_name">First Name</label>
+            <div class="input-wrapper">
+              <input
+                id="first_name"
+                type="text"
+                v-model="first_name"
+                v-on:focusout="handleLostFocus"
+                autofocus
+              />
+            </div>
+            <p
+              class="field-error"
+              v-if="formErrors.find(({field}) => field === 'first_name')"
+            >{{formErrors.find(({field}) => field ==='first_name').msg}}</p>
+          </div>
+          <div class="field-wrapper">
+            <label for="last_name">Last Name</label>
+            <div class="input-wrapper">
+              <input id="last_name" type="text" v-model="last_name" v-on:focusout="handleLostFocus" />
+            </div>
+            <p
+              class="field-error"
+              v-if="formErrors.find(({field}) => field === 'last_name')"
+            >{{formErrors.find(({field}) => field ==='last_name').msg}}</p>
+          </div>
+        </div>
+        <div class="field-wrapper">
+          <label for="email">Email</label>
+          <div class="input-wrapper">
+            <input id="email" type="text" v-model="email" v-on:focusout="handleLostFocus" />
+          </div>
+          <p
+            class="field-error"
+            v-if="formErrors.find(({field}) => field === 'email')"
+          >{{formErrors.find(({field}) => field ==='email').msg}}</p>
+        </div>
+        <div class="field-wrapper">
+          <label for="password">Password</label>
+          <div class="input-wrapper password">
+            <input id="password" type="password" v-model="password" v-on:focusout="handleLostFocus" />
+            <span class="show-password-button" @click="handleShowPassword">
+              <i id="password-icon" class="fas fa-eye"></i>
+            </span>
+          </div>
+          <p
+            class="field-error"
+            v-if="formErrors.find(({field}) => field === 'password')"
+          >{{formErrors.find(({field}) => field ==='password').msg}}</p>
+        </div>
+        <div class="field-wrapper">
+          <label for="password_confirm">Verify Password</label>
+          <div class="input-wrapper">
+            <input
+              id="password_confirm"
+              type="password"
+              v-model="password_confirmation"
+              v-on:focusout="handleLostFocus"
+            />
+          </div>
+          <p
+            class="field-error"
+            v-if="formErrors.find(({field}) => field === 'password_confirm')"
+          >{{formErrors.find(({field}) => field ==='password_confirm').msg}}</p>
+        </div>
+        <div class="input-wrapper">
+          <button type="submit">Register</button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -87,10 +102,12 @@ export default {
 
       // Preform some front-end validation
       if (this.password !== this.password_confirmation) {
-        this.addFormError('password', 'Passwords must match')
+        this.addFormError("password", "Passwords must match");
 
         this.password = "";
         this.password_confirmation = "";
+
+        document.getElementById("password").focus();
       } else {
         const data = {
           email: this.email,
@@ -108,15 +125,17 @@ export default {
             console.error(err);
             const errors = err.response.data.errors;
 
-            if (errors)
+            if (errors) {
               errors.forEach(({ param, msg }) => this.addFormError(param, msg));
+              document.getElementById("first_name").focus();
+            }
           });
       }
     },
     handleShowPassword: function() {
       const passEl = document.getElementById("password");
-      const passEl2 = document.getElementById("password-confirm");
-      const eyeEl = document.getElementById("password-icon");
+      const passEl2 = document.getElementById("password_confirm");
+      const eyeEl = document.getElementById("password_icon");
 
       if (this.showPassword) {
         passEl.type = "password";
@@ -139,11 +158,63 @@ export default {
         field,
         msg
       });
+    },
+    handleLostFocus: function(e) {
+      const elementId = e.target.id;
+      if (this.formErrors.length) {
+        this.removeFormError(elementId);
+      }
+    },
+    removeFormError: function(field) {
+      this.formErrors.find((error, index) => {
+        if (error && error.field === field) {
+          this.formErrors.splice(index, 1);
+        }
+      });
     }
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.auth-wrapper {
+  height: 100%;
+  display: flex;
+  flex-flow: row nowrap;
 
+  .auth-left {
+    flex-basis: 40%;
+    background: {
+      image: url("https://source.unsplash.com/random");
+      size: cover;
+      repeat: no-repeat;
+      position: center;
+    }
+  }
+
+  .auth-right {
+    flex-basis: 60%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 1rem;
+
+    .top-left,
+    .top-right {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+    }
+
+    .top-right {
+      left: unset;
+      right: 1rem;
+    }
+  }
+
+  .auth-form {
+    max-width: 460px;
+  }
+}
 </style>

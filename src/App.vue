@@ -59,6 +59,87 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+@import url("https://fonts.googleapis.com/css2?family=Muli:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;700&display=swap");
 
+$body-family: Muli, sans-serif;
+$header-family: Poppins, sans-serif;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $body-family;
+  font-size: 16px;
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $header-family;
+}
+
+#app {
+  height: 100vh;
+  min-height: 100vh;
+}
+
+form {
+  h4 {
+    font-size: 1.6rem;
+    font-weight: 300;
+    margin-bottom: 3rem;
+    line-height: 1.6;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    padding: 12px;
+    width: 100%;
+    border-color: transparentize($color: #000000, $amount: 0.8);
+  }
+
+  input[type="submit"], button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    font-size: 1.2rem;
+    padding: 8px 32px;
+    cursor: pointer;
+  }
+
+  .field-wrapper {
+    margin-bottom: 2rem;
+
+    .input-wrapper.password {
+      position: relative;
+
+      .show-password-button {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        padding: 12px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .field-error {
+    margin-top: 0.5rem;
+    padding: 1rem;
+    background-color: transparentize($color: red, $amount: 0.8)
+  }
+}
 </style>
