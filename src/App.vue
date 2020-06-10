@@ -59,13 +59,6 @@ export default {
 };
 </script>
 
-<style>
-
-@import './reset.css';
-@import './index.css';
-
-* {
-  box-sizing: border-box;
-}
+<style scoped>
 
 </style>

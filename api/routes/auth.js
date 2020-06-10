@@ -51,7 +51,6 @@ router.post(
       if (!passwordIsValid) {
         return Promise.reject('Invalid login')
       }
-
     })
   ],
   async (req, res) => {
