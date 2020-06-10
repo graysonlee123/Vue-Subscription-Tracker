@@ -2,7 +2,9 @@
   <div class="auth-wrapper">
     <div class="auth-left"></div>
     <div class="auth-right">
-      <div class="top-left">Language Select</div>
+      <div class="top-left">
+        <language-select/>
+      </div>
       <div class="top-right">
         Need to sign up? It's free!
         <router-link to="/register">Register</router-link>
@@ -15,7 +17,7 @@
             <input
               id="email"
               type="text"
-              placeholder="graysonlee123@gmail.com"
+              placeholder="johnnyappleseed@gmail.com"
               v-model="email"
               v-on:focusout="handleLostFocus"
               autofocus
@@ -54,6 +56,8 @@
 </template>
 
 <script>
+import LanguageSelect from '../Global/LanguageSelect';
+
 export default {
   data: function() {
     return {
@@ -62,6 +66,9 @@ export default {
       showPassword: false,
       formErrors: []
     };
+  },
+  components: {
+    languageSelect: LanguageSelect
   },
   methods: {
     handleSubmit: function() {

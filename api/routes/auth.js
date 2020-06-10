@@ -34,10 +34,12 @@ router.post(
       .bail()
       .normalizeEmail()
       .isEmail()
-      .withMessage("Must be a valid email address format"),
+      .withMessage("Must be a valid email address format")
+      .bail(),
     check("password")
       .notEmpty()
-      .withMessage("Must provide a password"),
+      .withMessage("Must provide a password")
+      .bail(),
     body('password').custom(async (value, {req}) => {
       const { email, password } = req.body;      
       const user = await User.findOne({ email });

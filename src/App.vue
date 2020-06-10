@@ -120,7 +120,8 @@ form {
   }
 
   .field-wrapper {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    clear: both;
 
     .input-wrapper.password {
       position: relative;
@@ -138,8 +139,10 @@ form {
 
   .field-error {
     margin-top: 0.5rem;
-    padding: 1rem;
-    background-color: transparentize($color: red, $amount: 0.8)
+    padding: 12px 16px;
+    background-color: transparentize($color: red, $amount: 0.9);
+    font-size: 0.8rem;
+    color: red;
   }
 }
 </style>

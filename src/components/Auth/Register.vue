@@ -2,7 +2,9 @@
   <div class="auth-wrapper">
     <div class="auth-left"></div>
     <div class="auth-right">
-      <div class="top-left">Language Select</div>
+      <div class="top-left">
+        <language-select />
+      </div>
       <div class="top-right">
         Already have an account?
         <router-link to="/login">Sign In</router-link>
@@ -16,6 +18,7 @@
               <input
                 id="first_name"
                 type="text"
+                placeholder="Johnny"
                 v-model="first_name"
                 v-on:focusout="handleLostFocus"
                 autofocus
@@ -29,7 +32,13 @@
           <div class="field-wrapper">
             <label for="last_name">Last Name</label>
             <div class="input-wrapper">
-              <input id="last_name" type="text" v-model="last_name" v-on:focusout="handleLostFocus" />
+              <input
+                id="last_name"
+                type="text"
+                placeholder="Appleseed"
+                v-model="last_name"
+                v-on:focusout="handleLostFocus"
+              />
             </div>
             <p
               class="field-error"
@@ -40,7 +49,13 @@
         <div class="field-wrapper">
           <label for="email">Email</label>
           <div class="input-wrapper">
-            <input id="email" type="text" v-model="email" v-on:focusout="handleLostFocus" />
+            <input
+              id="email"
+              type="text"
+              placeholder="johnnyappleseed@gmail.com"
+              v-model="email"
+              v-on:focusout="handleLostFocus"
+            />
           </div>
           <p
             class="field-error"
@@ -50,7 +65,13 @@
         <div class="field-wrapper">
           <label for="password">Password</label>
           <div class="input-wrapper password">
-            <input id="password" type="password" v-model="password" v-on:focusout="handleLostFocus" />
+            <input
+              id="password"
+              type="password"
+              placeholder="Must be at least 8 characters"
+              v-model="password"
+              v-on:focusout="handleLostFocus"
+            />
             <span class="show-password-button" @click="handleShowPassword">
               <i id="password-icon" class="fas fa-eye"></i>
             </span>
@@ -59,21 +80,6 @@
             class="field-error"
             v-if="formErrors.find(({field}) => field === 'password')"
           >{{formErrors.find(({field}) => field ==='password').msg}}</p>
-        </div>
-        <div class="field-wrapper">
-          <label for="password_confirm">Verify Password</label>
-          <div class="input-wrapper">
-            <input
-              id="password_confirm"
-              type="password"
-              v-model="password_confirmation"
-              v-on:focusout="handleLostFocus"
-            />
-          </div>
-          <p
-            class="field-error"
-            v-if="formErrors.find(({field}) => field === 'password_confirm')"
-          >{{formErrors.find(({field}) => field ==='password_confirm').msg}}</p>
         </div>
         <div class="input-wrapper">
           <button type="submit">Register</button>
@@ -84,6 +90,8 @@
 </template>
 
 <script>
+import LanguageSelect from "../Global/LanguageSelect.vue";
+
 export default {
   data: function() {
     return {
@@ -91,62 +99,51 @@ export default {
       first_name: "",
       last_name: "",
       password: "",
-      password_confirmation: "",
       showPassword: false,
       formErrors: []
     };
+  },
+  components: {
+    languageSelect: LanguageSelect
   },
   methods: {
     handleSubmit: function() {
       this.formErrors = [];
 
-      // Preform some front-end validation
-      if (this.password !== this.password_confirmation) {
-        this.addFormError("password", "Passwords must match");
+      const data = {
+        email: this.email,
+        first_name: this.first_name,
+        last_name: this.last_name,
+        password: this.password
+      };
 
-        this.password = "";
-        this.password_confirmation = "";
+      this.$store
+        .dispatch("register", data)
+        .then(() => {
+          this.$router.push("/app/dashboard");
+        })
+        .catch(err => {
+          console.error(err);
+          const errors = err.response.data.errors;
 
-        document.getElementById("password").focus();
-      } else {
-        const data = {
-          email: this.email,
-          first_name: this.first_name,
-          last_name: this.last_name,
-          password: this.password
-        };
-
-        this.$store
-          .dispatch("register", data)
-          .then(() => {
-            this.$router.push("/app/dashboard");
-          })
-          .catch(err => {
-            console.error(err);
-            const errors = err.response.data.errors;
-
-            if (errors) {
-              errors.forEach(({ param, msg }) => this.addFormError(param, msg));
-              document.getElementById("first_name").focus();
-            }
-          });
-      }
+          if (errors) {
+            errors.forEach(({ param, msg }) => this.addFormError(param, msg));
+            document.getElementById("first_name").focus();
+          }
+        });
     },
     handleShowPassword: function() {
       const passEl = document.getElementById("password");
-      const passEl2 = document.getElementById("password_confirm");
-      const eyeEl = document.getElementById("password_icon");
+      const eyeEl = document.getElementById("password-icon");
 
       if (this.showPassword) {
         passEl.type = "password";
-        passEl2.type = "password";
         this.showPassword = false;
 
         eyeEl.classList.remove("fa-eye-slash");
         eyeEl.classList.add("fa-eye");
       } else {
         passEl.type = "text";
-        passEl2.type = "text";
         this.showPassword = true;
 
         eyeEl.classList.remove("fa-eye");
@@ -215,6 +212,19 @@ export default {
 
   .auth-form {
     max-width: 460px;
+
+    .inputs-2-col .field-wrapper {
+      float: left;
+      clear: unset;
+      width: 48%;
+
+      &:nth-child(1) {
+        margin-right: 2%;
+      }
+      &:nth-child(2) {
+        margin-left: 2%;
+      }
+    }
   }
 }
 </style>

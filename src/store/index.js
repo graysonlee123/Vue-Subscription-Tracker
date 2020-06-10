@@ -9,7 +9,10 @@ export default new Vuex.Store({
     isAuthenticated: false,
     isLoading: false,
     token: localStorage.getItem("token") || "",
-    user: {}
+    user: {},
+    preferences: {
+      language: 'en'
+    }
   },
   // Vuex mutations are used to change the state of the vuex store
   mutations: {
@@ -33,6 +36,9 @@ export default new Vuex.Store({
       state.user = {};
       state.isAuthenticated = false,
       state.isLoading = false
+    },
+    change_language(state, lang) {
+      state.preferences.language = lang;
     }
   },
   // Vuex actions are used to commit mutations to the vuex store
@@ -115,6 +121,9 @@ export default new Vuex.Store({
             reject(err);
           });
       });
+    },
+    languageChange({ commit }, lang) {
+      commit("change_language", lang)
     }
   },
   // Use a vuex getter to get a value of vuex state

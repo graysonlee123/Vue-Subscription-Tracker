@@ -3,8 +3,8 @@ import Router from "vue-router";
 
 // Components
 import HelloWorld from "@/components/HelloWorld";
-import Login from "@/components/Login";
-import Register from "@/components/Register";
+import Login from "@/components/Auth/Login";
+import Register from "@/components/Auth/Register";
 import MainApp from "@/components/MainApp/MainApp";
 import Dashboard from "@/components/MainApp/Dashboard";
 import Account from "@/components/MainApp/Account";
