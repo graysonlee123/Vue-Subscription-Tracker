@@ -84,6 +84,15 @@ h6 {
   font-family: $header-family;
 }
 
+a {
+  color: inherit;
+  opacity: 0.5;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 #app {
   height: 100vh;
   min-height: 100vh;
@@ -110,13 +119,15 @@ form {
     border-color: transparentize($color: #000000, $amount: 0.8);
   }
 
-  input[type="submit"], button {
+  input[type="submit"],
+  button {
     background-color: #333;
     color: #fff;
     border: none;
     font-size: 1.2rem;
-    padding: 8px 32px;
+    padding: 12px 42px;
     cursor: pointer;
+    margin-top: 2rem;
   }
 
   .field-wrapper {

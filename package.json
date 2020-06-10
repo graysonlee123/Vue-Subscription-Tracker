@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "dev": "concurrently \"npm run serve\" \"npm run server\"",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "server": "nodemon api/server"
@@ -10,6 +11,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "bcrypt": "^5.0.0",
+    "concurrently": "^5.2.0",
     "core-js": "^3.6.5",
     "express-validator": "^6.5.0",
     "jsonwebtoken": "^8.5.1",
