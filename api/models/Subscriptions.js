@@ -5,54 +5,31 @@ const SubscriptionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
-  price: {
-    type: Number,
-    required: true
-  },
-  name: {
+  price: Number,
+  name: String,
+  description: {
     type: String,
-    required: true
+    default: null
   },
-  description: String,
-  payment: {
-    paymentType: {
-      type: String,
-      enum: ["recurring", "one_time"],
-      required: true
-    },
-    recurring: {
-      firstPaymentDate: {
-        type: Date,
-        required: function() {
-          return this.payment.paymentType === "recurring";
-        }
-      },
-      interval: {
-        type: Number,
-        required: function() {
-          return this.payment.paymentType === "recurring";
-        }
-      },
-      duration: {
-        type: String,
-        required: function() {
-          return this.payment.paymentType === "recurring";
-        }
-      }
-    },
-    one_time: {
-      paymentDate: {
-        type: Date,
-        required: function() {
-          return this.payment.paymentType === "one_time";
-        }
-      }
-    }
+  firstPaymentDate: Date,
+  interval: Number,
+  duration: String,
+  color: {
+    type: String,
+    default: "#ffffff"
   },
-  color: String,
-  paymentMethod: String,
-  note: String,
-  tags: [String]
+  paymentMethod: {
+    type: String,
+    default: null
+  },
+  note: {
+    type: String,
+    default: null
+  },
+  tags: {
+    type: Array,
+    default: []
+  }
 });
 
 module.exports = Subscription = mongoose.model(
