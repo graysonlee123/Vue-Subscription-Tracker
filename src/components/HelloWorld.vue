@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <h1>This is the homepage</h1>
+    <h1>This is the homepage. <router-link to="/login">Login</router-link> or <router-link to="/register">register</router-link></h1>
   </div>
 </template>
 
