@@ -1,28 +1,36 @@
 <template>
-  <div class="hello">
-    <h1>Dashboard</h1>
-    <h2>Welcome to your dashboard, {{email}}</h2>
-    <p>Here, you will see all of your subscriptions. Sort, edit, and more</p>
-    <div class="subscription-list">
-      <div v-if="isLoading">Spinner</div>
-      <div v-else>
-        <div class="subscription-preview-card" v-for="(subscription, index) in subscriptions" :key="index">
-          <span class="name">
-            {{subscription.name || "No name"}}
-          </span>
-          <span class="price">
-            {{subscription.price}}
-          </span>
+  <div>
+    <div id="left">
+      <div class="header">
+        <span id="show-menu-btn" @click="handleMenuToggle">
+          <i class="fa fa-bars"></i>
+        </span>
+        <h2>Subscriptions</h2>
+      </div>
+      <div class="subscription-list">
+        <div v-if="isLoading">Spinner</div>
+        <div v-else>
+          <div
+            class="subscription-preview-card"
+            v-for="(subscription, index) in subscriptions"
+            :key="index"
+          >
+            <span class="name">{{subscription.name || "No name"}}</span>
+            <span class="price">{{subscription.price}}</span>
+          </div>
         </div>
       </div>
     </div>
-    <addSubscriptionForm />
+    <div id="right">
+      <addSubscriptionForm />
+    </div>
   </div>
 </template>
 
 <script>
 import AddSubscriptionForm from "./AddSubscriptionForm";
 import axios from "axios";
+import { EventBus } from "../../EventBus";
 
 export default {
   data: function() {
@@ -32,19 +40,17 @@ export default {
       subscriptions: []
     };
   },
+  methods: {
+    handleMenuToggle: function() {
+      EventBus.$emit("showMobileMenu");
+    }
+  },
   components: {
     addSubscriptionForm: AddSubscriptionForm
   },
-  computed: {
-    email() {
-      return this.$store.state.user.email;
-    }
-  },
   created: async function() {
     try {
-      const res = await axios.get(
-        "http://localhost:3000/api/subscription"
-      );
+      const res = await axios.get("http://localhost:3000/api/subscription");
       const subscriptions = res.data.subscriptions;
 
       console.log(subscriptions);
@@ -96,5 +102,9 @@ a {
     max-width: 200px;
     text-align: right;
   }
+}
+
+#show-menu-btn {
+  display: inline;
 }
 </style>

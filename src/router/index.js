@@ -2,13 +2,13 @@ import Vue from "vue";
 import Router from "vue-router";
 
 // Components
-import HelloWorld from "@/components/HelloWorld";
+import Homepage from "@/components/Homepage";
 import Login from "@/components/Auth/Login";
 import Register from "@/components/Auth/Register";
-import MainApp from "@/components/MainApp/MainApp";
-import Dashboard from "@/components/MainApp/Dashboard";
-import Account from "@/components/MainApp/Account";
-import Settings from "@/components/MainApp/Settings";
+import WebApp from "@/components/WebApp/WebApp";
+import Dashboard from "@/components/WebApp/Dashboard";
+import Account from "@/components/WebApp/Account";
+import Settings from "@/components/WebApp/Settings";
 import catchAll from "@/components/404";
 
 import store from "../store";
@@ -20,13 +20,13 @@ let router = new Router({
   routes: [
     {
       path: "/",
-      name: "HelloWorld",
-      component: HelloWorld
+      name: "Landing",
+      component: Homepage
     },
     {
       path: "/about",
       name: "about",
-      component: HelloWorld
+      component: Homepage
     },
     {
       path: "/login",
@@ -41,7 +41,7 @@ let router = new Router({
     {
       path: "/app",
       name: "app",
-      component: MainApp,
+      component: WebApp,
       meta: {
         requiresAuth: true
       },

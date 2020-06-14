@@ -28,21 +28,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-nav {
-  background-color: lightblue;
-}
-
-nav ul {
-  display: flex;
-  flex-flow: row nowrap;
-  padding: 2rem;
-  list-style: none;
-  margin: 0;
-}
-
-nav ul li:not(:last-child) {
-  padding-right: 16px;
-}
-</style>
