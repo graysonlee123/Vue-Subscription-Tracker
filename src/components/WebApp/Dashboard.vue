@@ -26,8 +26,9 @@
       <div v-if="loadedSubscriptionIndex >= 0">
         <add-subscription-form v-bind:subscriptionProp="subscriptions[loadedSubscriptionIndex]"/>
       </div>
-      <div v-else>
-        Icon
+      <div class="no-subscription-container" v-else>
+          <i class="fas fa-question-circle"></i>
+          <p>Select a subscription to view its details, or add a new one.</p>
       </div>
     </div>
   </div>
@@ -52,7 +53,6 @@ export default {
       EventBus.$emit("showMobileMenu");
     },
     handleLoadSubscription: function(index) {
-      console.log(index);
       this.loadedSubscriptionIndex = index;
     }
   },
@@ -112,5 +112,19 @@ export default {
 
 #show-menu-btn {
   display: inline;
+}
+
+.no-subscription-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    font-size: 64px;
+    color: green;
+    margin-bottom: 2rem;
+  }
 }
 </style>

@@ -134,7 +134,8 @@ export default {
         interval: null,
         duration: "",
         paymentMethod: "",
-        note: ""
+        note: "",
+        _id: ""
       },
       formErrors: []
     };
@@ -149,9 +150,10 @@ export default {
       this.subscription.duration = this.subscriptionProp.duration;
       this.subscription.paymentMethod = this.subscriptionProp.paymentMethod;
       this.subscription.note = this.subscriptionProp.note;
+      this.subscription._id = this.subscriptionProp._id;
     },
     handleSubmit: function() {
-      console.log("submit");
+      console.log("submit to subscription id ", this.subscription._id);
     }
   },
   watch: {
