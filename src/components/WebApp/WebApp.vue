@@ -43,6 +43,12 @@ $nav-width: 260px;
 $rightWidthDesktop: 36%;
 $rightWidthMobile: 70%;
 
+$borderStyle: 1px solid grey;
+
+h2 {
+  font-size: 24px;
+}
+
 #app-container {
   #nav-menu {
     width: $nav-width;
@@ -52,7 +58,7 @@ $rightWidthMobile: 70%;
     top: 0;
 
     background-color: white;
-    border-right: 1px solid grey;
+    border-right: $borderStyle;
 
     &.show-menu {
       left: 0;
@@ -65,6 +71,11 @@ $rightWidthMobile: 70%;
     top: 0;
     right: 0;
     left: 0;
+    padding: 2rem;
+
+    .header {
+      margin-bottom: 2rem;
+    }
   }
 
   #right {
@@ -73,6 +84,8 @@ $rightWidthMobile: 70%;
     position: absolute;
     right: -1 * $rightWidthMobile;
     top: 0;
+    border-left: $borderStyle;
+    padding: 2rem;
   }
   
   // Break for right menu

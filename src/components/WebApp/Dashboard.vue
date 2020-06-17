@@ -14,6 +14,7 @@
             class="subscription-preview-card"
             v-for="(subscription, index) in subscriptions"
             :key="index"
+            @click="handleLoadSubscription(index)"
           >
             <span class="name">{{subscription.name || "No name"}}</span>
             <span class="price">{{subscription.price}}</span>
@@ -22,7 +23,12 @@
       </div>
     </div>
     <div id="right">
-      <addSubscriptionForm />
+      <div v-if="loadedSubscriptionIndex >= 0">
+        <add-subscription-form v-bind:subscriptionProp="subscriptions[loadedSubscriptionIndex]"/>
+      </div>
+      <div v-else>
+        Icon
+      </div>
     </div>
   </div>
 </template>
@@ -37,12 +43,17 @@ export default {
     return {
       msg: "the commoners",
       isLoading: true,
-      subscriptions: []
+      subscriptions: [],
+      loadedSubscriptionIndex: -1
     };
   },
   methods: {
     handleMenuToggle: function() {
       EventBus.$emit("showMobileMenu");
+    },
+    handleLoadSubscription: function(index) {
+      console.log(index);
+      this.loadedSubscriptionIndex = index;
     }
   },
   components: {
@@ -53,33 +64,28 @@ export default {
       const res = await axios.get("http://localhost:3000/api/subscription");
       const subscriptions = res.data.subscriptions;
 
-      console.log(subscriptions);
-
       if (!subscriptions) {
+        // TODO Redirect to add a subscription
       }
 
       this.subscriptions.push(...subscriptions);
       this.isLoading = false;
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   }
 };
 </script>
 
-<style scoped lang="scss">
-h1,
-h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+<style lang="scss">
+
+.subscription-preview-card {
+  cursor: pointer;
+  transition: transform 80ms ease-in-out;
+
+  &:hover {
+    transform: scale(1.03);
+  }
 }
 
 .subscription-preview-card {

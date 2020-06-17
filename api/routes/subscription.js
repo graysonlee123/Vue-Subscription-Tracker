@@ -111,7 +111,7 @@ router.post(
       .optional()
       .isString()
       .withMessage("must be a string")
-      .isLength({ min: 1, max: 100 })
+      .isLength({ min: 0, max: 100 })
       .withMessage("must be less than 100 characters")
       .trim()
       .escape(),
@@ -218,7 +218,7 @@ router.post(
       .optional()
       .isString()
       .withMessage("must be a string")
-      .isLength({ min: 1, max: 100 })
+      .isLength({ min: 0, max: 100 })
       .withMessage("must be less than 100 characters")
       .trim()
       .escape(),

@@ -48,6 +48,7 @@ let router = new Router({
       children: [
         {
           path: "dashboard",
+          name: "Dashboard",
           alias: "",
           component: Dashboard
         },
