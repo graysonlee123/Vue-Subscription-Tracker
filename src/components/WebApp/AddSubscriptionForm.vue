@@ -122,7 +122,7 @@
     </div>
     <!-- Submit -->
     <div class="field-wrapper">
-      <button type="submit">Update</button>
+      <button type="submit">{{this.isNewSubscription ? 'Add Subscription' : 'Update'}}</button>
     </div>
   </form>
 </template>
@@ -132,12 +132,7 @@ import axios from "axios";
 import moment from "moment";
 
 export default {
-  props: {
-    subscriptionProp: {
-      type: Object,
-      required: true
-    }
-  },
+  props: ["subscriptionProp"],
   data: function() {
     return {
       subscription: {
@@ -151,22 +146,40 @@ export default {
         color: "",
         note: ""
       },
-      formErrors: []
+      formErrors: [],
+      isNewSubscription: false
     };
   },
   methods: {
     updateFromProps: function() {
-      this.subscription.price = this.subscriptionProp.price;
-      this.subscription.name = this.subscriptionProp.name;
-      this.subscription.description = this.subscriptionProp.description;
-      this.subscription.firstPaymentDate = this.parseDate(
-        this.subscriptionProp.firstPaymentDate
-      );
-      this.subscription.interval = this.subscriptionProp.interval;
-      this.subscription.duration = this.subscriptionProp.duration;
-      this.subscription.paymentMethod = this.subscriptionProp.paymentMethod;
-      this.subscription.color = this.subscriptionProp.color;
-      this.subscription.note = this.subscriptionProp.note;
+      if (!this.subscriptionProp) {
+        this.isNewSubscription = true;
+        this.subscription = {
+          price: null,
+          name: "",
+          description: "",
+          firstPaymentDate: this.parseDate(Date.now()),
+          interval: 1,
+          duration: "month",
+          paymentMethod: "",
+          color: "#3f5cee",
+          note: ""
+        };
+      } else {
+        this.isNewSubscription = false;
+
+        this.subscription.price = this.subscriptionProp.price;
+        this.subscription.name = this.subscriptionProp.name;
+        this.subscription.description = this.subscriptionProp.description;
+        this.subscription.firstPaymentDate = this.parseDate(
+          this.subscriptionProp.firstPaymentDate
+        );
+        this.subscription.interval = this.subscriptionProp.interval;
+        this.subscription.duration = this.subscriptionProp.duration;
+        this.subscription.paymentMethod = this.subscriptionProp.paymentMethod;
+        this.subscription.color = this.subscriptionProp.color;
+        this.subscription.note = this.subscriptionProp.note;
+      }
     },
     parseDate: function(dateString) {
       // Expects an ISO date string
@@ -175,47 +188,110 @@ export default {
       return date.format("YYYY-MM-DD");
     },
     handleSubmit: async function() {
-      try {
-        const {
-          price,
-          name,
-          description,
-          firstPaymentDate,
-          interval,
-          duration,
-          paymentMethod,
-          color,
-          note
-        } = this.subscription;
+      if (this.isNewSubscription) {
+        try {
+          const {
+            price,
+            name,
+            description,
+            firstPaymentDate,
+            interval,
+            duration,
+            paymentMethod,
+            color,
+            note
+          } = this.subscription;
 
-        const data = {
-          price,
-          name,
-          description,
-          firstPaymentDate,
-          interval,
-          duration,
-          paymentMethod,
-          color,
-          note
-        };
+          const data = {
+            price,
+            name,
+            description,
+            firstPaymentDate,
+            interval,
+            duration,
+            paymentMethod,
+            color,
+            note
+          };
 
-        const update = await axios.post(
-          `http://localhost:3000/api/subscription/${this.subscriptionProp._id}`,
-          data
-        );
+          const post = await axios.post(
+            "http://localhost:3000/api/subscription",
+            data
+          );
 
-        // Run code to re-grab the user's subscriptions
-        this.$emit("getSubscriptions");
-      } catch (err) {
-        console.log(err.response.data);
+          this.$emit("getSubscriptions");
+        } catch (err) {
+          console.log(err);
+
+          const errors = err.response.data.errors;
+
+          if (errors) {
+            errors.forEach(({ param, msg }) => this.addFormError(param, msg));
+            document.getElementById("price").focus();
+          }
+        }
+      } else {
+        try {
+          const {
+            price,
+            name,
+            description,
+            firstPaymentDate,
+            interval,
+            duration,
+            paymentMethod,
+            color,
+            note
+          } = this.subscription;
+
+          const data = {
+            price,
+            name,
+            description,
+            firstPaymentDate,
+            interval,
+            duration,
+            paymentMethod,
+            color,
+            note
+          };
+
+          const update = await axios.post(
+            `http://localhost:3000/api/subscription/${this.subscriptionProp._id}`,
+            data
+          );
+
+          // Run code to re-grab the user's subscriptions
+          this.$emit("getSubscriptions");
+        } catch (err) {
+          console.log(err);
+
+          const errors = err.response.data.errors;
+
+          if (errors) {
+            errors.forEach(({ param, msg }) => this.addFormError(param, msg));
+            document.getElementById("price").focus();
+          }
+        }
       }
+    },
+    addFormError: function(field, msg) {
+      this.formErrors.push({
+        field,
+        msg
+      });
+    },
+    removeFormError: function(field) {
+      this.formErrors.find((error, index) => {
+        if (error && error.field === field) {
+          this.formErrors.splice(index, 1);
+        }
+      });
     }
   },
   watch: {
     subscriptionProp: function() {
       this.updateFromProps();
-      console.log("update");
     }
   },
   created: function() {

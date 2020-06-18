@@ -86,6 +86,7 @@ h2 {
     top: 0;
     border-left: $borderStyle;
     padding: 2rem;
+    overflow-y: auto;
   }
   
   // Break for right menu

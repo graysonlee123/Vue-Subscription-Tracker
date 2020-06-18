@@ -30,7 +30,7 @@
     <div id="right">
       <div v-if="isLoading">Spinner</div>
       <div v-else-if="showNewSubForm">
-        <add-subscription-form/>
+        <add-subscription-form v-on:getSubscriptions="fetchSubscriptions"/>
       </div>
       <div v-else-if="loadedSubscriptionIndex >= 0">
         <add-subscription-form
@@ -90,6 +90,7 @@ export default {
     },
     handleLoadSubscription: function(index) {
       this.loadedSubscriptionIndex = index;
+      this.showNewSubForm = false;
     }
   },
   components: {
@@ -148,6 +149,22 @@ export default {
     font-size: 64px;
     color: green;
     margin-bottom: 2rem;
+  }
+}
+
+// Add Subscription Button
+.new-subscription-wrapper {
+  margin: 32px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  .add-subscription-button {
+    cursor: pointer;
+    background-color: green;
+    border-radius: 50%;
+    padding: 16px;
+    color: white;
   }
 }
 </style>
