@@ -45,7 +45,7 @@
         v-if="formErrors.find(({field}) => field === 'description')"
       >{{formErrors.find(({field}) => field ==='description').msg}}</p>
     </div>
-    <!-- Payment -->
+    <!-- Payment Date -->
     <div class="field-wrapper">
       <label for="firstPaymentDate">First Payment</label>
       <div class="input-wrapper">
@@ -71,7 +71,7 @@
     <div class="field-wrapper">
       <label for="duration">Duration</label>
       <div class="input-wrapper">
-        <select name="duration" id="duration">
+        <select name="duration" id="duration" v-model="subscription.duration">
           <option value="day">Day</option>
           <option value="month">Month</option>
           <option value="year">Year</option>
@@ -98,11 +98,22 @@
         v-if="formErrors.find(({field}) => field === 'paymentMethod')"
       >{{formErrors.find(({field}) => field ==='paymentMethod').msg}}</p>
     </div>
+    <!-- Color -->
+    <div class="field-wrapper">
+      <label for="color">Color</label>
+      <div class="input-wrapper">
+        <input id="color" type="color" v-model="subscription.color" />
+      </div>
+      <p
+        class="field-error"
+        v-if="formErrors.find(({field}) => field === 'note')"
+      >{{formErrors.find(({field}) => field ==='note').msg}}</p>
+    </div>
     <!-- Note -->
     <div class="field-wrapper">
       <label for="note">Note</label>
       <div class="input-wrapper">
-        <input id="note" type="text" placeholder="Watch movies and TV" v-model="subscription.note" />
+        <input id="note" type="text" placeholder="Student discount" v-model="subscription.note" />
       </div>
       <p
         class="field-error"
@@ -117,6 +128,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import moment from "moment";
+
 export default {
   props: {
     subscriptionProp: {
@@ -134,8 +148,8 @@ export default {
         interval: null,
         duration: "",
         paymentMethod: "",
-        note: "",
-        _id: ""
+        color: "",
+        note: ""
       },
       formErrors: []
     };
@@ -145,15 +159,57 @@ export default {
       this.subscription.price = this.subscriptionProp.price;
       this.subscription.name = this.subscriptionProp.name;
       this.subscription.description = this.subscriptionProp.description;
-      this.subscription.firstPaymentDate = this.subscriptionProp.firstPaymentDate;
+      this.subscription.firstPaymentDate = this.parseDate(
+        this.subscriptionProp.firstPaymentDate
+      );
       this.subscription.interval = this.subscriptionProp.interval;
       this.subscription.duration = this.subscriptionProp.duration;
       this.subscription.paymentMethod = this.subscriptionProp.paymentMethod;
+      this.subscription.color = this.subscriptionProp.color;
       this.subscription.note = this.subscriptionProp.note;
-      this.subscription._id = this.subscriptionProp._id;
     },
-    handleSubmit: function() {
-      console.log("submit to subscription id ", this.subscription._id);
+    parseDate: function(dateString) {
+      // Expects an ISO date string
+      const date = moment(dateString);
+
+      return date.format("YYYY-MM-DD");
+    },
+    handleSubmit: async function() {
+      try {
+        const {
+          price,
+          name,
+          description,
+          firstPaymentDate,
+          interval,
+          duration,
+          paymentMethod,
+          color,
+          note
+        } = this.subscription;
+
+        const data = {
+          price,
+          name,
+          description,
+          firstPaymentDate,
+          interval,
+          duration,
+          paymentMethod,
+          color,
+          note
+        };
+
+        const update = await axios.post(
+          `http://localhost:3000/api/subscription/${this.subscriptionProp._id}`,
+          data
+        );
+
+        // Run code to re-grab the user's subscriptions
+        this.$emit("getSubscriptions");
+      } catch (err) {
+        console.log(err.response.data);
+      }
     }
   },
   watch: {

@@ -1,6 +1,11 @@
 <template>
   <div>
     <div id="left">
+      <div class="new-subscription-wrapper">
+        <div class="add-subscription-button" @click="handleAddNewForm">
+          <i class="fas fa-plus"></i>
+        </div>
+      </div>
       <div class="header">
         <span id="show-menu-btn" @click="handleMenuToggle">
           <i class="fa fa-bars"></i>
@@ -16,19 +21,26 @@
             :key="index"
             @click="handleLoadSubscription(index)"
           >
-            <span class="name">{{subscription.name || "No name"}}</span>
+            <span class="name">{{subscription.name}}</span>
             <span class="price">{{subscription.price}}</span>
           </div>
         </div>
       </div>
     </div>
     <div id="right">
-      <div v-if="loadedSubscriptionIndex >= 0">
-        <add-subscription-form v-bind:subscriptionProp="subscriptions[loadedSubscriptionIndex]"/>
+      <div v-if="isLoading">Spinner</div>
+      <div v-else-if="showNewSubForm">
+        <add-subscription-form/>
+      </div>
+      <div v-else-if="loadedSubscriptionIndex >= 0">
+        <add-subscription-form
+          v-bind:subscriptionProp="subscriptions[loadedSubscriptionIndex]"
+          v-on:getSubscriptions="fetchSubscriptions"
+        />
       </div>
       <div class="no-subscription-container" v-else>
-          <i class="fas fa-question-circle"></i>
-          <p>Select a subscription to view its details, or add a new one.</p>
+        <i class="fas fa-question-circle"></i>
+        <p>Select a subscription to view its details, or add a new one.</p>
       </div>
     </div>
   </div>
@@ -42,13 +54,37 @@ import { EventBus } from "../../EventBus";
 export default {
   data: function() {
     return {
-      msg: "the commoners",
       isLoading: true,
       subscriptions: [],
-      loadedSubscriptionIndex: -1
+      loadedSubscriptionIndex: -1,
+      showNewSubForm: false
     };
   },
   methods: {
+    fetchSubscriptions: async function() {
+      console.log("Refreshing subscriptions...");
+
+      try {
+        this.isLoading = true;
+        this.loadedSubscriptionIndex = -1;
+        this.subscriptions = [];
+
+        const res = await axios.get("http://localhost:3000/api/subscription");
+        const subscriptions = res.data.subscriptions;
+
+        if (!subscriptions) {
+          // TODO Redirect to add a subscription
+        }
+
+        this.subscriptions.push(...subscriptions);
+        this.isLoading = false;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    handleAddNewForm: function() {
+      this.showNewSubForm = true;
+    },
     handleMenuToggle: function() {
       EventBus.$emit("showMobileMenu");
     },
@@ -59,26 +95,13 @@ export default {
   components: {
     addSubscriptionForm: AddSubscriptionForm
   },
-  created: async function() {
-    try {
-      const res = await axios.get("http://localhost:3000/api/subscription");
-      const subscriptions = res.data.subscriptions;
-
-      if (!subscriptions) {
-        // TODO Redirect to add a subscription
-      }
-
-      this.subscriptions.push(...subscriptions);
-      this.isLoading = false;
-    } catch (err) {
-      console.log(err);
-    }
+  created: function() {
+    this.fetchSubscriptions();
   }
 };
 </script>
 
 <style lang="scss">
-
 .subscription-preview-card {
   cursor: pointer;
   transition: transform 80ms ease-in-out;
