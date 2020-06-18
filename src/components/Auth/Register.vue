@@ -94,6 +94,8 @@
 <script>
 import LanguageSelect from "../Global/LanguageSelect.vue";
 
+import { formErrors } from "../../mixins/formErrors";
+
 export default {
   data: function() {
     return {
@@ -105,6 +107,7 @@ export default {
       formErrors: []
     };
   },
+  mixins: [formErrors],
   components: {
     languageSelect: LanguageSelect
   },
@@ -126,12 +129,7 @@ export default {
         })
         .catch(err => {
           console.error(err);
-          const errors = err.response.data.errors;
-
-          if (errors) {
-            errors.forEach(({ param, msg }) => this.addFormError(param, msg));
-            document.getElementById("first_name").focus();
-          }
+          this.addFormError(err, 'first_name');
         });
     },
     handleShowPassword: function() {
@@ -152,24 +150,11 @@ export default {
         eyeEl.classList.add("fa-eye-slash");
       }
     },
-    addFormError: function(field, msg) {
-      this.formErrors.push({
-        field,
-        msg
-      });
-    },
     handleLostFocus: function(e) {
       const elementId = e.target.id;
       if (this.formErrors.length) {
         this.removeFormError(elementId);
       }
-    },
-    removeFormError: function(field) {
-      this.formErrors.find((error, index) => {
-        if (error && error.field === field) {
-          this.formErrors.splice(index, 1);
-        }
-      });
     }
   }
 };

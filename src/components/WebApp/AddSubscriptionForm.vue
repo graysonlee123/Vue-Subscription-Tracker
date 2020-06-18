@@ -131,6 +131,8 @@
 import axios from "axios";
 import moment from "moment";
 
+import { formErrors } from "../../mixins/formErrors";
+
 export default {
   props: ["subscriptionProp"],
   data: function() {
@@ -150,6 +152,7 @@ export default {
       isNewSubscription: false
     };
   },
+  mixins: [formErrors],
   methods: {
     updateFromProps: function() {
       if (!this.subscriptionProp) {
@@ -188,105 +191,30 @@ export default {
       return date.format("YYYY-MM-DD");
     },
     handleSubmit: async function() {
-      if (this.isNewSubscription) {
-        try {
-          const {
-            price,
-            name,
-            description,
-            firstPaymentDate,
-            interval,
-            duration,
-            paymentMethod,
-            color,
-            note
-          } = this.subscription;
+      this.clearErrors();
 
-          const data = {
-            price,
-            name,
-            description,
-            firstPaymentDate,
-            interval,
-            duration,
-            paymentMethod,
-            color,
-            note
-          };
+      try {
+        const data = {
+          ...this.subscription
+        };
 
+        if (this.isNewSubscription) {
           const post = await axios.post(
             "http://localhost:3000/api/subscription",
             data
           );
-
-          this.$emit("getSubscriptions");
-        } catch (err) {
-          console.log(err);
-
-          const errors = err.response.data.errors;
-
-          if (errors) {
-            errors.forEach(({ param, msg }) => this.addFormError(param, msg));
-            document.getElementById("price").focus();
-          }
-        }
-      } else {
-        try {
-          const {
-            price,
-            name,
-            description,
-            firstPaymentDate,
-            interval,
-            duration,
-            paymentMethod,
-            color,
-            note
-          } = this.subscription;
-
-          const data = {
-            price,
-            name,
-            description,
-            firstPaymentDate,
-            interval,
-            duration,
-            paymentMethod,
-            color,
-            note
-          };
-
+        } else {
           const update = await axios.post(
             `http://localhost:3000/api/subscription/${this.subscriptionProp._id}`,
             data
           );
-
-          // Run code to re-grab the user's subscriptions
-          this.$emit("getSubscriptions");
-        } catch (err) {
-          console.log(err);
-
-          const errors = err.response.data.errors;
-
-          if (errors) {
-            errors.forEach(({ param, msg }) => this.addFormError(param, msg));
-            document.getElementById("price").focus();
-          }
         }
+
+        this.$emit("getSubscriptions");
+      } catch (err) {
+        console.log(err);
+        this.addFormError(err, "price");
       }
-    },
-    addFormError: function(field, msg) {
-      this.formErrors.push({
-        field,
-        msg
-      });
-    },
-    removeFormError: function(field) {
-      this.formErrors.find((error, index) => {
-        if (error && error.field === field) {
-          this.formErrors.splice(index, 1);
-        }
-      });
     }
   },
   watch: {

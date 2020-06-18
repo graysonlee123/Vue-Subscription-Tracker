@@ -62,8 +62,6 @@ export default {
   },
   methods: {
     fetchSubscriptions: async function() {
-      console.log("Refreshing subscriptions...");
-
       try {
         this.isLoading = true;
         this.loadedSubscriptionIndex = -1;
@@ -73,7 +71,7 @@ export default {
         const subscriptions = res.data.subscriptions;
 
         if (!subscriptions) {
-          // TODO Redirect to add a subscription
+          return this.showNewSubForm = true;
         }
 
         this.subscriptions.push(...subscriptions);

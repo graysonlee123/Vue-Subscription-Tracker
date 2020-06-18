@@ -60,6 +60,8 @@
 <script>
 import LanguageSelect from "../Global/LanguageSelect";
 
+import { formErrors } from "../../mixins/formErrors";
+
 export default {
   data: function() {
     return {
@@ -69,12 +71,13 @@ export default {
       formErrors: []
     };
   },
+  mixins: [formErrors],
   components: {
     languageSelect: LanguageSelect
   },
   methods: {
     handleSubmit: function() {
-      this.formErrors = [];
+      this.clearErrors();
 
       const data = {
         email: this.email,
@@ -88,12 +91,7 @@ export default {
         })
         .catch(err => {
           console.error(err);
-          const errors = err.response.data.errors;
-
-          if (errors) {
-            errors.forEach(({ param, msg }) => this.addFormError(param, msg));
-            document.getElementById("email").focus();
-          }
+          this.addFormError(err, 'email');
         });
     },
     handleShowPassword: function() {
@@ -119,19 +117,6 @@ export default {
       if (this.formErrors.length) {
         this.removeFormError(elementId);
       }
-    },
-    addFormError: function(field, msg) {
-      this.formErrors.push({
-        field,
-        msg
-      });
-    },
-    removeFormError: function(field) {
-      this.formErrors.find((error, index) => {
-        if (error && error.field === field) {
-          this.formErrors.splice(index, 1);
-        }
-      });
     }
   }
 };
