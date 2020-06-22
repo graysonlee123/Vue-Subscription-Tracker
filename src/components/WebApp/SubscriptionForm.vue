@@ -124,6 +124,10 @@
     <div class="field-wrapper">
       <button type="submit">{{this.isNewSubscription ? 'Add Subscription' : 'Update'}}</button>
     </div>
+    <!-- Delete -->
+    <div @click="handleConfirmDelete">
+      <i class="fa fa-trash"></i>
+    </div>
   </form>
 </template>
 
@@ -214,6 +218,19 @@ export default {
       } catch (err) {
         console.log(err);
         this.addFormError(err, "price");
+      }
+    },
+    handleConfirmDelete: async function() {
+      if (!confirm("Are you sure? Deleting a subscription is permanent.")) return;
+
+      try {
+        const subscription = await axios.delete(
+          `http://localhost:3000/api/subscription/${this.subscriptionProp._id}`
+        );
+
+        this.$emit("getSubscriptions");
+      } catch (err) {
+        console.log(err);
       }
     }
   },

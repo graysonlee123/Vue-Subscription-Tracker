@@ -20,6 +20,7 @@
             v-for="(subscription, index) in subscriptions"
             :key="index"
             @click="handleLoadSubscription(index)"
+            :style="{ backgroundColor: subscription.color }"
           >
             <span class="name">{{subscription.name}}</span>
             <span class="price">{{subscription.price}}</span>
@@ -30,10 +31,10 @@
     <div id="right">
       <div v-if="isLoading">Spinner</div>
       <div v-else-if="showNewSubForm">
-        <add-subscription-form v-on:getSubscriptions="fetchSubscriptions"/>
+        <subscription-form v-on:getSubscriptions="fetchSubscriptions" />
       </div>
       <div v-else-if="loadedSubscriptionIndex >= 0">
-        <add-subscription-form
+        <subscription-form
           v-bind:subscriptionProp="subscriptions[loadedSubscriptionIndex]"
           v-on:getSubscriptions="fetchSubscriptions"
         />
@@ -47,7 +48,7 @@
 </template>
 
 <script>
-import AddSubscriptionForm from "./AddSubscriptionForm";
+import AddSubscriptionForm from "./SubscriptionForm";
 import axios from "axios";
 import { EventBus } from "../../EventBus";
 
@@ -71,7 +72,7 @@ export default {
         const subscriptions = res.data.subscriptions;
 
         if (!subscriptions) {
-          return this.showNewSubForm = true;
+          return (this.showNewSubForm = true);
         }
 
         this.subscriptions.push(...subscriptions);
@@ -92,7 +93,7 @@ export default {
     }
   },
   components: {
-    addSubscriptionForm: AddSubscriptionForm
+    subscriptionForm: AddSubscriptionForm
   },
   created: function() {
     this.fetchSubscriptions();
@@ -111,13 +112,14 @@ export default {
 }
 
 .subscription-preview-card {
-  $card-height: 64px;
+  $card-height: 48px;
 
   display: flex;
   align-items: center;
   background-color: green;
   height: $card-height;
   line-height: $card-height;
+  border: 1px solid grey;
   border-radius: 4px;
   padding: 0 12px;
   margin-bottom: 8px;

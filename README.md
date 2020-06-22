@@ -28,3 +28,13 @@ npm test
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+# TODOs
+[] Delete subscription
+[x] Color the subscriptions in the dashboard accordingly
+[] [] Color text accordingly
+[] HTML escapes
+[] Price to decimal
+[] Tags
+[] Polish dashboard look and feel
+[] Handle removing error on lost focus for an error'd field's input
