@@ -125,7 +125,7 @@
       <button type="submit">{{this.isNewSubscription ? 'Add Subscription' : 'Update'}}</button>
     </div>
     <!-- Delete -->
-    <div @click="handleConfirmDelete">
+    <div v-if="!isNewSubscription" @click="handleConfirmDelete">
       <i class="fa fa-trash"></i>
     </div>
   </form>

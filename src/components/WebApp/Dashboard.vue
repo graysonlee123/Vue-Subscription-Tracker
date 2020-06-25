@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="header">
-        <span id="show-menu-btn" @click="handleMenuToggle">
+        <span id="show-menu-btn" @click="handleShowMenu">
           <i class="fa fa-bars"></i>
         </span>
         <h2>Subscriptions</h2>
@@ -83,13 +83,15 @@ export default {
     },
     handleAddNewForm: function() {
       this.showNewSubForm = true;
+      this.$emit('showForm');
     },
-    handleMenuToggle: function() {
-      EventBus.$emit("showMobileMenu");
+    handleShowMenu: function() {
+      this.$emit("showNav", true);
     },
     handleLoadSubscription: function(index) {
       this.loadedSubscriptionIndex = index;
       this.showNewSubForm = false;
+      this.$emit('showForm');
     }
   },
   components: {
@@ -132,10 +134,6 @@ export default {
     max-width: 200px;
     text-align: right;
   }
-}
-
-#show-menu-btn {
-  display: inline;
 }
 
 .no-subscription-container {

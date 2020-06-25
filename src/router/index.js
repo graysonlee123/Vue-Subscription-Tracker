@@ -40,7 +40,7 @@ let router = new Router({
     },
     {
       path: "/app",
-      name: "app",
+      name: "App",
       component: WebApp,
       meta: {
         requiresAuth: true
@@ -54,10 +54,12 @@ let router = new Router({
         },
         {
           path: "account",
+          name: "Account",
           component: Account
         },
         {
           path: "settings",
+          name: "Settings",
           component: Settings
         }
       ]
