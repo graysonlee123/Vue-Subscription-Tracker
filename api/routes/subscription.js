@@ -56,10 +56,7 @@ router.post(
       .withMessage("cannot be empty")
       .isNumeric()
       .withMessage("must be a number")
-      .toFloat()
-      .customSanitizer(value => {
-        return value.toFixed(2);
-      }),
+      .toFloat(),
     check("name")
       .notEmpty()
       .withMessage("cannot be empty")
@@ -163,10 +160,7 @@ router.post(
       .withMessage("cannot be empty")
       .isNumeric()
       .withMessage("must be a number")
-      .toFloat()
-      .customSanitizer(value => {
-        return value.toFixed(2);
-      }),
+      .toFloat(),
     check("name")
       .notEmpty()
       .withMessage("cannot be empty")

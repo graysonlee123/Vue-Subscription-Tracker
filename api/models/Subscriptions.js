@@ -5,7 +5,7 @@ const SubscriptionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
-  price: Number,
+  price: mongoose.Types.Decimal128,
   name: String,
   description: {
     type: String,

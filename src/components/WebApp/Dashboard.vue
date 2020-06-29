@@ -23,7 +23,7 @@
             :style="{ backgroundColor: subscription.color }"
           >
             <span class="name">{{subscription.name}}</span>
-            <span class="price">{{subscription.price}}</span>
+            <span class="price">{{subscription.price.$numberDecimal}}</span>
           </div>
         </div>
       </div>

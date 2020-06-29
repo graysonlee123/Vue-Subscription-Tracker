@@ -175,7 +175,7 @@ export default {
       } else {
         this.isNewSubscription = false;
 
-        this.subscription.price = this.subscriptionProp.price;
+        this.subscription.price = this.subscriptionProp.price.$numberDecimal;
         this.subscription.name = this.subscriptionProp.name;
         this.subscription.description = this.subscriptionProp.description;
         this.subscription.firstPaymentDate = this.parseDate(
