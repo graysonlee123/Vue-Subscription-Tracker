@@ -3,7 +3,10 @@
     <div id="nav-menu" class="menu-container">
       <navigation />
     </div>
-    <router-view @showNav="() => this.showNavigation = true" @showForm="handleShowRight" />
+    <router-view
+      @toggleMenu="() => this.showMenu ? this.showMenu = false : this.showMenu = true"
+      @showItem="() => this.showItemOnMobile = true"
+    />
   </div>
 </template>
 
@@ -12,67 +15,78 @@ import { EventBus } from "../../EventBus";
 import Navigation from "./Navigation";
 import $ from "jquery";
 
+// Width in px for different menu logic to take over
+const desktopBreak = 1020;
+
 export default {
   data: function() {
     return {
-      showNavigation: false,
-      showRight: false
+      showMenu: false,
+      showItemOnMobile: false
     };
   },
-  methods: {
-    toggleMenu: function(bool) {
-      this.showNavigation = bool;
-    },
-    handleShowRight: function() {
-      this.showRight ? (this.showRight = false) : (this.showRight = true);
-    }
-  },
+  methods: {},
   components: {
     navigation: Navigation
   },
   watch: {
-    showNavigation: function(bool) {
+    showMenu: function(bool) {
       switch (bool) {
         case true:
           document.getElementById("app-container").classList.add("show-nav");
           break;
         case false:
-          document.getElementById("app-container").classList.remove("show-nav");
-          break;
         default:
-          document.getElementById("app-container").classList.toggle("show-nav");
+          document.getElementById("app-container").classList.remove("show-nav");
           break;
       }
     },
-    showRight: function(bool) {
+    showItemOnMobile: function(bool) {
+      console.log(bool);
+
       switch (bool) {
         case true:
           document.getElementById("app-container").classList.add("show-item");
           break;
         case false:
-          document
-            .getElementById("app-container")
-            .classList.remove("show-item");
-          break;
         default:
           document
             .getElementById("app-container")
-            .classList.toggle("show-item");
+            .classList.remove("show-item");
           break;
       }
     }
   },
   created: function() {
+    // Listen for menu closures
+
     $(document).on("click", event => {
       // ? Needs to be an arrow function to
       // ? retain binding of this to vue component
       if (
+        $(window).width() <= desktopBreak &&
         !$(event.target).closest(".menu-container").length &&
         !$(event.target).closest("#show-menu-btn").length
       ) {
-        this.toggleMenu(false);
+        this.showMenu = false;
+      }
+
+      if (
+        !$(event.target).closest("#right").length &&
+        !$(event.target).closest(".subscription-preview-card").length &&
+        !$(event.target).closest(".new-subscription-wrapper").length
+      ) {
+        this.showItemOnMobile = false;
       }
     });
+
+    // Initial check for desktop or mobile
+
+    const width = $(window).width();
+
+    if (width > desktopBreak) {
+      this.showMenu = true;
+    }
   }
 };
 </script>
@@ -103,6 +117,9 @@ $borderStyle: 1px solid grey;
   position: fixed;
   top: 0;
   right: -1 * $rightWidthMobile;
+  background-color: white;
+  padding: 1rem;
+  border-left: $borderStyle;
 }
 
 #left {
@@ -111,23 +128,25 @@ $borderStyle: 1px solid grey;
   right: 0;
   bottom: 0;
   left: 0;
+  background-color: white;
+  padding: 1rem;
 }
 
 #nav-menu {
-  width: 100vw;
-  height: 100vh;
+  width: $navWidth;
+  height: 100%;
   position: absolute;
   top: 0;
   left: -1 * 100%;
+  z-index: 5;
   transition: left 300ms ease;
   display: flex;
+  border-right: $borderStyle;
+  padding: 1rem;
+  background: #fff;
 
   nav {
     height: 100%;
-    width: $navWidth;
-    background: #fff;
-    border-right: $borderStyle;
-    z-index: 5;
   }
 
   #nav-background {
@@ -137,6 +156,13 @@ $borderStyle: 1px solid grey;
 }
 
 @media screen and (min-width: 767px) {
+  .show-nav {
+    #left {
+      left: $navWidth;
+      width: calc((100% - #{$rightWidthDesktop}) - #{$navWidth});
+    }
+  }
+
   #left {
     width: 100% - $rightWidthDesktop;
   }

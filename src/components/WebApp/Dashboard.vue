@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="header">
-        <span id="show-menu-btn" @click="handleShowMenu">
+        <span id="show-menu-btn" @click="toggleMenu">
           <i class="fa fa-bars"></i>
         </span>
         <h2>Subscriptions</h2>
@@ -83,15 +83,15 @@ export default {
     },
     handleAddNewForm: function() {
       this.showNewSubForm = true;
-      this.$emit('showForm');
+      this.$emit('showItem');
     },
-    handleShowMenu: function() {
-      this.$emit("showNav", true);
+    toggleMenu: function() {
+      this.$emit("toggleMenu", true);
     },
     handleLoadSubscription: function(index) {
       this.loadedSubscriptionIndex = index;
       this.showNewSubForm = false;
-      this.$emit('showForm');
+      this.$emit('showItem');
     }
   },
   components: {
