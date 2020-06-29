@@ -115,7 +115,7 @@ $borderStyle: 1px solid grey;
   top: 0;
   right: -1 * $rightWidthMobile;
   background-color: white;
-  padding: 1rem;
+  padding: 1.2em;
   border-left: $borderStyle;
 }
 
@@ -127,7 +127,7 @@ $borderStyle: 1px solid grey;
   bottom: 0;
   left: 0;
   background-color: white;
-  padding: 1rem;
+  padding: 1.2em;
 }
 
 #nav-menu {

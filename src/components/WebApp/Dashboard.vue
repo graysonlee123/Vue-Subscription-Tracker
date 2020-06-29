@@ -11,24 +11,33 @@
           <i class="fa fa-bars"></i>
         </span>
         <h5>Subscriptions</h5>
+        <span id="sort-button">
+          <i class="fa fa-sort-amount-down"></i>
+        </span>
+        <span id="subscriptions-options-btn">
+          <i class="fas fa-ellipsis-h"></i>
+        </span>
       </div>
       <div class="subscription-list">
         <div v-if="isLoading">Spinner</div>
-        <div v-else>
-          <div
-            class="subscription-preview-card"
+        <ul v-else>
+          <li
+            class="subscription"
             v-for="(subscription, index) in subscriptions"
             :key="index"
-            @click="handleLoadSubscription(index)"
             :class="{ selected: loadedSubscriptionIndex === index }"
           >
-            <span class="name">{{subscription.name}}</span>
-            <span class="price">{{subscription.price.$numberDecimal}}</span>
-            <span class="color">
-              <div class="color-el" :style="{backgroundColor: subscription.color}"></div>
-            </span>
-          </div>
-        </div>
+            <div class="subscription-preview-card" @click="handleLoadSubscription(index)">
+              <span class="name">{{subscription.name}}</span>
+              <span class="date">{{subscription.firstPaymentDate | moment("dddd, MMMM Do YYYY")}}</span>
+              <span class="price">{{subscription.price.$numberDecimal}}</span>
+              <span class="color">
+                <div class="color-el" :style="{backgroundColor: subscription.color}"></div>
+              </span>
+            </div>
+            <div class="subscription-line"></div>
+          </li>
+        </ul>
       </div>
     </div>
     <div id="right">
@@ -86,7 +95,7 @@ export default {
     },
     handleAddNewForm: function() {
       this.showNewSubForm = true;
-      this.$emit('showItem');
+      this.$emit("showItem");
     },
     toggleMenu: function() {
       this.$emit("toggleMenu", true);
@@ -94,7 +103,7 @@ export default {
     handleLoadSubscription: function(index) {
       this.loadedSubscriptionIndex = index;
       this.showNewSubForm = false;
-      this.$emit('showItem');
+      this.$emit("showItem");
     }
   },
   components: {
@@ -107,46 +116,113 @@ export default {
 </script>
 
 <style lang="scss">
-.subscription-preview-card {
-  $card-height: 48px;
+li.subscription {
+  .subscription-preview-card {
+    $card-height: 48px;
 
-  display: flex;
-  align-items: center;
-  height: $card-height;
-  line-height: $card-height;
-  border-radius: 4px;
-  padding: 0 12px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  transition: transform 80ms ease-in-out;
-  border-bottom: 1px solid grey;
+    display: flex;
+    align-items: center;
+    height: $card-height;
+    line-height: $card-height;
+    border-radius: 4px;
+    padding: 0 12px;
+    cursor: pointer;
+    transition: transform 80ms ease-in-out;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .name {
+      flex: auto;
+      max-width: 100%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .date {
+      font-size: 0.7em;
+      opacity: 0.4;
+      flex-basis: auto;
+      text-align: right;
+      white-space: nowrap;
+
+      @media screen and (max-width: 464px) {
+        display: none;
+      }
+    }
+
+    .price {
+      font-size: 0.8em;
+      font-weight: bold;
+      text-align: right;
+      padding-left: 16px;
+      flex-basis: 92px;
+      flex-shrink: 0;
+
+      &::before {
+        content: '$';
+        font-size: 0.7em;
+        opacity: 0.4;
+        letter-spacing: 3px;
+      }
+    }
+
+    .color {
+      flex-basis: 32px;
+      padding-left: 12px;
+
+      div {
+        $size: 12px;
+
+        width: $size;
+        height: $size;
+        border-radius: $size / 2;
+      }
+    }
+  }
+
+  .subscription-line {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.1);
+    margin-bottom: 8px;
+  }
 
   &.selected {
-    background-color: rgba(0, 0, 0, 0.1);
-    border-bottom: none;
-  }
-
-  .name {
-    flex: auto;
-  }
-
-  .price {
-    font-size: 0.8em;
-    font-weight: bold;
-    max-width: 200px;
-    text-align: right;
-  }
-
-  .color {
-    padding-left: 8px;
-
-    div {
-      $size: 12px;
-
-      width: $size;
-      height: $size;
-      border-radius: $size / 2; 
+    .subscription-preview-card {
+      background-color: rgba(0, 0, 0, 0.05);
     }
+
+    .subscription-line {
+      visibility: hidden;
+    }
+  }
+
+  &:hover {
+    .subscription-line {
+      visibility: hidden;
+    }
+  }
+}
+
+.header {
+  display: flex;
+  margin-bottom: 2rem;
+  align-items: center;
+
+  #show-menu-btn {
+    cursor: pointer;
+    margin-right: 16px;
+    padding: 8px;
+  }
+
+  h5 {
+    flex-grow: 1;
+  }
+
+  #subscriptions-options-btn {
+    margin-left: 12px;
   }
 }
 
