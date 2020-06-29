@@ -65,13 +65,44 @@ export default {
 $body-family: Muli, sans-serif;
 $header-family: Poppins, sans-serif;
 
+$breakpoints: (
+  "xs": 446px,
+  "s": 768px,
+  "m": 992px,
+  "l": 1020px,
+  "xl": 1200px
+);
+
+@mixin mq($width, $type: min) {
+  @if map_has_key($breakpoints, $width) {
+    $width: map_get($breakpoints, $width);
+    @if $type == max {
+      $width: $width - 1px;
+    }
+    @media only screen and (#{$type}-width: $width) {
+      @content;
+    }
+  }
+}
+
+html {
+  font-size: 16px;
+
+  @include mq(m) {
+    font-size: 18px;
+  }
+
+  @include mq(xl) {
+    font-size: 20px;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   font-family: $body-family;
-  font-size: 16px;
   overflow: hidden;
 }
 
@@ -82,6 +113,10 @@ h4,
 h5,
 h6 {
   font-family: $header-family;
+}
+
+h5 {
+  font-size: 2em;
 }
 
 a {
@@ -98,7 +133,7 @@ a {
   min-height: 100vh;
 }
 
-form {
+form.auth-form {
   h4 {
     font-size: 1.6rem;
     font-weight: 300;

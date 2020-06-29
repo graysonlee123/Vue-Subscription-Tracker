@@ -158,6 +158,11 @@ export default {
   },
   mixins: [formErrors],
   methods: {
+    decodeHtml: function(html) {
+      let txt = document.createElement("textarea");
+      txt.innerHTML = html;
+      return txt.value;
+    },
     updateFromProps: function() {
       if (!this.subscriptionProp) {
         this.isNewSubscription = true;
@@ -185,7 +190,7 @@ export default {
         this.subscription.duration = this.subscriptionProp.duration;
         this.subscription.paymentMethod = this.subscriptionProp.paymentMethod;
         this.subscription.color = this.subscriptionProp.color;
-        this.subscription.note = this.subscriptionProp.note;
+        this.subscription.note = this.decodeHtml(this.subscriptionProp.note);
       }
     },
     parseDate: function(dateString) {

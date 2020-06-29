@@ -10,7 +10,7 @@
         <span id="show-menu-btn" @click="toggleMenu">
           <i class="fa fa-bars"></i>
         </span>
-        <h2>Subscriptions</h2>
+        <h5>Subscriptions</h5>
       </div>
       <div class="subscription-list">
         <div v-if="isLoading">Spinner</div>
@@ -20,10 +20,13 @@
             v-for="(subscription, index) in subscriptions"
             :key="index"
             @click="handleLoadSubscription(index)"
-            :style="{ backgroundColor: subscription.color }"
+            :class="{ selected: loadedSubscriptionIndex === index }"
           >
             <span class="name">{{subscription.name}}</span>
             <span class="price">{{subscription.price.$numberDecimal}}</span>
+            <span class="color">
+              <div class="color-el" :style="{backgroundColor: subscription.color}"></div>
+            </span>
           </div>
         </div>
       </div>
@@ -105,34 +108,45 @@ export default {
 
 <style lang="scss">
 .subscription-preview-card {
-  cursor: pointer;
-  transition: transform 80ms ease-in-out;
-
-  &:hover {
-    transform: scale(1.03);
-  }
-}
-
-.subscription-preview-card {
   $card-height: 48px;
 
   display: flex;
   align-items: center;
-  background-color: green;
   height: $card-height;
   line-height: $card-height;
-  border: 1px solid grey;
   border-radius: 4px;
   padding: 0 12px;
   margin-bottom: 8px;
+  cursor: pointer;
+  transition: transform 80ms ease-in-out;
+  border-bottom: 1px solid grey;
+
+  &.selected {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-bottom: none;
+  }
 
   .name {
     flex: auto;
   }
 
   .price {
+    font-size: 0.8em;
+    font-weight: bold;
     max-width: 200px;
     text-align: right;
+  }
+
+  .color {
+    padding-left: 8px;
+
+    div {
+      $size: 12px;
+
+      width: $size;
+      height: $size;
+      border-radius: $size / 2; 
+    }
   }
 }
 
@@ -151,6 +165,7 @@ export default {
 }
 
 // Add Subscription Button
+
 .new-subscription-wrapper {
   margin: 32px;
   position: absolute;

@@ -42,8 +42,6 @@ export default {
       }
     },
     showItemOnMobile: function(bool) {
-      console.log(bool);
-
       switch (bool) {
         case true:
           document.getElementById("app-container").classList.add("show-item");
@@ -82,9 +80,7 @@ export default {
 
     // Initial check for desktop or mobile
 
-    const width = $(window).width();
-
-    if (width > desktopBreak) {
+    if ($(window).width() > desktopBreak) {
       this.showMenu = true;
     }
   }
@@ -112,6 +108,7 @@ $borderStyle: 1px solid grey;
 }
 
 #right {
+  font-size: 1rem;
   width: $rightWidthMobile;
   height: 100%;
   position: fixed;
@@ -123,6 +120,7 @@ $borderStyle: 1px solid grey;
 }
 
 #left {
+  font-size: 1rem;
   position: fixed;
   top: 0;
   right: 0;
@@ -133,6 +131,7 @@ $borderStyle: 1px solid grey;
 }
 
 #nav-menu {
+  font-size: 0.8rem;
   width: $navWidth;
   height: 100%;
   position: absolute;

@@ -33,8 +33,8 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 [x] Delete subscription
 [x] Color the subscriptions in the dashboard accordingly
 [] [] Color text accordingly
-[] HTML escapes
-[] Price to decimal
+[x] HTML escapes
+[x] Price to decimal
 [] Tags
 [] Polish dashboard look and feel
 [] Handle removing error on lost focus for an error'd field's input
