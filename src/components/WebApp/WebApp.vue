@@ -95,8 +95,12 @@ $rightWidthMobile: 70%;
 
 $borderStyle: 1px solid grey;
 
+$backgroundColor: #1c1d1f;
+$menuColor: #27282a;
+
 #app-container {
   height: 100%;
+  color: #fafafa;
 
   &.show-nav #nav-menu {
     left: 0;
@@ -114,7 +118,7 @@ $borderStyle: 1px solid grey;
   position: fixed;
   top: 0;
   right: -1 * $rightWidthMobile;
-  background-color: white;
+  background-color: $backgroundColor;
   padding: 1.2em;
   border-left: $borderStyle;
 }
@@ -126,7 +130,7 @@ $borderStyle: 1px solid grey;
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: white;
+  background-color: $backgroundColor;
   padding: 1.2em;
 }
 
@@ -142,7 +146,7 @@ $borderStyle: 1px solid grey;
   display: flex;
   border-right: $borderStyle;
   padding: 1rem;
-  background: #fff;
+  background: $menuColor;
 
   nav {
     height: 100%;

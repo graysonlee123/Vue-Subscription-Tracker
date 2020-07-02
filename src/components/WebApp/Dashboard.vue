@@ -29,7 +29,7 @@
           >
             <div class="subscription-preview-card" @click="handleLoadSubscription(index)">
               <span class="name">{{subscription.name}}</span>
-              <span class="date">{{subscription.firstPaymentDate | moment("dddd, MMMM Do YYYY")}}</span>
+              <span class="date">{{subscription.paymentDates[0] | moment("dddd, MMMM Do YYYY")}}</span>
               <span class="price">{{subscription.price.$numberDecimal}}</span>
               <span class="color">
                 <div class="color-el" :style="{backgroundColor: subscription.color}"></div>
@@ -63,6 +63,7 @@
 import AddSubscriptionForm from "./SubscriptionForm";
 import axios from "axios";
 import { EventBus } from "../../EventBus";
+import moment from "moment";
 
 export default {
   data: function() {
@@ -74,6 +75,53 @@ export default {
     };
   },
   methods: {
+    getPaymentDates: function({ firstPaymentDate, interval, duration }, index) {
+      const date = new Date(firstPaymentDate);
+      const upcomingPaymentsCount = 10;
+
+      switch (duration) {
+        case "year":
+          return [Date.now()];
+          console.log("year");
+
+          break;
+        default:
+        case "month":
+          const dates = [];
+
+          const paymentDay = moment(firstPaymentDate).date();
+          const now = moment();
+          const todaysDay = now.date();
+
+          if (paymentDay < todaysDay) {
+            for (let i = 1; i <= upcomingPaymentsCount; i++) {
+              dates.push(
+                moment(firstPaymentDate)
+                  .year(now.year())
+                  .month(now.month() + i)
+                  .valueOf()
+              );
+            }
+          } else {
+            for (let i = 0; i < upcomingPaymentsCount; i++) {
+              dates.push(
+                moment(firstPaymentDate)
+                  .year(now.year())
+                  .month(now.month() + i)
+                  .valueOf()
+              );
+            }
+          }
+
+          console.log({ dates });
+          return dates;
+          break;
+        case "day":
+          console.log("day");
+          return [Date.now()];
+          break;
+      }
+    },
     fetchSubscriptions: async function() {
       try {
         this.isLoading = true;
@@ -87,7 +135,15 @@ export default {
           return (this.showNewSubForm = true);
         }
 
+        subscriptions.forEach((subscription, index) => {
+          subscriptions[index].paymentDates = this.getPaymentDates(
+            subscription,
+            index
+          );
+        });
+
         this.subscriptions.push(...subscriptions);
+
         this.isLoading = false;
       } catch (err) {
         console.log(err);
@@ -130,7 +186,7 @@ li.subscription {
     transition: transform 80ms ease-in-out;
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.05);
+      background-color: rgba(255, 255, 255, 0.05);
     }
 
     .name {
@@ -162,7 +218,7 @@ li.subscription {
       flex-shrink: 0;
 
       &::before {
-        content: '$';
+        content: "$";
         font-size: 0.7em;
         opacity: 0.4;
         letter-spacing: 3px;
@@ -185,13 +241,13 @@ li.subscription {
 
   .subscription-line {
     height: 1px;
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.1);
     margin-bottom: 8px;
   }
 
   &.selected {
     .subscription-preview-card {
-      background-color: rgba(0, 0, 0, 0.05);
+      background-color: rgba(255, 255, 255, 0.1);
     }
 
     .subscription-line {
@@ -208,7 +264,7 @@ li.subscription {
 
 .header {
   display: flex;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5em;
   align-items: center;
 
   #show-menu-btn {
@@ -235,8 +291,8 @@ li.subscription {
 
   i {
     font-size: 64px;
-    color: green;
     margin-bottom: 2rem;
+    color: #fcfcfc;
   }
 }
 
@@ -250,7 +306,7 @@ li.subscription {
 
   .add-subscription-button {
     cursor: pointer;
-    background-color: green;
+    background-color: cadetblue;
     border-radius: 50%;
     padding: 16px;
     color: white;
