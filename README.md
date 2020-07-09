@@ -30,11 +30,14 @@ npm test
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
 # TODOs
+[] Fix dates going back a day on save - maybe save in DB as Unix Timestamp
+[] Year and day parsing for future payments
+[] Add sorting to payments
 [x] Delete subscription
 [x] Color the subscriptions in the dashboard accordingly
-[] [] Color text accordingly
 [x] HTML escapes
 [x] Price to decimal
 [] Tags
 [] Polish dashboard look and feel
+  [] Work on right form menu
 [] Handle removing error on lost focus for an error'd field's input

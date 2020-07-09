@@ -27,15 +27,27 @@
             :key="index"
             :class="{ selected: loadedSubscriptionIndex === index }"
           >
-            <div class="subscription-preview-card" @click="handleLoadSubscription(index)">
-              <span class="name">{{subscription.name}}</span>
-              <span class="date">{{subscription.paymentDates[0] | moment("dddd, MMMM Do YYYY")}}</span>
-              <span class="price">{{subscription.price.$numberDecimal}}</span>
-              <span class="color">
-                <div class="color-el" :style="{backgroundColor: subscription.color}"></div>
-              </span>
+            <div class="s-left">
+              <div class="subscription-preview-card" @click="handleLoadSubscription(index)">
+                <span class="name">{{subscription.name}}</span>
+                <span class="date">{{subscription.paymentDates[0] | moment("dddd, MMMM Do YYYY")}}</span>
+                <span class="price">{{subscription.price.$numberDecimal}}</span>
+              </div>
+              <div class="subscription-line" :style="{ backgroundColor: subscription.color} "></div>
             </div>
-            <div class="subscription-line"></div>
+            <div class="s-right">
+              <i class="fas fa-ellipsis-v" @click="handleOpenSubMenu(index)"></i>
+              <div class="options-menu" v-if="showOptionsMenuId === index">
+                <ul>
+                  <li>
+                    <i class="fa fa-tag"></i> Tags
+                  </li>
+                  <li @click="handleConfirmDelete(subscription._id)">
+                    <i class="fa fa-trash"></i> Delete
+                  </li>
+                </ul>
+              </div>
+            </div>
           </li>
         </ul>
       </div>
@@ -71,13 +83,16 @@ export default {
       isLoading: true,
       subscriptions: [],
       loadedSubscriptionIndex: -1,
-      showNewSubForm: false
+      showNewSubForm: false,
+      showOptionsMenuId: -1
     };
   },
   methods: {
     getPaymentDates: function({ firstPaymentDate, interval, duration }, index) {
       const date = new Date(firstPaymentDate);
       const upcomingPaymentsCount = 10;
+
+      // These should return future payment dates in unix timestamps
 
       switch (duration) {
         case "year":
@@ -113,7 +128,6 @@ export default {
             }
           }
 
-          console.log({ dates });
           return dates;
           break;
         case "day":
@@ -144,6 +158,7 @@ export default {
 
         this.subscriptions.push(...subscriptions);
 
+        this.showOptionsMenuId = -1;
         this.isLoading = false;
       } catch (err) {
         console.log(err);
@@ -153,6 +168,9 @@ export default {
       this.showNewSubForm = true;
       this.$emit("showItem");
     },
+    handleOpenSubMenu: function(i) {
+      this.showOptionsMenuId = i;
+    },
     toggleMenu: function() {
       this.$emit("toggleMenu", true);
     },
@@ -160,6 +178,20 @@ export default {
       this.loadedSubscriptionIndex = index;
       this.showNewSubForm = false;
       this.$emit("showItem");
+    },
+    handleConfirmDelete: async function(id) {
+      if (!confirm("Are you sure? Deleting a subscription is permanent."))
+        return;
+
+      try {
+        const subscription = await axios.delete(
+          `http://localhost:3000/api/subscription/${id}`
+        );
+
+        this.fetchSubscriptions();
+      } catch (err) {
+        console.log(err);
+      }
     }
   },
   components: {
@@ -173,14 +205,52 @@ export default {
 
 <style lang="scss">
 li.subscription {
-  .subscription-preview-card {
-    $card-height: 48px;
+  $card-height: 48px;
 
+  display: grid;
+  grid-template-columns: 1fr auto;
+  height: $card-height;
+  line-height: $card-height;
+  margin-bottom: 12px;
+
+  .s-right {
+    position: relative;
+
+    > i {
+      padding: 1em;
+      cursor: pointer;
+    }
+
+    .options-menu {
+      position: absolute;
+      line-height: 1;
+      font-size: 0.8rem;
+      top: $card-height + 12px;
+      right: -10px;
+      padding: 1em 0;
+      background-color: #333;
+      border-radius: 12px;
+      z-index: 5;
+
+      i {
+        padding: 0 12px 0 0;
+      }
+
+      li {
+        cursor: pointer;
+        width: 120px;
+        padding: 1em;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+  }
+
+  .subscription-preview-card {
     display: flex;
     align-items: center;
-    height: $card-height;
-    line-height: $card-height;
-    border-radius: 4px;
     padding: 0 12px;
     cursor: pointer;
     transition: transform 80ms ease-in-out;
@@ -198,7 +268,7 @@ li.subscription {
     }
 
     .date {
-      font-size: 0.7em;
+      font-size: 0.5em;
       opacity: 0.4;
       flex-basis: auto;
       text-align: right;
@@ -214,7 +284,7 @@ li.subscription {
       font-weight: bold;
       text-align: right;
       padding-left: 16px;
-      flex-basis: 92px;
+      flex-basis: 84px;
       flex-shrink: 0;
 
       &::before {
@@ -224,40 +294,16 @@ li.subscription {
         letter-spacing: 3px;
       }
     }
-
-    .color {
-      flex-basis: 32px;
-      padding-left: 12px;
-
-      div {
-        $size: 12px;
-
-        width: $size;
-        height: $size;
-        border-radius: $size / 2;
-      }
-    }
   }
 
   .subscription-line {
     height: 1px;
     background: rgba(255, 255, 255, 0.1);
-    margin-bottom: 8px;
   }
 
   &.selected {
     .subscription-preview-card {
       background-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .subscription-line {
-      visibility: hidden;
-    }
-  }
-
-  &:hover {
-    .subscription-line {
-      visibility: hidden;
     }
   }
 }
