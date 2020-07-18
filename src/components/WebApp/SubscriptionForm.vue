@@ -1,14 +1,14 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <!-- Price -->
-    <div class="field-wrapper">
+    <div id="price-wrapper" class="field-wrapper price-wrapper" :style="{backgroundColor: subscription.color}">
       <label for="price">Price</label>
       <div class="input-wrapper">
         <input
           id="price"
           type="number"
           step="0.01"
-          placeholder="19.99"
+          placeholder="0.00"
           v-model="subscription.price"
           autofocus
         />
@@ -19,10 +19,10 @@
       >{{formErrors.find(({field}) => field ==='price').msg}}</p>
     </div>
     <!-- Name -->
-    <div class="field-wrapper">
+    <div class="field-wrapper name-wrapper">
       <label for="name">Name</label>
       <div class="input-wrapper">
-        <input id="name" type="text" placeholder="Netflix" v-model="subscription.name" />
+        <input id="name" type="text" placeholder="e.g. Spotify" v-model="subscription.name" />
       </div>
       <p
         class="field-error"
@@ -30,13 +30,13 @@
       >{{formErrors.find(({field}) => field ==='name').msg}}</p>
     </div>
     <!-- Description -->
-    <div class="field-wrapper">
-      <label for="description">Description</label>
+    <div class="field-wrapper desc-wrapper">
+      <label for="description" class="optional">Description</label>
       <div class="input-wrapper">
         <input
           id="description"
           type="text"
-          placeholder="Watch movies and TV"
+          placeholder="e.g. Student plan"
           v-model="subscription.description"
         />
       </div>
@@ -45,8 +45,12 @@
         v-if="formErrors.find(({field}) => field === 'description')"
       >{{formErrors.find(({field}) => field ==='description').msg}}</p>
     </div>
-    <!-- Payment Date -->
+    <!-- Divider -->
     <div class="field-wrapper">
+      <hr class="divider" />
+    </div>
+    <!-- Payment Date -->
+    <div class="field-wrapper date-wrapper">
       <label for="firstPaymentDate">First Payment</label>
       <div class="input-wrapper">
         <input id="firstPaymentDate" type="date" v-model="subscription.firstPaymentDate" />
@@ -57,7 +61,7 @@
       >{{formErrors.find(({field}) => field ==='firstPaymentDate').msg}}</p>
     </div>
     <!-- Interval -->
-    <div class="field-wrapper">
+    <div class="field-wrapper interval-wrapper">
       <label for="interval">Interval</label>
       <div class="input-wrapper">
         <input id="interval" type="number" default="1" v-model="subscription.interval" />
@@ -68,7 +72,7 @@
       >{{formErrors.find(({field}) => field ==='interval').msg}}</p>
     </div>
     <!-- Duration -->
-    <div class="field-wrapper">
+    <div class="field-wrapper duration-wrapper">
       <label for="duration">Duration</label>
       <div class="input-wrapper">
         <select name="duration" id="duration" v-model="subscription.duration">
@@ -82,24 +86,12 @@
         v-if="formErrors.find(({field}) => field === 'duration')"
       >{{formErrors.find(({field}) => field ==='duration').msg}}</p>
     </div>
-    <!-- Payment Method -->
+    <!-- Divider -->
     <div class="field-wrapper">
-      <label for="paymentMethod">Payment Method</label>
-      <div class="input-wrapper">
-        <input
-          id="paymentMethod"
-          type="text"
-          placeholder="Checking Account"
-          v-model="subscription.paymentMethod"
-        />
-      </div>
-      <p
-        class="field-error"
-        v-if="formErrors.find(({field}) => field === 'paymentMethod')"
-      >{{formErrors.find(({field}) => field ==='paymentMethod').msg}}</p>
+      <hr class="divider" />
     </div>
     <!-- Color -->
-    <div class="field-wrapper">
+    <div class="field-wrapper color-wrapper">
       <label for="color">Color</label>
       <div class="input-wrapper">
         <input id="color" type="color" v-model="subscription.color" />
@@ -109,11 +101,32 @@
         v-if="formErrors.find(({field}) => field === 'note')"
       >{{formErrors.find(({field}) => field ==='note').msg}}</p>
     </div>
-    <!-- Note -->
-    <div class="field-wrapper">
-      <label for="note">Note</label>
+    <!-- Payment Method -->
+    <div class="field-wrapper method-wrapper">
+      <label for="paymentMethod" class="optional">Payment Method</label>
       <div class="input-wrapper">
-        <input id="note" type="text" placeholder="Student discount" v-model="subscription.note" />
+        <input
+          id="paymentMethod"
+          type="text"
+          placeholder="e.g. Checking Account"
+          v-model="subscription.paymentMethod"
+        />
+      </div>
+      <p
+        class="field-error"
+        v-if="formErrors.find(({field}) => field === 'paymentMethod')"
+      >{{formErrors.find(({field}) => field ==='paymentMethod').msg}}</p>
+    </div>
+    <!-- Note -->
+    <div class="field-wrapper note-wrapper">
+      <label for="note" class="optional">Note</label>
+      <div class="input-wrapper">
+        <input
+          id="note"
+          type="text"
+          placeholder="e.g. Student discount"
+          v-model="subscription.note"
+        />
       </div>
       <p
         class="field-error"
@@ -121,7 +134,7 @@
       >{{formErrors.find(({field}) => field ==='note').msg}}</p>
     </div>
     <!-- Submit -->
-    <div class="field-wrapper">
+    <div class="field-wrapper submit-wrapper">
       <button type="submit">{{this.isNewSubscription ? 'Add Subscription' : 'Update'}}</button>
     </div>
   </form>
@@ -232,3 +245,119 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+form {
+  font-size: 1rem;
+  display: grid;
+  grid-template-columns: 3fr 6fr;
+  grid-row-gap: 1em;
+  grid-column-gap: 1em;
+  max-width: 100%;
+  margin: 2em;
+
+  .field-wrapper {
+    grid-column: 1 / 3;
+  }
+
+  .interval-wrapper {
+    grid-column: 1 / 2;
+  }
+
+  .duration-wrapper {
+    grid-column: 2 / 3;
+  }
+
+  .divider {
+    border-bottom: none;
+    border-top-width: 1px;
+    border-color: rgba(255, 255, 255, 0.3);
+    margin: 0;
+  }
+}
+
+.field-wrapper {
+  label {
+    display: block;
+    margin-bottom: 0.4em;
+    color: #888;
+    font-size: 0.8em;
+    font-weight: bold;
+
+    &.optional:after {
+      content: " - optional";
+      color: #444;
+      font-weight: normal;
+    }
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select {
+    $height: 44px;
+
+    width: 100%;
+    border: none;
+    padding: 0.8em;
+    font-size: 0.8em;
+    background-color: #333;
+    color: #eee;
+    border-radius: 5px;
+    height: $height;
+    line-height: $height;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  input[type="number"] {
+    // Chrome, safari, edge, opera
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    -moz-appearance: textfield;
+
+    &::-webkit-input-placeholder {
+      color: transparentize($color: #eee, $amount: 0.5);
+    }
+  }
+}
+
+#price-wrapper {
+  width: 100%;
+  height: 200px;
+  background-color: #333;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  label {
+    display: none;
+  }
+
+  .input-wrapper {
+    width: 200px;
+
+    input {
+      width: 100%;
+      height: auto;
+      text-align: center;
+      background: none;
+      border: none;
+      font-size: 3em;
+      color: #eee;
+      padding: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}
+</style>

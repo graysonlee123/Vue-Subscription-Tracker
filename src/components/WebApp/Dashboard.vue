@@ -54,15 +54,12 @@
     </div>
     <div id="right">
       <div v-if="isLoading">Spinner</div>
-      <div v-else-if="showNewSubForm">
-        <subscription-form v-on:getSubscriptions="fetchSubscriptions" />
-      </div>
-      <div v-else-if="loadedSubscriptionIndex >= 0">
-        <subscription-form
-          v-bind:subscriptionProp="subscriptions[loadedSubscriptionIndex]"
-          v-on:getSubscriptions="fetchSubscriptions"
-        />
-      </div>
+      <subscription-form v-else-if="showNewSubForm" v-on:getSubscriptions="fetchSubscriptions" />
+      <subscription-form
+        v-else-if="loadedSubscriptionIndex >= 0"
+        v-bind:subscriptionProp="subscriptions[loadedSubscriptionIndex]"
+        v-on:getSubscriptions="fetchSubscriptions"
+      />
       <div class="no-subscription-container" v-else>
         <i class="fas fa-question-circle"></i>
         <p>Select a subscription to view its details, or add a new one.</p>
@@ -336,6 +333,7 @@ li.subscription {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 1em;
 
   i {
     font-size: 64px;

@@ -119,8 +119,10 @@ $menuColor: #27282a;
   top: 0;
   right: -1 * $rightWidthMobile;
   background-color: $backgroundColor;
-  padding: 1.2em;
+  padding: 0;
   border-left: $borderStyle;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #left {
