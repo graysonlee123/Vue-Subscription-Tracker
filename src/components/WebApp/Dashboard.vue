@@ -36,8 +36,8 @@
               <div class="subscription-line" :style="{ backgroundColor: subscription.color} "></div>
             </div>
             <div class="s-right">
-              <i class="fas fa-ellipsis-v" @click="handleOpenSubMenu(index)"></i>
-              <div class="options-menu" v-if="showOptionsMenuId === index">
+              <i class="fas fa-ellipsis-v" @click="toggleSubscriptionOptionsMenu(index)"></i>
+              <div class="options-menu" v-if="openedSubscriptionOptionsMenu === index">
                 <ul>
                   <li>
                     <i class="fa fa-tag"></i> Tags
@@ -84,7 +84,7 @@ export default {
       subscriptions: [],
       loadedSubscriptionIndex: -1,
       showNewSubForm: false,
-      showOptionsMenuId: -1
+      openedSubscriptionOptionsMenu: -1
     };
   },
   methods: {
@@ -158,7 +158,7 @@ export default {
 
         this.subscriptions.push(...subscriptions);
 
-        this.showOptionsMenuId = -1;
+        this.openedSubscriptionOptionsMenu = -1;
         this.isLoading = false;
       } catch (err) {
         console.log(err);
@@ -168,8 +168,8 @@ export default {
       this.showNewSubForm = true;
       this.$emit("showItem");
     },
-    handleOpenSubMenu: function(i) {
-      this.showOptionsMenuId = i;
+    toggleSubscriptionOptionsMenu: function(i) {
+      this.openedSubscriptionOptionsMenu === i ? this.openedSubscriptionOptionsMenu = -1 : this.openedSubscriptionOptionsMenu = i;
     },
     toggleMenu: function() {
       this.$emit("toggleMenu", true);
@@ -217,7 +217,9 @@ li.subscription {
     position: relative;
 
     > i {
-      padding: 1em;
+      font-size: 0.8em;
+      padding: 0 0.5em 0 1em;
+      color:rgba(255, 255, 255, 0.2);
       cursor: pointer;
     }
 
