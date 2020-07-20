@@ -1,4 +1,5 @@
 <template>
+<div class="form-container">
   <form @submit.prevent="handleSubmit">
     <!-- Price -->
     <div
@@ -12,6 +13,8 @@
           id="price"
           type="number"
           step="0.01"
+          min="0.00"
+          max="999.00"
           placeholder="0.00"
           v-model="subscription.price"
           v-on:blur="handlePriceBlur"
@@ -143,6 +146,7 @@
       <button type="submit">{{this.isNewSubscription ? 'Add Subscription' : 'Update'}}</button>
     </div>
   </form>
+</div>
 </template>
 
 <script>
@@ -262,6 +266,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.form-container {
+  height: 100%;
+  overflow-y: auto;
+}
+
 form {
   font-size: 1rem;
   display: grid;
@@ -356,7 +365,7 @@ form {
   }
 
   .input-wrapper {
-    width: 200px;
+    width: 240px;
     padding: 0 16px;
 
     input {
@@ -369,6 +378,7 @@ form {
       color: #eee;
       padding: 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 0;
 
       &:focus {
         outline: none;

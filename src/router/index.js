@@ -53,6 +53,12 @@ let router = new Router({
           component: Dashboard
         },
         {
+          path: "today",
+          name: "Today",
+          alias: "",
+          component: Today
+        },
+        {
           path: "account",
           name: "Account",
           component: Account

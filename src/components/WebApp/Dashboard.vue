@@ -40,29 +40,40 @@
             </div>
             <div class="s-right">
               <i class="fas fa-ellipsis-v" @click="toggleSubscriptionOptionsMenu(index)"></i>
-              <subscription-menu
-                v-if="openedSubscriptionOptionsMenu === index"
-                :subscription-id="subscription._id"
-                v-on:fetchSubscriptions="fetchSubscriptions"
-              />
+              <transition name="fade-up-short">
+                <subscription-menu
+                  v-if="openedSubscriptionOptionsMenu === index"
+                  :subscription-id="subscription._id"
+                  v-on:fetchSubscriptions="fetchSubscriptions"
+                />
+              </transition>
             </div>
           </li>
         </ul>
       </div>
     </div>
     <div id="right">
-      <div v-if="isLoading">Spinner</div>
-      <subscription-form v-else-if="showNewSubForm" v-on:fetchSubscriptions="fetchSubscriptions" />
-      <subscription-form
-        v-else-if="viewSubscriptionID != ''"
-        v-bind:subscriptionProp="subscriptions[subIndex]"
-        v-bind:index="subIndex"
-        v-on:fetchSubscriptions="fetchSubscriptions"
-      />
-      <div class="no-subscription-container" v-else>
-        <i class="fas fa-question-circle"></i>
-        <p>Select a subscription to view its details, or add a new one.</p>
-      </div>
+      <transition name="fade-up" mode="out-in">
+        <div v-if="isLoading" class="spinner-container">
+          <i class="spinner"></i>
+        </div>
+        <subscription-form
+          v-else-if="showNewSubForm"
+          v-on:fetchSubscriptions="fetchSubscriptions"
+          key="1"
+        />
+        <subscription-form
+          v-else-if="viewSubscriptionID != ''"
+          v-bind:subscriptionProp="subscriptions[subIndex]"
+          v-bind:index="subIndex"
+          v-on:fetchSubscriptions="fetchSubscriptions"
+          key="2"
+        />
+        <div class="no-subscription-container" v-else key="3">
+          <i class="fas fa-question-circle"></i>
+          <p>Select a subscription to view its details, or add a new one.</p>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -180,9 +191,12 @@ export default {
       this.$emit("toggleMenu", true);
     },
     handleLoadSubscription: function(id) {
-      this.viewSubscriptionID = id;
-      this.showNewSubForm = false;
-      this.$emit("showItem");
+      this.viewSubscriptionID = '';
+      setTimeout(() => {
+        this.viewSubscriptionID = id;
+        this.showNewSubForm = false;
+        this.$emit("showItem");
+      }, 10);
     }
   },
   components: {
@@ -194,7 +208,6 @@ export default {
   },
   computed: {
     subIndex: function() {
-
       //TODO: Rework this function
       let index = null;
 
@@ -344,4 +357,52 @@ li.subscription {
     color: white;
   }
 }
+
+.fade-up-leave-active,
+.fade-up-enter-active {
+  transition: transform 400ms ease-in-out, opacity 200ms ease;
+}
+
+.fade-up-enter {
+  transform: translateY(60px);
+  opacity: 0;
+}
+
+.fade-up-enter-to {
+  transform: translateY(0px);
+  opacity: 1;
+}
+.fade-up-leave {
+  transform: translateY(0px);
+  opacity: 1;
+}
+
+.fade-up-leave-to {
+  transform: translateY(60px);
+  opacity: 0;
+}
+
+.fade-up-short-leave-active,
+.fade-up-short-enter-active {
+  transition: transform 100ms ease-in-out, opacity 50ms ease;
+}
+
+.fade-up-short-enter {
+  transform: translateY(6px);
+  opacity: 0;
+}
+
+.fade-up-short-enter-to {
+  transform: translateY(0px);
+  opacity: 1;
+}
+
+.fade-up-short-leave {
+  opacity: 1;
+}
+
+.fade-up-short-leave-to {
+  opacity: 0;
+}
+
 </style>

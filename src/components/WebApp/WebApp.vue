@@ -3,10 +3,12 @@
     <div id="nav-menu" class="menu-container">
       <navigation />
     </div>
-    <router-view
-      @toggleMenu="() => this.showMenu ? this.showMenu = false : this.showMenu = true"
-      @showItem="() => this.showItemOnMobile = true"
-    />
+    <transition name="page" mode="out-in">
+      <router-view
+        @toggleMenu="() => this.showMenu ? this.showMenu = false : this.showMenu = true"
+        @showItem="() => this.showItemOnMobile = true"
+      />
+    </transition>
   </div>
 </template>
 
@@ -121,8 +123,7 @@ $menuColor: #27282a;
   background-color: $backgroundColor;
   padding: 0;
   border-left: $borderStyle;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 #left {
@@ -157,6 +158,45 @@ $menuColor: #27282a;
   #nav-background {
     z-index: 4;
     flex-grow: 1;
+  }
+}
+
+.spinner-container {
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.spinner {
+  border: 2px solid #fff;
+  border-top: 2px solid #333;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  animation: spin 1s ease-in-out infinite;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transform: opacity 300ms ease;
+}
+
+.page-enter-to,
+.page-leave {
+  opacity: 1;
+}
+
+.page-enter,
+.page-leave-to {
+  opacity: 0;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 
