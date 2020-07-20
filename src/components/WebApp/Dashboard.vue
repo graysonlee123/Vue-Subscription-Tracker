@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <main id="page-wrapper">
     <div id="left">
       <div class="new-subscription-wrapper">
         <div class="add-subscription-button" @click="handleAddNewForm">
@@ -75,7 +75,7 @@
         </div>
       </transition>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>

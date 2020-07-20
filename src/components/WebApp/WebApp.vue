@@ -1,11 +1,14 @@
 <template>
-  <div id="app-container">
-    <div id="nav-menu" class="menu-container">
-      <navigation />
-    </div>
+  <div id="app-container" :class="{ leftMenuOpened: showLeftNav }">
+    <transition name="slideToRight" mode="in-out">
+      <navigation
+        v-if="showLeftNav"
+        @toggleMenu="() => this.showLeftNav ? this.showLeftNav = false : this.showLeftNav = true"
+      />
+    </transition>
     <transition name="page" mode="out-in">
       <router-view
-        @toggleMenu="() => this.showMenu ? this.showMenu = false : this.showMenu = true"
+        @toggleMenu="() => this.showLeftNav ? this.showLeftNav = false : this.showLeftNav = true"
         @showItem="() => this.showItemOnMobile = true"
       />
     </transition>
@@ -24,7 +27,8 @@ export default {
   data: function() {
     return {
       showMenu: false,
-      showItemOnMobile: false
+      showItemOnMobile: false,
+      showLeftNav: false
     };
   },
   methods: {},
@@ -32,17 +36,17 @@ export default {
     navigation: Navigation
   },
   watch: {
-    showMenu: function(bool) {
-      switch (bool) {
-        case true:
-          document.getElementById("app-container").classList.add("show-nav");
-          break;
-        case false:
-        default:
-          document.getElementById("app-container").classList.remove("show-nav");
-          break;
-      }
-    },
+    // showMenu: function(bool) {
+    //   switch (bool) {
+    //     case true:
+    //       document.getElementById("app-container").classList.add("show-nav");
+    //       break;
+    //     case false:
+    //     default:
+    //       document.getElementById("app-container").classList.remove("show-nav");
+    //       break;
+    //   }
+    // },
     showItemOnMobile: function(bool) {
       switch (bool) {
         case true:
@@ -59,32 +63,28 @@ export default {
   },
   created: function() {
     // Listen for menu closures
-
-    $(document).on("click", event => {
-      // ? Needs to be an arrow function to
-      // ? retain binding of this to vue component
-      if (
-        $(window).width() <= desktopBreak &&
-        !$(event.target).closest(".menu-container").length &&
-        !$(event.target).closest("#show-menu-btn").length
-      ) {
-        this.showMenu = false;
-      }
-
-      if (
-        !$(event.target).closest("#right").length &&
-        !$(event.target).closest(".subscription-preview-card").length &&
-        !$(event.target).closest(".new-subscription-wrapper").length
-      ) {
-        this.showItemOnMobile = false;
-      }
-    });
-
+    // $(document).on("click", event => {
+    //   // ? Needs to be an arrow function to
+    //   // ? retain binding of this to vue component
+    //   if (
+    //     $(window).width() <= desktopBreak &&
+    //     !$(event.target).closest(".menu-container").length &&
+    //     !$(event.target).closest("#show-menu-btn").length
+    //   ) {
+    //     this.showMenu = false;
+    //   }
+    //   if (
+    //     !$(event.target).closest("#right").length &&
+    //     !$(event.target).closest(".subscription-preview-card").length &&
+    //     !$(event.target).closest(".new-subscription-wrapper").length
+    //   ) {
+    //     this.showItemOnMobile = false;
+    //   }
+    // });
     // Initial check for desktop or mobile
-
-    if ($(window).width() > desktopBreak) {
-      this.showMenu = true;
-    }
+    // if ($(window).width() > desktopBreak) {
+    //   this.showMenu = true;
+    // }
   }
 };
 </script>
@@ -100,6 +100,10 @@ $borderStyle: 1px solid grey;
 $backgroundColor: #1c1d1f;
 $menuColor: #27282a;
 
+body {
+  background-color: $backgroundColor;
+}
+
 #app-container {
   height: 100%;
   color: #fafafa;
@@ -113,13 +117,16 @@ $menuColor: #27282a;
   }
 }
 
+#page-wrapper {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
 #right {
   font-size: 1rem;
-  width: $rightWidthMobile;
   height: 100%;
-  position: fixed;
-  top: 0;
-  right: -1 * $rightWidthMobile;
   background-color: $backgroundColor;
   padding: 0;
   border-left: $borderStyle;
@@ -128,11 +135,6 @@ $menuColor: #27282a;
 
 #left {
   font-size: 1rem;
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
   background-color: $backgroundColor;
   padding: 1.2em;
 }
@@ -141,15 +143,13 @@ $menuColor: #27282a;
   font-size: 0.8rem;
   width: $navWidth;
   height: 100%;
-  position: absolute;
-  top: 0;
-  left: -1 * 100%;
   z-index: 5;
-  transition: left 300ms ease;
   display: flex;
   border-right: $borderStyle;
   padding: 1rem;
   background: $menuColor;
+  position: absolute;
+  left: 0;
 
   nav {
     height: 100%;
@@ -160,6 +160,8 @@ $menuColor: #27282a;
     flex-grow: 1;
   }
 }
+
+// Global Stuff
 
 .spinner-container {
   height: 100%;
@@ -176,9 +178,11 @@ $menuColor: #27282a;
   animation: spin 1s ease-in-out infinite;
 }
 
+// Transitions
+
 .page-enter-active,
 .page-leave-active {
-  transform: opacity 300ms ease;
+  transition: opacity 300ms ease;
 }
 
 .page-enter-to,
@@ -188,6 +192,23 @@ $menuColor: #27282a;
 
 .page-enter,
 .page-leave-to {
+  opacity: 0;
+}
+
+.slideToRight-enter-active,
+.slideToRight-leave-active {
+  transition: transform 200ms ease, opacity 100ms ease-in-out;
+}
+
+.slideToRight-enter-to,
+.slideToRight-leave {
+  transform: translateX(0px);
+  opacity: 1;
+}
+
+.slideToRight-enter,
+.slideToRight-leave-to {
+  transform: translateX(-1 * $navWidth);
   opacity: 0;
 }
 
@@ -201,20 +222,10 @@ $menuColor: #27282a;
 }
 
 @media screen and (min-width: 767px) {
-  .show-nav {
-    #left {
-      left: $navWidth;
-      width: calc((100% - #{$rightWidthDesktop}) - #{$navWidth});
+  #app-container.leftMenuOpened {
+    #page-wrapper {
+      padding-left: $navWidth;
     }
-  }
-
-  #left {
-    width: 100% - $rightWidthDesktop;
-  }
-
-  #right {
-    width: $rightWidthDesktop;
-    right: 0;
   }
 }
 </style>

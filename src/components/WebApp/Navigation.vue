@@ -1,6 +1,7 @@
 <template>
-  <nav>
+  <nav id="nav-menu" class="menu-container">
     <ul>
+      <li @click="handleToggleMenu" class="close">Close Menu</li>
       <li>
         <router-link to="/app/dashboard">Dashboard</router-link>
       </li>
@@ -24,6 +25,9 @@ export default {
       this.$store.dispatch("logout").finally(() => {
         this.$router.push("/login");
       });
+    },
+    handleToggleMenu: function() {
+      this.$emit("toggleMenu", false);
     }
   }
 };
