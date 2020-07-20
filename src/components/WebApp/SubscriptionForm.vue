@@ -1,7 +1,11 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <!-- Price -->
-    <div id="price-wrapper" class="field-wrapper price-wrapper" :style="{backgroundColor: subscription.color}">
+    <div
+      id="price-wrapper"
+      class="field-wrapper price-wrapper"
+      :style="{backgroundColor: subscription.color}"
+    >
       <label for="price">Price</label>
       <div class="input-wrapper">
         <input
@@ -10,6 +14,7 @@
           step="0.01"
           placeholder="0.00"
           v-model="subscription.price"
+          v-on:blur="handlePriceBlur"
           autofocus
         />
       </div>
@@ -147,7 +152,14 @@ import moment from "moment";
 import { formErrors } from "../../mixins/formErrors";
 
 export default {
-  props: ["subscriptionProp"],
+  props: {
+    subscriptionProp: {
+      type: Object
+    },
+    index: {
+      type: Number
+    }
+  },
   data: function() {
     return {
       subscription: {
@@ -221,18 +233,21 @@ export default {
             "http://localhost:3000/api/subscription",
             data
           );
+          this.$emit("fetchSubscriptions", post.data.subscription._id);
         } else {
           const update = await axios.post(
             `http://localhost:3000/api/subscription/${this.subscriptionProp._id}`,
             data
           );
+          this.$emit("fetchSubscriptions", update.data.subscription._id);
         }
-
-        this.$emit("getSubscriptions");
       } catch (err) {
         console.log(err);
         this.addFormError(err, "price");
       }
+    },
+    handlePriceBlur: function() {
+      this.subscription.price = parseFloat(this.subscription.price).toFixed(2);
     }
   },
   watch: {
@@ -342,6 +357,7 @@ form {
 
   .input-wrapper {
     width: 200px;
+    padding: 0 16px;
 
     input {
       width: 100%;

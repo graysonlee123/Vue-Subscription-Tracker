@@ -25,10 +25,13 @@
             class="subscription"
             v-for="(subscription, index) in subscriptions"
             :key="index"
-            :class="{ selected: loadedSubscriptionIndex === index }"
+            :class="{ selected: viewSubscriptionID === index }"
           >
             <div class="s-left">
-              <div class="subscription-preview-card" @click="handleLoadSubscription(index)">
+              <div
+                class="subscription-preview-card"
+                @click="handleLoadSubscription(subscription._id)"
+              >
                 <span class="name">{{subscription.name}}</span>
                 <span class="date">{{subscription.paymentDates[0] | moment("dddd, MMMM Do YYYY")}}</span>
                 <span class="price">{{subscription.price.$numberDecimal}}</span>
@@ -37,16 +40,11 @@
             </div>
             <div class="s-right">
               <i class="fas fa-ellipsis-v" @click="toggleSubscriptionOptionsMenu(index)"></i>
-              <div class="options-menu" v-if="openedSubscriptionOptionsMenu === index">
-                <ul>
-                  <li>
-                    <i class="fa fa-tag"></i> Tags
-                  </li>
-                  <li @click="handleConfirmDelete(subscription._id)">
-                    <i class="fa fa-trash"></i> Delete
-                  </li>
-                </ul>
-              </div>
+              <subscription-menu
+                v-if="openedSubscriptionOptionsMenu === index"
+                :subscription-id="subscription._id"
+                v-on:fetchSubscriptions="fetchSubscriptions"
+              />
             </div>
           </li>
         </ul>
@@ -54,11 +52,12 @@
     </div>
     <div id="right">
       <div v-if="isLoading">Spinner</div>
-      <subscription-form v-else-if="showNewSubForm" v-on:getSubscriptions="fetchSubscriptions" />
+      <subscription-form v-else-if="showNewSubForm" v-on:fetchSubscriptions="fetchSubscriptions" />
       <subscription-form
-        v-else-if="loadedSubscriptionIndex >= 0"
-        v-bind:subscriptionProp="subscriptions[loadedSubscriptionIndex]"
-        v-on:getSubscriptions="fetchSubscriptions"
+        v-else-if="viewSubscriptionID != ''"
+        v-bind:subscriptionProp="subscriptions[subIndex]"
+        v-bind:index="subIndex"
+        v-on:fetchSubscriptions="fetchSubscriptions"
       />
       <div class="no-subscription-container" v-else>
         <i class="fas fa-question-circle"></i>
@@ -70,6 +69,7 @@
 
 <script>
 import AddSubscriptionForm from "./SubscriptionForm";
+import SubscriptionMenu from "./SubscriptionMenu";
 import axios from "axios";
 import { EventBus } from "../../EventBus";
 import moment from "moment";
@@ -78,8 +78,10 @@ export default {
   data: function() {
     return {
       isLoading: true,
+      // User's subscriptions
       subscriptions: [],
-      loadedSubscriptionIndex: -1,
+      // ID of loaded subscription
+      viewSubscriptionID: "",
       showNewSubForm: false,
       openedSubscriptionOptionsMenu: -1
     };
@@ -133,17 +135,19 @@ export default {
           break;
       }
     },
-    fetchSubscriptions: async function() {
+    fetchSubscriptions: async function(displaySubId = "") {
       try {
         this.isLoading = true;
-        this.loadedSubscriptionIndex = -1;
+        this.viewSubscriptionID = "";
         this.subscriptions = [];
 
         const res = await axios.get("http://localhost:3000/api/subscription");
         const subscriptions = res.data.subscriptions;
 
         if (!subscriptions) {
-          return (this.showNewSubForm = true);
+          this.showNewSubForm = true;
+          this.isLoading = false;
+          return;
         }
 
         subscriptions.forEach((subscription, index) => {
@@ -155,7 +159,9 @@ export default {
 
         this.subscriptions.push(...subscriptions);
 
+        this.showNewSubForm = false;
         this.openedSubscriptionOptionsMenu = -1;
+        this.viewSubscriptionID = displaySubId;
         this.isLoading = false;
       } catch (err) {
         console.log(err);
@@ -166,49 +172,55 @@ export default {
       this.$emit("showItem");
     },
     toggleSubscriptionOptionsMenu: function(i) {
-      this.openedSubscriptionOptionsMenu === i ? this.openedSubscriptionOptionsMenu = -1 : this.openedSubscriptionOptionsMenu = i;
+      this.openedSubscriptionOptionsMenu === i
+        ? (this.openedSubscriptionOptionsMenu = -1)
+        : (this.openedSubscriptionOptionsMenu = i);
     },
     toggleMenu: function() {
       this.$emit("toggleMenu", true);
     },
-    handleLoadSubscription: function(index) {
-      this.loadedSubscriptionIndex = index;
+    handleLoadSubscription: function(id) {
+      this.viewSubscriptionID = id;
       this.showNewSubForm = false;
       this.$emit("showItem");
-    },
-    handleConfirmDelete: async function(id) {
-      if (!confirm("Are you sure? Deleting a subscription is permanent."))
-        return;
-
-      try {
-        const subscription = await axios.delete(
-          `http://localhost:3000/api/subscription/${id}`
-        );
-
-        this.fetchSubscriptions();
-      } catch (err) {
-        console.log(err);
-      }
     }
   },
   components: {
-    subscriptionForm: AddSubscriptionForm
+    subscriptionForm: AddSubscriptionForm,
+    subscriptionMenu: SubscriptionMenu
   },
   created: function() {
     this.fetchSubscriptions();
+  },
+  computed: {
+    subIndex: function() {
+
+      //TODO: Rework this function
+      let index = null;
+
+      const sub = this.subscriptions.find((sub, i) => {
+        if (sub._id === this.viewSubscriptionID) {
+          index = i;
+          return true;
+        }
+      });
+
+      return index;
+    }
   }
 };
 </script>
 
 <style lang="scss">
 li.subscription {
-  $card-height: 48px;
+  $card-height: 36px;
 
   display: grid;
   grid-template-columns: 1fr auto;
   height: $card-height;
   line-height: $card-height;
   margin-bottom: 12px;
+  font-size: 0.9rem;
 
   .s-right {
     position: relative;
@@ -216,34 +228,8 @@ li.subscription {
     > i {
       font-size: 0.8em;
       padding: 0 0.5em 0 1em;
-      color:rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.2);
       cursor: pointer;
-    }
-
-    .options-menu {
-      position: absolute;
-      line-height: 1;
-      font-size: 0.8rem;
-      top: $card-height + 12px;
-      right: -10px;
-      padding: 1em 0;
-      background-color: #333;
-      border-radius: 12px;
-      z-index: 5;
-
-      i {
-        padding: 0 12px 0 0;
-      }
-
-      li {
-        cursor: pointer;
-        width: 120px;
-        padding: 1em;
-
-        &:hover {
-          background-color: rgba(255, 255, 255, 0.1);
-        }
-      }
     }
   }
 

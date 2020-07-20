@@ -38,6 +38,13 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 [x] HTML escapes
 [x] Price to decimal
 [] Tags
-[] Polish dashboard look and feel
-  [] Work on right form menu
+[x] Polish dashboard look and feel
+  [x] Work on right form menu
 [] Handle removing error on lost focus for an error'd field's input
+[] animations
+[] custom color picker
+[] custom date picker
+[] left sidebar items
+[] account page
+[] settings page
+[] prices aren't decimals anymore
