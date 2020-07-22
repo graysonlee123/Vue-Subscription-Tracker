@@ -30,21 +30,24 @@ npm test
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
 # TODOs
+[x] Empty dashboard 
+[x] Update subscriptions in dashboard main component when a subscription is updated
+[] reintegrate new subscription form
+[] Make a proxy for server? For easier deployment
 [] Fix dates going back a day on save - maybe save in DB as Unix Timestamp
 [] Year and day parsing for future payments
 [] Add sorting to payments
-[x] Delete subscription
-[x] Color the subscriptions in the dashboard accordingly
-[x] HTML escapes
-[x] Price to decimal
-[] Tags
-[x] Polish dashboard look and feel
-  [x] Work on right form menu
+[] account page - full screen route
+[] settings page - integrate with account page
 [] Handle removing error on lost focus for an error'd field's input
 [] animations
 [] custom color picker
 [] custom date picker
 [] left sidebar items
-[] account page
-[] settings page
-[] prices aren't decimals anymore
+[] Tags
+[x] Delete subscription
+[x] Color the subscriptions in the dashboard accordingly
+[x] HTML escapes
+[x] Price to decimal
+[x] Polish dashboard look and feel
+  [x] Work on right form menu

@@ -7,7 +7,9 @@ import Login from "@/components/Auth/Login";
 import Register from "@/components/Auth/Register";
 import WebApp from "@/components/WebApp/WebApp";
 import Dashboard from "@/components/WebApp/Dashboard";
+import PickASubscription from "@/components/WebApp/PickASubscription";
 import SubscriptionForm from "@/components/WebApp/SubscriptionForm";
+import NewSubscriptionForm from "@/components/WebApp/NewSubscriptionForm";
 import Account from "@/components/WebApp/Account";
 import Settings from "@/components/WebApp/Settings";
 import catchAll from "@/components/404";
@@ -50,9 +52,22 @@ let router = new Router({
         {
           path: "dashboard",
           name: "Dashboard",
-          alias: "",
           component: Dashboard,
           children: [
+            {
+              path: "",
+              name: "No Subscription Loaded",
+              component: PickASubscription
+            },
+            {
+              path: "subscription",
+              redirect: "/app/dashboard"
+            },
+            {
+              path: "subscription/new",
+              name: "New Subscription",
+              component: NewSubscriptionForm
+            },
             {
               path: "subscription/:id",
               name: "Subscription",

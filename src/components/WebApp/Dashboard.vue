@@ -2,9 +2,9 @@
   <main id="page-wrapper">
     <div id="left">
       <div class="new-subscription-wrapper">
-        <div class="add-subscription-button" @click="handleAddNewForm">
+        <router-link to="/app/dashboard/subscription/new" class="add-subscription-button">
           <i class="fas fa-plus"></i>
-        </div>
+        </router-link>
       </div>
       <div class="header">
         <span id="show-menu-btn" @click="toggleMenu">
@@ -23,27 +23,27 @@
         <ul v-else>
           <li
             class="subscription"
-            v-for="(subscription, index) in subscriptions"
+            v-for="({_id: id, name, paymentDates, price, color}, index) in subscriptions"
             :key="index"
-            :class="{ selected: viewSubscriptionID === index }"
+            :class="{ selected: id === loadedSubscriptionId }"
           >
             <div class="s-left">
               <div
                 class="subscription-preview-card"
-                @click="handleLoadSubscription(subscription._id)"
+                @click="handleLoadSubscription(id)"
               >
-                <span class="name">{{subscription.name}}</span>
-                <span class="date">{{subscription.paymentDates[0] | moment("dddd, MMMM Do YYYY")}}</span>
-                <span class="price">{{subscription.price.$numberDecimal}}</span>
+                <span class="name">{{name}}</span>
+                <span class="date">{{paymentDates[0] | moment("dddd, MMMM Do YYYY")}}</span>
+                <span class="price">{{price}}</span>
               </div>
-              <div class="subscription-line" :style="{ backgroundColor: subscription.color} "></div>
+              <div class="subscription-line" :style="{ backgroundColor: color} "></div>
             </div>
             <div class="s-right">
-              <i class="fas fa-ellipsis-v" @click="toggleSubscriptionOptionsMenu(index)"></i>
+              <i class="fas fa-ellipsis-v" @click="toggleSubscriptionOptionsMenu(id)"></i>
               <transition name="fade-up-short">
                 <subscription-menu
-                  v-if="openedSubscriptionOptionsMenu === index"
-                  :subscription-id="subscription._id"
+                  v-if="openedSubscriptionOptionsMenu === id"
+                  :subscription-id="id"
                   v-on:fetchSubscriptions="fetchSubscriptions"
                 />
               </transition>
@@ -53,53 +53,34 @@
       </div>
     </div>
     <div id="right">
-      <!-- <transition name="fade-up" mode="out-in">
-        <div v-if="isLoading" class="spinner-container">
-          <i class="spinner"></i>
-        </div>
-        <subscription-form
-          v-else-if="showNewSubForm"
-          v-on:fetchSubscriptions="fetchSubscriptions"
-          key="1"
-        />
-        <subscription-form
-          v-else-if="viewSubscriptionID != ''"
-          v-bind:subscriptionProp="subscriptions[subIndex]"
-          v-bind:index="subIndex"
-          v-on:fetchSubscriptions="fetchSubscriptions"
-          key="2"
-        />
-        <div class="no-subscription-container" v-else key="3">
-          <i class="fas fa-question-circle"></i>
-          <p>Select a subscription to view its details, or add a new one.</p>
-        </div>
-      </transition> -->
-      <router-view></router-view>
+      <transition name="fade-up" mode="out-in">
+        <router-view @refreshSubscriptions="fetchSubscriptions"></router-view>
+      </transition>
     </div>
   </main>
 </template>
 
 <script>
-import AddSubscriptionForm from "./SubscriptionForm";
 import SubscriptionMenu from "./SubscriptionMenu";
 import axios from "axios";
 import { EventBus } from "../../EventBus";
 import moment from "moment";
 
 export default {
-  data: function() {
+  data: function () {
     return {
       isLoading: true,
       // User's subscriptions
       subscriptions: [],
       // ID of loaded subscription
-      viewSubscriptionID: "",
-      showNewSubForm: false,
-      openedSubscriptionOptionsMenu: -1
+      openedSubscriptionOptionsMenu: false,
     };
   },
   methods: {
-    getPaymentDates: function({ firstPaymentDate, interval, duration }, index) {
+    getPaymentDates: function (
+      { firstPaymentDate, interval, duration },
+      index
+    ) {
       const date = new Date(firstPaymentDate);
       const upcomingPaymentsCount = 10;
 
@@ -147,10 +128,9 @@ export default {
           break;
       }
     },
-    fetchSubscriptions: async function(displaySubId = "") {
+    fetchSubscriptions: async function () {
       try {
         this.isLoading = true;
-        this.viewSubscriptionID = "";
         this.subscriptions = [];
 
         const res = await axios.get("http://localhost:3000/api/subscription");
@@ -172,51 +152,38 @@ export default {
         this.subscriptions.push(...subscriptions);
 
         this.showNewSubForm = false;
-        this.openedSubscriptionOptionsMenu = -1;
-        this.viewSubscriptionID = displaySubId;
+        this.openedSubscriptionOptionsMenu = false;
         this.isLoading = false;
       } catch (err) {
         console.log(err);
       }
     },
-    handleAddNewForm: function() {
-      this.showNewSubForm = true;
-      this.$emit("showItem");
+    toggleSubscriptionOptionsMenu: function (id) {
+      this.openedSubscriptionOptionsMenu === id
+        ? (this.openedSubscriptionOptionsMenu = false)
+        : (this.openedSubscriptionOptionsMenu = id);
     },
-    toggleSubscriptionOptionsMenu: function(i) {
-      this.openedSubscriptionOptionsMenu === i
-        ? (this.openedSubscriptionOptionsMenu = -1)
-        : (this.openedSubscriptionOptionsMenu = i);
-    },
-    toggleMenu: function() {
+    toggleMenu: function () {
       this.$emit("toggleMenu", true);
     },
-    handleLoadSubscription: function(id) {    
-      this.$router.push('/app/dashboard/subscription/' + id);
+    handleLoadSubscription: function (id) {
+      this.$router.push("/app/dashboard/subscription/" + id);
       this.showNewSubForm = false;
       this.$emit("showItem");
-    }
+    },
   },
   components: {
-    subscriptionForm: AddSubscriptionForm,
-    subscriptionMenu: SubscriptionMenu
+    subscriptionMenu: SubscriptionMenu,
   },
-  created: function() {
+  created: function () {
     this.fetchSubscriptions();
   },
   computed: {
-    subIndex: function() {
-      //TODO: Rework this function
-      let index = null;
-
-      const sub = this.subscriptions.find((sub, i) => {
-        if (sub._id === this.viewSubscriptionID) {
-          index = i;
-          return true;
-        }
-      });
-
-      return index;
+    loadedSubscriptionId: function() {
+      const data = this.$route.params;
+      
+      if (data.id) return data.id;
+      else return false;
     }
   }
 };
@@ -324,21 +291,6 @@ li.subscription {
   }
 }
 
-.no-subscription-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1em;
-
-  i {
-    font-size: 64px;
-    margin-bottom: 2rem;
-    color: #fcfcfc;
-  }
-}
-
 // Add Subscription Button
 
 .new-subscription-wrapper {
@@ -348,11 +300,13 @@ li.subscription {
   right: 0;
 
   .add-subscription-button {
+    display: block;
+    opacity: 1;
+    color: white;
     cursor: pointer;
     background-color: cadetblue;
     border-radius: 50%;
     padding: 16px;
-    color: white;
   }
 }
 
@@ -402,5 +356,4 @@ li.subscription {
 .fade-up-short-leave-to {
   opacity: 0;
 }
-
 </style>

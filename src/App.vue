@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view />
+    <transition name="page-transitions" mode="out-in">
+      <router-view />
+    </transition>
   </div>
 </template>
 
@@ -103,6 +105,7 @@ html {
 
 body {
   font-family: $body-family;
+  color: #fff;
   overflow: hidden;
 }
 
@@ -190,5 +193,22 @@ form.auth-form {
     font-size: 0.8rem;
     color: red;
   }
+}
+
+.page-transitions-enter-active,
+.page-transitions-leave-active {
+  transition: transform 600ms ease-out, opacity 300ms ease-in;
+}
+
+.page-transitions-enter-to,
+.page-transitions-leave {
+  transform: translateX(0px);
+  opacity: 1;
+}
+
+.page-transitions-enter,
+.page-transitions-leave-to {
+  transform: translateX(120px);
+  opacity: 0;
 }
 </style>

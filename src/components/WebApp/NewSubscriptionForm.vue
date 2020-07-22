@@ -4,7 +4,7 @@
       <div v-if="isLoading" class="spinner-container">
         <i class="spinner"></i>
       </div>
-      <form v-else @submit.prevent="updateSubscription">
+      <form v-else @submit.prevent="postSubscription">
         <!-- Price -->
         <div
           id="price-wrapper"
@@ -147,7 +147,7 @@
         </div>
         <!-- Submit -->
         <div class="field-wrapper submit-wrapper">
-          <button type="submit">Update</button>
+          <button type="submit">Add Subscription</button>
         </div>
       </form>
     </transition>
@@ -161,74 +161,52 @@ import moment from "moment";
 import { formErrors } from "../../mixins/formErrors";
 
 export default {
-  props: {
-    id: {
-      type: String,
-      required: true
-    }
-  },
-  data: function() {
+  data: function () {
     return {
-      isLoading: true,
-      subscription: null,
-      formErrors: []
+      isLoading: false,
+      subscription: {
+        price: "",
+        name: "",
+        description: "",
+        firstPaymentDate: "",
+        interval: "1",
+        duration: "month",
+        color: "#326FBD",
+        paymentMethod: "",
+        note: "",
+      },
+      formErrors: [],
     };
   },
   mixins: [formErrors],
   methods: {
-    fetchSubscription: async function() {
-      this.isLoading = true;
-      this.subscription = null;
-
-      try {
-        const req = await axios.get(
-          `http://localhost:3000/api/subscription/${this.id}`
-        );
-
-        this.subscription = req.data.subscription;
-        this.isLoading = false;
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    updateSubscription: async function() {
+    postSubscription: async function () {
       this.formErrors = [];
       this.isLoading = true;
 
       try {
         const data = {
-          ...this.subscription
+          ...this.subscription,
         };
 
         const res = await axios.post(
-          `http://localhost:3000/api/subscription/${this.id}`,
+          `http://localhost:3000/api/subscription/`,
           data
         );
 
-        this.subscription = res.data.subscription;
         this.isLoading = false;
 
         this.$emit("refreshSubscriptions");
+        this.$router.push(`/app/dashboard/subscription/${res.data.subscription._id}`);
       } catch (err) {
         console.log(err);
         this.isLoading = false;
         this.addFormError(err, "price");
       }
     },
-    decodeHtml: function(html) {
-      let txt = document.createElement("textarea");
-      txt.innerHTML = html;
-      return txt.value;
-    },
-    handlePriceBlur: function() {
+    handlePriceBlur: function () {
       this.subscription.price = parseFloat(this.subscription.price).toFixed(2);
-    }
-  },
-  created: function() {
-    this.fetchSubscription();
-  },
-  watch: {
-    '$route': 'fetchSubscription'
+    },
   }
 };
 </script>
