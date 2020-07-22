@@ -1,152 +1,157 @@
 <template>
-<div class="form-container">
-  <form @submit.prevent="handleSubmit">
-    <!-- Price -->
-    <div
-      id="price-wrapper"
-      class="field-wrapper price-wrapper"
-      :style="{backgroundColor: subscription.color}"
-    >
-      <label for="price">Price</label>
-      <div class="input-wrapper">
-        <input
-          id="price"
-          type="number"
-          step="0.01"
-          min="0.00"
-          max="999.00"
-          placeholder="0.00"
-          v-model="subscription.price"
-          v-on:blur="handlePriceBlur"
-          autofocus
-        />
+  <div class="form-container">
+    <transition name="fade-up" mode="out-in">
+      <div v-if="isLoading" class="spinner-container">
+        <i class="spinner"></i>
       </div>
-      <p
-        class="field-error"
-        v-if="formErrors.find(({field}) => field === 'price')"
-      >{{formErrors.find(({field}) => field ==='price').msg}}</p>
-    </div>
-    <!-- Name -->
-    <div class="field-wrapper name-wrapper">
-      <label for="name">Name</label>
-      <div class="input-wrapper">
-        <input id="name" type="text" placeholder="e.g. Spotify" v-model="subscription.name" />
-      </div>
-      <p
-        class="field-error"
-        v-if="formErrors.find(({field}) => field === 'name')"
-      >{{formErrors.find(({field}) => field ==='name').msg}}</p>
-    </div>
-    <!-- Description -->
-    <div class="field-wrapper desc-wrapper">
-      <label for="description" class="optional">Description</label>
-      <div class="input-wrapper">
-        <input
-          id="description"
-          type="text"
-          placeholder="e.g. Student plan"
-          v-model="subscription.description"
-        />
-      </div>
-      <p
-        class="field-error"
-        v-if="formErrors.find(({field}) => field === 'description')"
-      >{{formErrors.find(({field}) => field ==='description').msg}}</p>
-    </div>
-    <!-- Divider -->
-    <div class="field-wrapper">
-      <hr class="divider" />
-    </div>
-    <!-- Payment Date -->
-    <div class="field-wrapper date-wrapper">
-      <label for="firstPaymentDate">First Payment</label>
-      <div class="input-wrapper">
-        <input id="firstPaymentDate" type="date" v-model="subscription.firstPaymentDate" />
-      </div>
-      <p
-        class="field-error"
-        v-if="formErrors.find(({field}) => field === 'firstPaymentDate')"
-      >{{formErrors.find(({field}) => field ==='firstPaymentDate').msg}}</p>
-    </div>
-    <!-- Interval -->
-    <div class="field-wrapper interval-wrapper">
-      <label for="interval">Interval</label>
-      <div class="input-wrapper">
-        <input id="interval" type="number" default="1" v-model="subscription.interval" />
-      </div>
-      <p
-        class="field-error"
-        v-if="formErrors.find(({field}) => field === 'interval')"
-      >{{formErrors.find(({field}) => field ==='interval').msg}}</p>
-    </div>
-    <!-- Duration -->
-    <div class="field-wrapper duration-wrapper">
-      <label for="duration">Duration</label>
-      <div class="input-wrapper">
-        <select name="duration" id="duration" v-model="subscription.duration">
-          <option value="day">Day</option>
-          <option value="month">Month</option>
-          <option value="year">Year</option>
-        </select>
-      </div>
-      <p
-        class="field-error"
-        v-if="formErrors.find(({field}) => field === 'duration')"
-      >{{formErrors.find(({field}) => field ==='duration').msg}}</p>
-    </div>
-    <!-- Divider -->
-    <div class="field-wrapper">
-      <hr class="divider" />
-    </div>
-    <!-- Color -->
-    <div class="field-wrapper color-wrapper">
-      <label for="color">Color</label>
-      <div class="input-wrapper">
-        <input id="color" type="color" v-model="subscription.color" />
-      </div>
-      <p
-        class="field-error"
-        v-if="formErrors.find(({field}) => field === 'note')"
-      >{{formErrors.find(({field}) => field ==='note').msg}}</p>
-    </div>
-    <!-- Payment Method -->
-    <div class="field-wrapper method-wrapper">
-      <label for="paymentMethod" class="optional">Payment Method</label>
-      <div class="input-wrapper">
-        <input
-          id="paymentMethod"
-          type="text"
-          placeholder="e.g. Checking Account"
-          v-model="subscription.paymentMethod"
-        />
-      </div>
-      <p
-        class="field-error"
-        v-if="formErrors.find(({field}) => field === 'paymentMethod')"
-      >{{formErrors.find(({field}) => field ==='paymentMethod').msg}}</p>
-    </div>
-    <!-- Note -->
-    <div class="field-wrapper note-wrapper">
-      <label for="note" class="optional">Note</label>
-      <div class="input-wrapper">
-        <input
-          id="note"
-          type="text"
-          placeholder="e.g. Student discount"
-          v-model="subscription.note"
-        />
-      </div>
-      <p
-        class="field-error"
-        v-if="formErrors.find(({field}) => field === 'note')"
-      >{{formErrors.find(({field}) => field ==='note').msg}}</p>
-    </div>
-    <!-- Submit -->
-    <div class="field-wrapper submit-wrapper">
-      <button type="submit">{{this.isNewSubscription ? 'Add Subscription' : 'Update'}}</button>
-    </div>
-  </form>
-</div>
+      <form v-else @submit.prevent="updateSubscription">
+        <!-- Price -->
+        <div
+          id="price-wrapper"
+          class="field-wrapper price-wrapper"
+          :style="{backgroundColor: subscription.color}"
+        >
+          <label for="price">Price</label>
+          <div class="input-wrapper">
+            <input
+              id="price"
+              type="number"
+              step="0.01"
+              min="0.00"
+              max="999.00"
+              placeholder="0.00"
+              v-model="subscription.price"
+              v-on:blur="handlePriceBlur"
+              autofocus
+            />
+          </div>
+          <p
+            class="field-error"
+            v-if="formErrors.find(({field}) => field === 'price')"
+          >{{formErrors.find(({field}) => field ==='price').msg}}</p>
+        </div>
+        <!-- Name -->
+        <div class="field-wrapper name-wrapper">
+          <label for="name">Name</label>
+          <div class="input-wrapper">
+            <input id="name" type="text" placeholder="e.g. Spotify" v-model="subscription.name" />
+          </div>
+          <p
+            class="field-error"
+            v-if="formErrors.find(({field}) => field === 'name')"
+          >{{formErrors.find(({field}) => field ==='name').msg}}</p>
+        </div>
+        <!-- Description -->
+        <div class="field-wrapper desc-wrapper">
+          <label for="description" class="optional">Description</label>
+          <div class="input-wrapper">
+            <input
+              id="description"
+              type="text"
+              placeholder="e.g. Student plan"
+              v-model="subscription.description"
+            />
+          </div>
+          <p
+            class="field-error"
+            v-if="formErrors.find(({field}) => field === 'description')"
+          >{{formErrors.find(({field}) => field ==='description').msg}}</p>
+        </div>
+        <!-- Divider -->
+        <div class="field-wrapper">
+          <hr class="divider" />
+        </div>
+        <!-- Payment Date -->
+        <div class="field-wrapper date-wrapper">
+          <label for="firstPaymentDate">First Payment</label>
+          <div class="input-wrapper">
+            <input id="firstPaymentDate" type="date" v-model="subscription.firstPaymentDate" />
+          </div>
+          <p
+            class="field-error"
+            v-if="formErrors.find(({field}) => field === 'firstPaymentDate')"
+          >{{formErrors.find(({field}) => field ==='firstPaymentDate').msg}}</p>
+        </div>
+        <!-- Interval -->
+        <div class="field-wrapper interval-wrapper">
+          <label for="interval">Interval</label>
+          <div class="input-wrapper">
+            <input id="interval" type="number" default="1" v-model="subscription.interval" />
+          </div>
+          <p
+            class="field-error"
+            v-if="formErrors.find(({field}) => field === 'interval')"
+          >{{formErrors.find(({field}) => field ==='interval').msg}}</p>
+        </div>
+        <!-- Duration -->
+        <div class="field-wrapper duration-wrapper">
+          <label for="duration">Duration</label>
+          <div class="input-wrapper">
+            <select name="duration" id="duration" v-model="subscription.duration">
+              <option value="day">Day</option>
+              <option value="month">Month</option>
+              <option value="year">Year</option>
+            </select>
+          </div>
+          <p
+            class="field-error"
+            v-if="formErrors.find(({field}) => field === 'duration')"
+          >{{formErrors.find(({field}) => field ==='duration').msg}}</p>
+        </div>
+        <!-- Divider -->
+        <div class="field-wrapper">
+          <hr class="divider" />
+        </div>
+        <!-- Color -->
+        <div class="field-wrapper color-wrapper">
+          <label for="color">Color</label>
+          <div class="input-wrapper">
+            <input id="color" type="color" v-model="subscription.color" />
+          </div>
+          <p
+            class="field-error"
+            v-if="formErrors.find(({field}) => field === 'note')"
+          >{{formErrors.find(({field}) => field ==='note').msg}}</p>
+        </div>
+        <!-- Payment Method -->
+        <div class="field-wrapper method-wrapper">
+          <label for="paymentMethod" class="optional">Payment Method</label>
+          <div class="input-wrapper">
+            <input
+              id="paymentMethod"
+              type="text"
+              placeholder="e.g. Checking Account"
+              v-model="subscription.paymentMethod"
+            />
+          </div>
+          <p
+            class="field-error"
+            v-if="formErrors.find(({field}) => field === 'paymentMethod')"
+          >{{formErrors.find(({field}) => field ==='paymentMethod').msg}}</p>
+        </div>
+        <!-- Note -->
+        <div class="field-wrapper note-wrapper">
+          <label for="note" class="optional">Note</label>
+          <div class="input-wrapper">
+            <input
+              id="note"
+              type="text"
+              placeholder="e.g. Student discount"
+              v-model="subscription.note"
+            />
+          </div>
+          <p
+            class="field-error"
+            v-if="formErrors.find(({field}) => field === 'note')"
+          >{{formErrors.find(({field}) => field ==='note').msg}}</p>
+        </div>
+        <!-- Submit -->
+        <div class="field-wrapper submit-wrapper">
+          <button type="submit">Update</button>
+        </div>
+      </form>
+    </transition>
+  </div>
 </template>
 
 <script>
@@ -157,110 +162,71 @@ import { formErrors } from "../../mixins/formErrors";
 
 export default {
   props: {
-    subscriptionProp: {
-      type: Object
-    },
-    index: {
-      type: Number
+    id: {
+      type: String,
+      required: true
     }
   },
   data: function() {
     return {
-      subscription: {
-        price: null,
-        name: "",
-        description: "",
-        firstPaymentDate: "",
-        interval: null,
-        duration: "",
-        paymentMethod: "",
-        color: "",
-        note: ""
-      },
-      formErrors: [],
-      isNewSubscription: false
+      isLoading: true,
+      subscription: null,
+      formErrors: []
     };
   },
   mixins: [formErrors],
   methods: {
-    decodeHtml: function(html) {
-      let txt = document.createElement("textarea");
-      txt.innerHTML = html;
-      return txt.value;
-    },
-    updateFromProps: function() {
-      if (!this.subscriptionProp) {
-        this.isNewSubscription = true;
-        this.subscription = {
-          price: null,
-          name: "",
-          description: "",
-          firstPaymentDate: this.parseDate(Date.now()),
-          interval: 1,
-          duration: "month",
-          paymentMethod: "",
-          color: "#3f5cee",
-          note: ""
-        };
-      } else {
-        this.isNewSubscription = false;
+    fetchSubscription: async function() {
+      this.isLoading = true;
+      this.subscription = null;
 
-        this.subscription.price = this.subscriptionProp.price.$numberDecimal;
-        this.subscription.name = this.subscriptionProp.name;
-        this.subscription.description = this.subscriptionProp.description;
-        this.subscription.firstPaymentDate = this.parseDate(
-          this.subscriptionProp.firstPaymentDate
+      try {
+        const req = await axios.get(
+          `http://localhost:3000/api/subscription/${this.id}`
         );
-        this.subscription.interval = this.subscriptionProp.interval;
-        this.subscription.duration = this.subscriptionProp.duration;
-        this.subscription.paymentMethod = this.subscriptionProp.paymentMethod;
-        this.subscription.color = this.subscriptionProp.color;
-        this.subscription.note = this.decodeHtml(this.subscriptionProp.note);
+
+        this.subscription = req.data.subscription;
+        this.isLoading = false;
+      } catch (err) {
+        console.log(err);
       }
     },
-    parseDate: function(dateString) {
-      // Expects an ISO date string
-      const date = moment(dateString);
-
-      return date.format("YYYY-MM-DD");
-    },
-    handleSubmit: async function() {
-      this.clearErrors();
+    updateSubscription: async function() {
+      this.formErrors = [];
+      this.isLoading = true;
 
       try {
         const data = {
           ...this.subscription
         };
 
-        if (this.isNewSubscription) {
-          const post = await axios.post(
-            "http://localhost:3000/api/subscription",
-            data
-          );
-          this.$emit("fetchSubscriptions", post.data.subscription._id);
-        } else {
-          const update = await axios.post(
-            `http://localhost:3000/api/subscription/${this.subscriptionProp._id}`,
-            data
-          );
-          this.$emit("fetchSubscriptions", update.data.subscription._id);
-        }
+        const res = await axios.post(
+          `http://localhost:3000/api/subscription/${this.id}`,
+          data
+        );
+
+        this.isLoading = false;
+        this.subscription = res.data.subscription;
       } catch (err) {
         console.log(err);
+        this.isLoading = false;
         this.addFormError(err, "price");
       }
+    },
+    decodeHtml: function(html) {
+      let txt = document.createElement("textarea");
+      txt.innerHTML = html;
+      return txt.value;
     },
     handlePriceBlur: function() {
       this.subscription.price = parseFloat(this.subscription.price).toFixed(2);
     }
   },
-  watch: {
-    subscriptionProp: function() {
-      this.updateFromProps();
-    }
-  },
   created: function() {
-    this.updateFromProps();
+    this.fetchSubscription();
+  },
+  watch: {
+    '$route': 'fetchSubscription'
   }
 };
 </script>
@@ -385,5 +351,20 @@ form {
       }
     }
   }
+}
+
+.fade-up-enter-active,
+.fade-up-leave-active {
+  transition: transform 200ms ease, opacity 100ms ease;
+}
+
+.fade-up-enter,
+.fade-up-leave-to {
+  opacity: 0;
+}
+
+.fade-up-enter-to,
+.fade-up-leave {
+  opacity: 1;
 }
 </style>

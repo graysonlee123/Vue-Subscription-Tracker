@@ -53,7 +53,7 @@
       </div>
     </div>
     <div id="right">
-      <transition name="fade-up" mode="out-in">
+      <!-- <transition name="fade-up" mode="out-in">
         <div v-if="isLoading" class="spinner-container">
           <i class="spinner"></i>
         </div>
@@ -73,7 +73,8 @@
           <i class="fas fa-question-circle"></i>
           <p>Select a subscription to view its details, or add a new one.</p>
         </div>
-      </transition>
+      </transition> -->
+      <router-view></router-view>
     </div>
   </main>
 </template>
@@ -190,13 +191,10 @@ export default {
     toggleMenu: function() {
       this.$emit("toggleMenu", true);
     },
-    handleLoadSubscription: function(id) {
-      this.viewSubscriptionID = '';
-      setTimeout(() => {
-        this.viewSubscriptionID = id;
-        this.showNewSubForm = false;
-        this.$emit("showItem");
-      }, 10);
+    handleLoadSubscription: function(id) {    
+      this.$router.push('/app/dashboard/subscription/' + id);
+      this.showNewSubForm = false;
+      this.$emit("showItem");
     }
   },
   components: {
