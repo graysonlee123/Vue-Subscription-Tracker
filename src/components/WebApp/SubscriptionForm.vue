@@ -1,10 +1,9 @@
 <template>
-  <div class="form-container">
-    <transition name="fade-up" mode="out-in">
-      <div v-if="isLoading" class="spinner-container">
-        <i class="spinner"></i>
-      </div>
-      <form v-else @submit.prevent="updateSubscription">
+    <div v-if="isLoading" key="spinner" class="spinner-container">
+      <i class="spinner"></i>
+    </div>
+    <div v-else key="form" class="form-container">
+      <form @submit.prevent="updateSubscription">
         <!-- Price -->
         <div
           id="price-wrapper"
@@ -150,8 +149,7 @@
           <button type="submit">Update</button>
         </div>
       </form>
-    </transition>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -164,19 +162,19 @@ export default {
   props: {
     id: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
-  data: function() {
+  data: function () {
     return {
       isLoading: true,
       subscription: null,
-      formErrors: []
+      formErrors: [],
     };
   },
   mixins: [formErrors],
   methods: {
-    fetchSubscription: async function() {
+    fetchSubscription: async function () {
       this.isLoading = true;
       this.subscription = null;
 
@@ -191,13 +189,13 @@ export default {
         console.log(err);
       }
     },
-    updateSubscription: async function() {
+    updateSubscription: async function () {
       this.formErrors = [];
       this.isLoading = true;
 
       try {
         const data = {
-          ...this.subscription
+          ...this.subscription,
         };
 
         const res = await axios.post(
@@ -215,21 +213,21 @@ export default {
         this.addFormError(err, "price");
       }
     },
-    decodeHtml: function(html) {
+    decodeHtml: function (html) {
       let txt = document.createElement("textarea");
       txt.innerHTML = html;
       return txt.value;
     },
-    handlePriceBlur: function() {
+    handlePriceBlur: function () {
       this.subscription.price = parseFloat(this.subscription.price).toFixed(2);
-    }
+    },
   },
-  created: function() {
+  created: function () {
     this.fetchSubscription();
   },
   watch: {
-    '$route': 'fetchSubscription'
-  }
+    $route: "fetchSubscription",
+  },
 };
 </script>
 
@@ -353,20 +351,5 @@ form {
       }
     }
   }
-}
-
-.fade-up-enter-active,
-.fade-up-leave-active {
-  transition: transform 200ms ease, opacity 100ms ease;
-}
-
-.fade-up-enter,
-.fade-up-leave-to {
-  opacity: 0;
-}
-
-.fade-up-enter-to,
-.fade-up-leave {
-  opacity: 1;
 }
 </style>

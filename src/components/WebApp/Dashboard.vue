@@ -1,64 +1,64 @@
 <template>
-    <main id="dashboard-wrapper">
-      <div id="left">
-        <div class="new-subscription-wrapper">
-          <router-link to="/app/dashboard/subscription/new" class="add-subscription-button">
-            <i class="fas fa-plus"></i>
-          </router-link>
-        </div>
-        <div class="header">
-          <span id="show-menu-btn" @click="toggleMenu">
-            <i class="fa fa-bars"></i>
-          </span>
-          <h5>Subscriptions</h5>
-          <span id="sort-button">
-            <i class="fa fa-sort-amount-down"></i>
-          </span>
-          <span id="subscriptions-options-btn">
-            <i class="fas fa-ellipsis-h"></i>
-          </span>
-        </div>
-        <div class="subscription-list">
-          <div v-if="isLoading">Spinner</div>
-          <ul v-else>
-            <li
-              class="subscription"
-              v-for="({_id: id, name, paymentDates, price, color}, index) in subscriptions"
-              :key="index"
-              :class="{ selected: id === loadedSubscriptionId }"
-            >
-              <div class="s-left">
-                <router-link
-                  tag="div"
-                  class="subscription-preview-card"
-                  :to="{path: `/app/dashboard/subscription/${id}`}"
-                >
-                  <span class="name">{{name}}</span>
-                  <span class="date">{{paymentDates[0] | moment("dddd, MMMM Do YYYY")}}</span>
-                  <span class="price">{{price}}</span>
-                </router-link>
-                <div class="subscription-line" :style="{ backgroundColor: color} "></div>
-              </div>
-              <div class="s-right">
-                <i class="fas fa-ellipsis-v" @click="toggleSubMenu(id)"></i>
-                <transition name="fade-up-short">
-                  <subscription-menu
-                    v-if="openedSubscriptionOptionsMenu === id"
-                    :subscription-id="id"
-                    v-on:fetchSubscriptions="fetchSubscriptions"
-                  />
-                </transition>
-              </div>
-            </li>
-          </ul>
-        </div>
+  <main id="dashboard-wrapper">
+    <div id="left">
+      <div class="new-subscription-wrapper">
+        <router-link to="/app/dashboard/subscription/new" class="add-subscription-button">
+          <i class="fas fa-plus"></i>
+        </router-link>
       </div>
-      <div id="right">
-        <transition name="fade-up" mode="out-in">
-          <router-view @refreshSubscriptions="fetchSubscriptions"></router-view>
-        </transition>
+      <div class="header">
+        <span id="show-menu-btn" @click="toggleMenu">
+          <i class="fa fa-bars"></i>
+        </span>
+        <h5>Subscriptions</h5>
+        <span id="sort-button">
+          <i class="fa fa-sort-amount-down"></i>
+        </span>
+        <span id="subscriptions-options-btn">
+          <i class="fas fa-ellipsis-h"></i>
+        </span>
       </div>
-    </main>
+      <div class="subscription-list">
+        <div v-if="isLoading">Spinner</div>
+        <ul v-else>
+          <li
+            class="subscription"
+            v-for="({_id: id, name, paymentDates, price, color}, index) in subscriptions"
+            :key="index"
+            :class="{ selected: id === loadedSubscriptionId }"
+          >
+            <div class="s-left">
+              <router-link
+                tag="div"
+                class="subscription-preview-card"
+                :to="{path: `/app/dashboard/subscription/${id}`}"
+              >
+                <span class="name">{{name}}</span>
+                <span class="date">{{paymentDates[0] | moment("dddd, MMMM Do YYYY")}}</span>
+                <span class="price">{{price}}</span>
+              </router-link>
+              <div class="subscription-line" :style="{ backgroundColor: color} "></div>
+            </div>
+            <div class="s-right">
+              <i class="fas fa-ellipsis-v" @click="toggleSubMenu(id)"></i>
+              <transition name="fade-up-short">
+                <subscription-menu
+                  v-if="openedSubscriptionOptionsMenu === id"
+                  :subscription-id="id"
+                  v-on:fetchSubscriptions="fetchSubscriptions"
+                />
+              </transition>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div id="right">
+      <transition name="slide" mode="out-in">
+        <router-view @refreshSubscriptions="fetchSubscriptions"></router-view>
+      </transition>
+    </div>
+  </main>
 </template>
 
 <script>
@@ -164,7 +164,7 @@ export default {
     },
     toggleMenu: function () {
       this.$emit("toggleMenu", true);
-    }
+    },
   },
   components: {
     subscriptionMenu: SubscriptionMenu,
@@ -305,28 +305,21 @@ li.subscription {
   }
 }
 
-.fade-up-leave-active,
-.fade-up-enter-active {
+.slide-leave-active,
+.slide-enter-active {
   transition: transform 400ms ease-in-out, opacity 200ms ease;
 }
 
-.fade-up-enter {
-  transform: translateY(60px);
+.slide-enter,
+.slide-leave-to {
+  transform: translateX(10px);
   opacity: 0;
 }
 
-.fade-up-enter-to {
-  transform: translateY(0px);
+.slide-enter-to,
+.slide-leave {
+  transform: translateX(0px);
   opacity: 1;
-}
-.fade-up-leave {
-  transform: translateY(0px);
-  opacity: 1;
-}
-
-.fade-up-leave-to {
-  transform: translateY(60px);
-  opacity: 0;
 }
 
 .fade-up-short-leave-active,
@@ -334,21 +327,15 @@ li.subscription {
   transition: transform 100ms ease-in-out, opacity 50ms ease;
 }
 
-.fade-up-short-enter {
+.fade-up-short-enter,
+.fade-up-short-leave-to {
   transform: translateY(6px);
   opacity: 0;
 }
 
-.fade-up-short-enter-to {
+.fade-up-short-enter-to,
+.fade-up-short-leave {
   transform: translateY(0px);
   opacity: 1;
-}
-
-.fade-up-short-leave {
-  opacity: 1;
-}
-
-.fade-up-short-leave-to {
-  opacity: 0;
 }
 </style>
