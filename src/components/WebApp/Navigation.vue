@@ -6,65 +6,54 @@
       </div>
       <p>{{fullName}}</p>
     </router-link>
-    <ul class="nav-filters">
-      <li>
-        <router-link to="/app/dashboard/all">
-          <i class="fa fa-check"></i>
-          <p>All</p>
-          <span>1</span>
-        </router-link>
-      </li>
-      <li>
-        <router-link to="/app/dashboard/today">
-          <i class="fa fa-check"></i>
-          <p>Today</p>
-          <span>1</span>
-        </router-link>
-      </li>
-      <li>
-        <router-link to="/app/dashboard/week">
-          <i class="fa fa-check"></i>
-          <p>This Week</p>
-          <span>2</span>
-        </router-link>
-      </li>
-      <li>
-        <router-link to="/app/dashboard/month">
-          <i class="fa fa-check"></i>
-          <p>This Month</p>
-          <span>4</span>
-        </router-link>
-      </li>
+    <ul class="quick-links">
+      <router-link to="/app/dashboard" tag="li">
+        <i class="fa fa-book"></i>
+        <p>Subscriptions</p>
+        <span>2</span>
+      </router-link>
+      <router-link to="/app/dashboard/subscription/new" tag="li">
+        <i class="fa fa-plus-circle"></i>
+        <p>Add New</p>
+      </router-link>
     </ul>
     <hr />
-    <ul>
-      <li @click="handleToggleMenu" class="close">Close Menu</li>
-      <li>
-        <router-link to="/app/dashboard">Dashboard</router-link>
-      </li>
-      <li>
-        <router-link to="/app/account">Account</router-link>
-      </li>
-      <li>
-        <router-link to="/app/settings">Settings</router-link>
-      </li>
-      <li>
-        <span @click="handleLogout">Logout</span>
-      </li>
-    </ul>
+    <div class="tags" :class="{ 'is-open': tagsAccordionOpen }">
+      <div class="tags-header" @click="handleTagsAccordion()">
+        <i class="fas fa-chevron-down"></i>
+        <p>Tags</p>
+      </div>
+      <ul class="tags-list" v-if="tagsAccordionOpen">
+        <li>
+          <i class="fa fa-bars"></i>
+          <p>Freelance</p>
+          <span style="background-color: green;"></span>
+        </li>
+        <li>
+          <i class="fa fa-plus-circle"></i>
+          <p>Add Tag</p>
+        </li>
+      </ul>
+    </div>
+    <hr>
   </nav>
 </template>
 
 <script>
 export default {
+  data: function () {
+    return {
+      tagsAccordionOpen: true,
+    };
+  },
   methods: {
     handleLogout: function () {
       this.$store.dispatch("logout").finally(() => {
         this.$router.push("/login");
       });
     },
-    handleToggleMenu: function () {
-      this.$emit("toggleMenu", false);
+    handleTagsAccordion: function () {
+      this.tagsAccordionOpen = !this.tagsAccordionOpen;
     },
   },
   computed: {
@@ -80,12 +69,13 @@ export default {
 
 <style lang="scss" scoped>
 #nav-menu {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   height: 100%;
   z-index: 5;
   padding: 1rem;
   position: absolute;
   left: 0;
+  user-select: none;
 
   nav {
     height: 100%;
@@ -124,41 +114,98 @@ export default {
     max-width: 100%;
     padding: 0.8em;
     text-transform: capitalize;
+    font-size: 1.1em;
   }
 }
 
-.nav-filters {
+hr {
+  margin: 1em 0;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.quick-links {
   li {
-    a {
+    display: flex;
+    padding: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+
+    i {
+      margin-right: 0.8em;
+    }
+
+    p {
+      flex-grow: 1;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &.router-link-exact-active {
+      background-color: rgba(255, 255, 255, 0.2);
+
+      p {
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+.tags {
+  .tags-header {
+    display: flex;
+    font-size: 1em;
+    padding: 0.4em 1em;
+    margin-bottom: 1em;
+    color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+
+    i {
+      margin-right: 0.8em;
+    }
+
+    p {
+      flex-grow: 1;
+      font-weight: bold;
+    }
+  }
+
+  .tags-list {
+    li {
       display: flex;
-      opacity: 1;
-      padding: 0.8em;
+      align-items: center;
+      padding: 1em;
       border-radius: 5px;
-      text-decoration: none;
-      color: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
 
       i {
-        margin-right: 0.8em;
+        margin-right: 1em;
       }
 
       p {
         flex-grow: 1;
       }
 
+      span {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+
       &:hover {
         background-color: rgba(255, 255, 255, 0.1);
       }
-    }
 
-    &.active {
-      a {
-        color: #fff;
+      &.router-link-active {
         background-color: rgba(255, 255, 255, 0.2);
-
-        p {
-          font-weight: bold;
-        }
       }
+    }
+  }
+
+  &.is-open {
+    .tags-header i {
+      transform: rotate(180deg);
     }
   }
 }

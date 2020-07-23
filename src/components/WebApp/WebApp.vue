@@ -3,7 +3,6 @@
     <transition name="slideToRight" mode="in-out">
       <navigation
         v-if="showLeftNav"
-        @toggleMenu="() => this.showLeftNav ? this.showLeftNav = false : this.showLeftNav = true"
       />
     </transition>
     <transition name="page" mode="out-in">
@@ -25,12 +24,24 @@ const desktopBreak = 1020;
 export default {
   data: function () {
     return {
-      showLeftNav: false,
+      showLeftNav: true,
     };
+  },
+  methods: {
+    checkWidth: function() {
+      const width = $(document).width();
+  
+      if (width <= desktopBreak) {
+        this.showLeftNav = false;
+      }
+    }
   },
   components: {
     navigation: Navigation,
   },
+  beforeMount: function() {
+    this.checkWidth();
+  }
 };
 </script>
 

@@ -44,7 +44,7 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 [] Handle removing error on lost focus for an error'd field's input
 [] custom color picker
 [] custom date picker
-[] Tags
+[] Integrate Tags
 [x] Delete subscription
 [x] Color the subscriptions in the dashboard accordingly
 [x] HTML escapes
