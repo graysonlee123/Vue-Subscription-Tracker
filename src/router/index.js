@@ -60,10 +60,6 @@ let router = new Router({
               component: PickASubscription
             },
             {
-              path: "subscription",
-              redirect: "/app/dashboard"
-            },
-            {
               path: "subscription/new",
               name: "New Subscription",
               component: NewSubscriptionForm
@@ -73,24 +69,12 @@ let router = new Router({
               name: "Subscription",
               component: SubscriptionForm,
               props: true
+            },
+            {
+              path: "subscription",
+              redirect: "/app/dashboard"
             }
           ]
-        },
-        {
-          path: "today",
-          name: "Today",
-          alias: "",
-          component: Dashboard
-        },
-        {
-          path: "account",
-          name: "Account",
-          component: Account
-        },
-        {
-          path: "settings",
-          name: "Settings",
-          component: Settings
         }
       ]
     },

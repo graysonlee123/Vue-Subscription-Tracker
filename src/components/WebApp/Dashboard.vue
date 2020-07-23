@@ -1,63 +1,64 @@
 <template>
-  <main id="page-wrapper">
-    <div id="left">
-      <div class="new-subscription-wrapper">
-        <router-link to="/app/dashboard/subscription/new" class="add-subscription-button">
-          <i class="fas fa-plus"></i>
-        </router-link>
-      </div>
-      <div class="header">
-        <span id="show-menu-btn" @click="toggleMenu">
-          <i class="fa fa-bars"></i>
-        </span>
-        <h5>Subscriptions</h5>
-        <span id="sort-button">
-          <i class="fa fa-sort-amount-down"></i>
-        </span>
-        <span id="subscriptions-options-btn">
-          <i class="fas fa-ellipsis-h"></i>
-        </span>
-      </div>
-      <div class="subscription-list">
-        <div v-if="isLoading">Spinner</div>
-        <ul v-else>
-          <li
-            class="subscription"
-            v-for="({_id: id, name, paymentDates, price, color}, index) in subscriptions"
-            :key="index"
-            :class="{ selected: id === loadedSubscriptionId }"
-          >
-            <div class="s-left">
-              <div
-                class="subscription-preview-card"
-                @click="handleLoadSubscription(id)"
-              >
-                <span class="name">{{name}}</span>
-                <span class="date">{{paymentDates[0] | moment("dddd, MMMM Do YYYY")}}</span>
-                <span class="price">{{price}}</span>
+    <main id="dashboard-wrapper">
+      <div id="left">
+        <div class="new-subscription-wrapper">
+          <router-link to="/app/dashboard/subscription/new" class="add-subscription-button">
+            <i class="fas fa-plus"></i>
+          </router-link>
+        </div>
+        <div class="header">
+          <span id="show-menu-btn" @click="toggleMenu">
+            <i class="fa fa-bars"></i>
+          </span>
+          <h5>Subscriptions</h5>
+          <span id="sort-button">
+            <i class="fa fa-sort-amount-down"></i>
+          </span>
+          <span id="subscriptions-options-btn">
+            <i class="fas fa-ellipsis-h"></i>
+          </span>
+        </div>
+        <div class="subscription-list">
+          <div v-if="isLoading">Spinner</div>
+          <ul v-else>
+            <li
+              class="subscription"
+              v-for="({_id: id, name, paymentDates, price, color}, index) in subscriptions"
+              :key="index"
+              :class="{ selected: id === loadedSubscriptionId }"
+            >
+              <div class="s-left">
+                <router-link
+                  tag="div"
+                  class="subscription-preview-card"
+                  :to="{path: `/app/dashboard/subscription/${id}`}"
+                >
+                  <span class="name">{{name}}</span>
+                  <span class="date">{{paymentDates[0] | moment("dddd, MMMM Do YYYY")}}</span>
+                  <span class="price">{{price}}</span>
+                </router-link>
+                <div class="subscription-line" :style="{ backgroundColor: color} "></div>
               </div>
-              <div class="subscription-line" :style="{ backgroundColor: color} "></div>
-            </div>
-            <div class="s-right">
-              <i class="fas fa-ellipsis-v" @click="toggleSubscriptionOptionsMenu(id)"></i>
-              <transition name="fade-up-short">
-                <subscription-menu
-                  v-if="openedSubscriptionOptionsMenu === id"
-                  :subscription-id="id"
-                  v-on:fetchSubscriptions="fetchSubscriptions"
-                />
-              </transition>
-            </div>
-          </li>
-        </ul>
+              <div class="s-right">
+                <i class="fas fa-ellipsis-v" @click="toggleSubMenu(id)"></i>
+                <transition name="fade-up-short">
+                  <subscription-menu
+                    v-if="openedSubscriptionOptionsMenu === id"
+                    :subscription-id="id"
+                    v-on:fetchSubscriptions="fetchSubscriptions"
+                  />
+                </transition>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-    <div id="right">
-      <transition name="fade-up" mode="out-in">
-        <router-view @refreshSubscriptions="fetchSubscriptions"></router-view>
-      </transition>
-    </div>
-  </main>
+      <div id="right">
+        <transition name="fade-up" mode="out-in">
+          <router-view @refreshSubscriptions="fetchSubscriptions"></router-view>
+        </transition>
+      </div>
+    </main>
 </template>
 
 <script>
@@ -137,7 +138,6 @@ export default {
         const subscriptions = res.data.subscriptions;
 
         if (!subscriptions) {
-          this.showNewSubForm = true;
           this.isLoading = false;
           return;
         }
@@ -151,26 +151,20 @@ export default {
 
         this.subscriptions.push(...subscriptions);
 
-        this.showNewSubForm = false;
         this.openedSubscriptionOptionsMenu = false;
         this.isLoading = false;
       } catch (err) {
         console.log(err);
       }
     },
-    toggleSubscriptionOptionsMenu: function (id) {
+    toggleSubMenu: function (id) {
       this.openedSubscriptionOptionsMenu === id
         ? (this.openedSubscriptionOptionsMenu = false)
         : (this.openedSubscriptionOptionsMenu = id);
     },
     toggleMenu: function () {
       this.$emit("toggleMenu", true);
-    },
-    handleLoadSubscription: function (id) {
-      this.$router.push("/app/dashboard/subscription/" + id);
-      this.showNewSubForm = false;
-      this.$emit("showItem");
-    },
+    }
   },
   components: {
     subscriptionMenu: SubscriptionMenu,
@@ -179,13 +173,13 @@ export default {
     this.fetchSubscriptions();
   },
   computed: {
-    loadedSubscriptionId: function() {
+    loadedSubscriptionId: function () {
       const data = this.$route.params;
-      
+
       if (data.id) return data.id;
       else return false;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -284,6 +278,7 @@ li.subscription {
 
   h5 {
     flex-grow: 1;
+    text-transform: capitalize;
   }
 
   #subscriptions-options-btn {

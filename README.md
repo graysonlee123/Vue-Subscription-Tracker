@@ -32,18 +32,18 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 # TODOs
 [x] Empty dashboard 
 [x] Update subscriptions in dashboard main component when a subscription is updated
-[] reintegrate new subscription form
+[x] reintegrate new subscription form
 [] Make a proxy for server? For easier deployment
-[] Fix dates going back a day on save - maybe save in DB as Unix Timestamp
+[] Fix dates going back a day on save - maybe save in DB as Unix Timestamp and parse on front-end
 [] Year and day parsing for future payments
-[] Add sorting to payments
+[] Add sorting to payments; maybe layout like TickTick's side menu. E.g. All, Today, This Week, This Month
+  [] For All, add accordion button 
+[] No Subscription Found item
 [] account page - full screen route
-[] settings page - integrate with account page
+  [] settings page - integrate with account page
 [] Handle removing error on lost focus for an error'd field's input
-[] animations
 [] custom color picker
 [] custom date picker
-[] left sidebar items
 [] Tags
 [x] Delete subscription
 [x] Color the subscriptions in the dashboard accordingly

@@ -9,7 +9,6 @@
     <transition name="page" mode="out-in">
       <router-view
         @toggleMenu="() => this.showLeftNav ? this.showLeftNav = false : this.showLeftNav = true"
-        @showItem="() => this.showItemOnMobile = true"
       />
     </transition>
   </div>
@@ -24,68 +23,14 @@ import $ from "jquery";
 const desktopBreak = 1020;
 
 export default {
-  data: function() {
+  data: function () {
     return {
-      showMenu: false,
-      showItemOnMobile: false,
-      showLeftNav: false
+      showLeftNav: false,
     };
   },
-  methods: {},
   components: {
-    navigation: Navigation
+    navigation: Navigation,
   },
-  watch: {
-    // showMenu: function(bool) {
-    //   switch (bool) {
-    //     case true:
-    //       document.getElementById("app-container").classList.add("show-nav");
-    //       break;
-    //     case false:
-    //     default:
-    //       document.getElementById("app-container").classList.remove("show-nav");
-    //       break;
-    //   }
-    // },
-    showItemOnMobile: function(bool) {
-      switch (bool) {
-        case true:
-          document.getElementById("app-container").classList.add("show-item");
-          break;
-        case false:
-        default:
-          document
-            .getElementById("app-container")
-            .classList.remove("show-item");
-          break;
-      }
-    }
-  },
-  created: function() {
-    // Listen for menu closures
-    // $(document).on("click", event => {
-    //   // ? Needs to be an arrow function to
-    //   // ? retain binding of this to vue component
-    //   if (
-    //     $(window).width() <= desktopBreak &&
-    //     !$(event.target).closest(".menu-container").length &&
-    //     !$(event.target).closest("#show-menu-btn").length
-    //   ) {
-    //     this.showMenu = false;
-    //   }
-    //   if (
-    //     !$(event.target).closest("#right").length &&
-    //     !$(event.target).closest(".subscription-preview-card").length &&
-    //     !$(event.target).closest(".new-subscription-wrapper").length
-    //   ) {
-    //     this.showItemOnMobile = false;
-    //   }
-    // });
-    // Initial check for desktop or mobile
-    // if ($(window).width() > desktopBreak) {
-    //   this.showMenu = true;
-    // }
-  }
 };
 </script>
 
@@ -107,17 +52,9 @@ body {
 #app-container {
   height: 100%;
   color: #fafafa;
-
-  &.show-nav #nav-menu {
-    left: 0;
-  }
-
-  &.show-item #right {
-    right: 0;
-  }
 }
 
-#page-wrapper {
+#dashboard-wrapper {
   width: 100%;
   height: 100%;
   display: grid;
@@ -140,25 +77,9 @@ body {
 }
 
 #nav-menu {
-  font-size: 0.8rem;
   width: $navWidth;
-  height: 100%;
-  z-index: 5;
-  display: flex;
   border-right: $borderStyle;
-  padding: 1rem;
   background: $menuColor;
-  position: absolute;
-  left: 0;
-
-  nav {
-    height: 100%;
-  }
-
-  #nav-background {
-    z-index: 4;
-    flex-grow: 1;
-  }
 }
 
 // Global Stuff
@@ -223,7 +144,7 @@ body {
 
 @media screen and (min-width: 767px) {
   #app-container.leftMenuOpened {
-    #page-wrapper {
+    #dashboard-wrapper {
       padding-left: $navWidth;
     }
   }

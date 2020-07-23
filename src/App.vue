@@ -124,11 +124,7 @@ h5 {
 
 a {
   color: inherit;
-  opacity: 0.5;
-
-  &:hover {
-    opacity: 1;
-  }
+  text-decoration: none;
 }
 
 #app {
