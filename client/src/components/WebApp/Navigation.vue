@@ -35,7 +35,7 @@
         </li>
       </ul>
     </div>
-    <hr>
+    <hr />
   </nav>
 </template>
 

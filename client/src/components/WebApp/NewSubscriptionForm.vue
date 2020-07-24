@@ -106,7 +106,23 @@
         <div class="field-wrapper color-wrapper">
           <label for="color">Color</label>
           <div class="input-wrapper">
-            <input id="color" type="color" v-model="subscription.color" />
+            <div class="color-picker-wrapper">
+              <div
+                class="color-picker"
+                @click="toggleColorModal()"
+                :style="{backgroundColor: subscription.color}"
+              >Pick a Color</div>
+              <div class="color-modal" :class="{active: showColorModal}">
+                <ul>
+                  <li
+                    v-for="(color, index) in colors"
+                    :key="index"
+                    :style="{backgroundColor: color}"
+                    @click="pickColor(color);"
+                  ></li>
+                </ul>
+              </div>
+            </div>
           </div>
           <p
             class="field-error"
@@ -169,11 +185,24 @@ export default {
         firstPaymentDate: "",
         interval: "1",
         duration: "month",
-        color: "#326FBD",
+        color: '#f57700',
         paymentMethod: "",
         note: "",
       },
       formErrors: [],
+      showColorModal: false,
+      colors: [
+        "#f57700",
+        "#f8c610",
+        "#77dcb1",
+        "#11e17b",
+        "#89cffa",
+        "#0d8ace",
+        "#9daba9",
+        "#da054e",
+        "#e36e9e",
+        "#8b00ef",
+      ],
     };
   },
   mixins: [formErrors],
@@ -187,15 +216,14 @@ export default {
           ...this.subscription,
         };
 
-        const res = await axios.post(
-          `/api/subscription/`,
-          data
-        );
+        const res = await axios.post(`/api/subscription/`, data);
 
         this.isLoading = false;
 
         this.$emit("refreshSubscriptions");
-        this.$router.push(`/app/dashboard/subscription/${res.data.subscription._id}`);
+        this.$router.push(
+          `/app/dashboard/subscription/${res.data.subscription._id}`
+        );
       } catch (err) {
         console.log(err);
         this.isLoading = false;
@@ -205,7 +233,28 @@ export default {
     handlePriceBlur: function () {
       this.subscription.price = parseFloat(this.subscription.price).toFixed(2);
     },
-  }
+    toggleColorModal: function (bool) {
+      switch (bool) {
+        case true: {
+          this.showColorModal = true;
+          break;
+        }
+        case false: {
+          this.showColorModal = false;
+          break;
+        }
+        default: {
+          this.showColorModal
+            ? (this.showColorModal = false)
+            : (this.showColorModal = true);
+          break;
+        }
+      }
+    },
+    pickColor: function (color) {
+      this.subscription.color = color;
+    },
+  },
 };
 </script>
 
@@ -261,6 +310,7 @@ form {
 
   input[type="text"],
   input[type="number"],
+  .color-picker,
   select {
     $height: 44px;
 
@@ -272,7 +322,6 @@ form {
     color: #eee;
     border-radius: 5px;
     height: $height;
-    line-height: $height;
 
     &:focus {
       outline: none;
@@ -291,6 +340,50 @@ form {
 
     &::-webkit-input-placeholder {
       color: transparentize($color: #eee, $amount: 0.5);
+    }
+  }
+
+  .color-picker-wrapper {
+    position: relative;
+    user-select: none;
+
+    .color-picker {
+      cursor: pointer;
+    }
+
+    .color-modal {
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 300px;
+      background-color: #444;
+      padding: 1em;
+      border-radius: 5px;
+      box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.3);
+      display: none;
+
+      &.active {
+        display: block;
+      }
+
+      ul {
+        display: flex;
+        flex-flow: row wrap;
+
+        li {
+          $size: 22px;
+          width: $size;
+          height: $size;
+          border-radius: 50%;
+          margin: 6px;
+          cursor: pointer;
+          transition: 300ms ease-in-out;
+
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
+      }
     }
   }
 }
