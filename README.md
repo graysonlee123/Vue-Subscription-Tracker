@@ -36,7 +36,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [x] Empty dashboard 
 [x] Update subscriptions in dashboard main component when a subscription is updated
 [x] reintegrate new subscription form
-[] Make a proxy for server? For easier deployment
+[x] Make a proxy for server? For easier deployment
 [] Fix dates going back a day on save - maybe save in DB as Unix Timestamp and parse on front-end
 [] Year and day parsing for future payments
 [] Add sorting to payments; maybe layout like TickTick's side menu. E.g. All, Today, This Week, This Month

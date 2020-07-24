@@ -31,7 +31,7 @@ export default {
 
       try {
         await this.$http.delete(
-          `http://localhost:3000/api/subscription/${this.subscriptionId}`
+          `/api/subscription/${this.subscriptionId}`
         );
 
         this.$emit('fetchSubscriptions');

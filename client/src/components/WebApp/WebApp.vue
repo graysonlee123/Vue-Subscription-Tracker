@@ -55,10 +55,6 @@ $borderStyle: 1px solid grey;
 $backgroundColor: #1c1d1f;
 $menuColor: #27282a;
 
-body {
-  background-color: $backgroundColor;
-}
-
 #app-container {
   height: 100%;
   color: #fafafa;

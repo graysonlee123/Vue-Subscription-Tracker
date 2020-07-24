@@ -107,6 +107,7 @@ body {
   font-family: $body-family;
   color: #fff;
   overflow: hidden;
+  background-color: #1c1d1f;
 }
 
 h1,

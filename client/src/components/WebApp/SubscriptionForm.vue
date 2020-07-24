@@ -178,7 +178,7 @@ export default {
 
       try {
         const req = await axios.get(
-          `http://localhost:3000/api/subscription/${this.id}`
+          `/api/subscription/${this.id}`
         );
 
         this.subscription = req.data.subscription;
@@ -197,7 +197,7 @@ export default {
         };
 
         const res = await axios.post(
-          `http://localhost:3000/api/subscription/${this.id}`,
+          `/api/subscription/${this.id}`,
           data
         );
 

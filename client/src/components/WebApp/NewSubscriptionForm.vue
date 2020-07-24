@@ -188,7 +188,7 @@ export default {
         };
 
         const res = await axios.post(
-          `http://localhost:3000/api/subscription/`,
+          `/api/subscription/`,
           data
         );
 
