@@ -1,5 +1,5 @@
 const express = require("express");
-const connectDB = require("./db");
+const connectDB = require("./utils/db");
 const bodyParser = require("body-parser");
 
 // Initialize Express
@@ -29,6 +29,6 @@ app.use("/api/auth", require("./routes/auth"));
 // Start server
 const PORT = process.env.PORT || 3000;
 
-const server = app.listen(PORT, function() {
+app.listen(PORT, function() {
   console.log("Listening on port " + PORT);
 });

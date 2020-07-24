@@ -156,8 +156,6 @@
 
 <script>
 import axios from "axios";
-import moment from "moment";
-
 import { formErrors } from "../../mixins/formErrors";
 
 export default {

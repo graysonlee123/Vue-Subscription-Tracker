@@ -50,9 +50,9 @@ export default {
     // Intercepting axios calls to determine if we get 401 unauthorized
     // If we do, logout the user
     this.$http.interceptors.response.use(undefined, function(err) {
-      return new Promise(function(resolve, reject) {
+      return new Promise(function() {
         if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
-          this.$store.dispatch(logout);
+          this.$store.dispatch('logout');
         }
         throw err;
       });

@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import { EventBus } from "../../EventBus";
 import Navigation from "./Navigation";
 import $ from "jquery";
 

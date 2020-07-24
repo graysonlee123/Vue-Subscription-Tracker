@@ -11,7 +11,7 @@ export default new Vuex.Store({
     token: localStorage.getItem("token") || "",
     user: {},
     preferences: {
-      language: 'en'
+      language: "en"
     }
   },
   // Vuex mutations are used to change the state of the vuex store
@@ -22,20 +22,18 @@ export default new Vuex.Store({
     auth_success(state, { token, user }) {
       state.token = token;
       state.user = user;
-      state.isAuthenticated = true,
-      state.isLoading = false
+      (state.isAuthenticated = true), (state.isLoading = false);
     },
     auth_error(state) {
-      state.isLoading = false,
-      state.isAuthenticated = false,
-      state.token = null,
-      state.user = {}
+      (state.isLoading = false),
+        (state.isAuthenticated = false),
+        (state.token = null),
+        (state.user = {});
     },
     logout(state) {
       state.token = null;
       state.user = {};
-      state.isAuthenticated = false,
-      state.isLoading = false
+      (state.isAuthenticated = false), (state.isLoading = false);
     },
     change_language(state, lang) {
       state.preferences.language = lang;
@@ -54,12 +52,12 @@ export default new Vuex.Store({
           .then(res => {
             const token = res.data.token;
             const user = res.data.user;
-
+            
             localStorage.setItem("token", token);
-
+            
             // Sets the header auth header for future axios requests
             axios.defaults.headers.common["x-auth-token"] = token;
-
+            
             commit("auth_success", { token, user });
             resolve(res);
           })
@@ -96,7 +94,7 @@ export default new Vuex.Store({
       });
     },
     logout({ commit }) {
-      return new Promise((resolve, reject) => {
+      return new Promise(resolve => {
         commit("logout");
         localStorage.removeItem("token");
         delete axios.defaults.headers.common["x-auth-token"];
@@ -123,7 +121,7 @@ export default new Vuex.Store({
       });
     },
     languageChange({ commit }, lang) {
-      commit("change_language", lang)
+      commit("change_language", lang);
     }
   },
   // Use a vuex getter to get a value of vuex state

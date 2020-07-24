@@ -64,7 +64,6 @@
 <script>
 import SubscriptionMenu from "./SubscriptionMenu";
 import axios from "axios";
-import { EventBus } from "../../EventBus";
 import moment from "moment";
 
 export default {
@@ -78,23 +77,17 @@ export default {
     };
   },
   methods: {
-    getPaymentDates: function (
-      { firstPaymentDate, interval, duration },
-      index
-    ) {
-      const date = new Date(firstPaymentDate);
+    getPaymentDates: function ({ firstPaymentDate, duration }) {
       const upcomingPaymentsCount = 10;
 
       // These should return future payment dates in unix timestamps
 
       switch (duration) {
-        case "year":
+        case "year": {
           return [Date.now()];
-          console.log("year");
-
-          break;
+        }
         default:
-        case "month":
+        case "month": {
           const dates = [];
 
           const paymentDay = moment(firstPaymentDate).date();
@@ -122,11 +115,11 @@ export default {
           }
 
           return dates;
-          break;
-        case "day":
+        }
+        case "day": {
           console.log("day");
           return [Date.now()];
-          break;
+        }
       }
     },
     fetchSubscriptions: async function () {
@@ -134,7 +127,7 @@ export default {
         this.isLoading = true;
         this.subscriptions = [];
 
-        const res = await axios.get("http://localhost:3000/api/subscription");
+        const res = await axios.get("/api/subscription");
         const subscriptions = res.data.subscriptions;
 
         if (!subscriptions) {

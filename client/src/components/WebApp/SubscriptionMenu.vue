@@ -4,7 +4,7 @@
       <li>
         <i class="fa fa-tag"></i> Tags
       </li>
-      <li @click="handleConfirmDelete()">
+      <li @click="handleConfirmDelete">
         <i class="fa fa-trash"></i> Delete
       </li>
     </ul>
@@ -25,12 +25,12 @@ export default {
     }
   },
   methods: {
-    handleConfirmDelete: async function() {
+    async handleConfirmDelete() {
       if (!confirm("Are you sure? Deleting a subscription is permanent."))
         return;
 
       try {
-        const subscription = await axios.delete(
+        await this.$http.delete(
           `http://localhost:3000/api/subscription/${this.subscriptionId}`
         );
 

@@ -29,6 +29,9 @@ npm test
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
+To start api server, run `node server/index.js`.
+To start vue webpack server, run `npm run dev` from the client folder.
+
 # TODOs
 [x] Empty dashboard 
 [x] Update subscriptions in dashboard main component when a subscription is updated
@@ -51,3 +54,7 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 [x] Price to decimal
 [x] Polish dashboard look and feel
   [x] Work on right form menu
+
+  https://stackoverflow.com/questions/46389267/using-async-await-with-webpack-simple-configuration-throwing-error-regeneratorr
+
+  https://vuejs.org/v2/cookbook/debugging-in-vscode.html
