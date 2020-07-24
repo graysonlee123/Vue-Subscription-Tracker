@@ -33,21 +33,21 @@ To start api server, run `node server/index.js`.
 To start vue webpack server, run `npm run dev` from the client folder.
 
 # TODOs
+[] Fix dates going back a day on save - maybe save in DB as Unix Timestamp and parse on front-end
+[] custom color picker
+[] custom date picker
+[] Add sorting to payments; maybe layout like TickTick's side menu. E.g. All, Today, This Week, This Month
+  [] For All, add accordion button 
+[] Year and day parsing for future payments
+[] No Subscription Found component
+[] account page - full screen route
+  [] settings page - integrate with account page
+[] Handle removing error on lost focus for an error'd field's input
+[] Integrate Tags
 [x] Empty dashboard 
 [x] Update subscriptions in dashboard main component when a subscription is updated
 [x] reintegrate new subscription form
 [x] Make a proxy for server? For easier deployment
-[] Fix dates going back a day on save - maybe save in DB as Unix Timestamp and parse on front-end
-[] Year and day parsing for future payments
-[] Add sorting to payments; maybe layout like TickTick's side menu. E.g. All, Today, This Week, This Month
-  [] For All, add accordion button 
-[] No Subscription Found item
-[] account page - full screen route
-  [] settings page - integrate with account page
-[] Handle removing error on lost focus for an error'd field's input
-[] custom color picker
-[] custom date picker
-[] Integrate Tags
 [x] Delete subscription
 [x] Color the subscriptions in the dashboard accordingly
 [x] HTML escapes

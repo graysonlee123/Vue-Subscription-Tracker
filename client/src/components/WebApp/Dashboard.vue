@@ -54,6 +54,7 @@
       </div>
     </div>
     <div id="right">
+      <!-- // TODO: Fix this transition acting weird -->
       <transition name="slide" mode="out-in">
         <router-view @refreshSubscriptions="fetchSubscriptions"></router-view>
       </transition>
@@ -300,7 +301,7 @@ li.subscription {
 
 .slide-leave-active,
 .slide-enter-active {
-  transition: transform 400ms ease-in-out, opacity 200ms ease;
+  transition: transform 600ms ease, opacity 900ms ease;
 }
 
 .slide-enter,

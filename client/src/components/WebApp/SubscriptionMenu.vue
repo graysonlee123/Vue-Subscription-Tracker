@@ -35,6 +35,7 @@ export default {
         );
 
         this.$emit('fetchSubscriptions');
+        this.$router.push('/app/dashboard/');
       } catch (err) {
         console.log(err);
       }
