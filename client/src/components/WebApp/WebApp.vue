@@ -80,6 +80,7 @@ $menuColor: #27282a;
   font-size: 1rem;
   background-color: $backgroundColor;
   padding: 1.2em;
+  position: relative;
 }
 
 #nav-menu {
