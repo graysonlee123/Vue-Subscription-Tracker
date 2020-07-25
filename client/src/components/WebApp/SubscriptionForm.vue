@@ -64,7 +64,11 @@
       <div class="field-wrapper date-wrapper">
         <label for="firstPaymentDate">First Payment</label>
         <div class="input-wrapper">
-          <input id="firstPaymentDate" type="date" v-model="subscription.firstPaymentDate" />
+          <date-picker
+            :date="subscription.firstPaymentDate"
+            :color="subscription.color"
+            @dateUpdated="(data) => subscription.firstPaymentDate = data"
+          ></date-picker>
         </div>
         <p
           class="field-error"
@@ -172,6 +176,8 @@
 import axios from "axios";
 import { formErrors } from "../../mixins/formErrors";
 
+import DatePicker from "./DatePicker.vue";
+
 export default {
   props: {
     id: {
@@ -271,19 +277,8 @@ export default {
   watch: {
     $route: "fetchSubscription",
   },
-  directives: {
-    cleave: {
-      inserted: (el, binding) => {
-        el.cleave = new Cleave(el, binding.value || {});
-      },
-      update: (el) => {
-        const event = new Event("input", { bubbles: true });
-        setTimeout(function () {
-          el.value = el.cleave.properties.result;
-          el.dispatchEvent(event);
-        }, 100);
-      },
-    },
+  components: {
+    datePicker: DatePicker,
   },
 };
 </script>
