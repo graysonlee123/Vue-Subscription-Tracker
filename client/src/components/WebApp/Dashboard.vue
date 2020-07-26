@@ -18,40 +18,22 @@
           <i class="fas fa-ellipsis-h"></i>
         </span>
       </div>
-      <div class="subscription-list">
-        <div v-if="isLoading">Spinner</div>
-        <ul v-else>
-          <li
-            class="subscription"
-            v-for="({_id: id, name, paymentDates, price, color}, index) in subscriptions"
-            :key="index"
-            :class="{ selected: id === loadedSubscriptionId }"
-          >
-            <div class="s-left">
-              <router-link
-                tag="div"
-                class="subscription-preview-card"
-                :to="{path: `/app/dashboard/subscription/view/${id}`}"
-              >
-                <span class="name">{{name}}</span>
-                <span class="date">{{paymentDates[0] | moment("dddd, MMMM Do YYYY")}}</span>
-                <span class="price">{{price}}</span>
-              </router-link>
-              <div class="subscription-line" :style="{ backgroundColor: color} "></div>
-            </div>
-            <div class="s-right">
-              <i class="fas fa-ellipsis-v" @click="toggleSubMenu(id)"></i>
-              <transition name="fade-up-short">
-                <subscription-menu
-                  v-if="openedSubscriptionOptionsMenu === id"
-                  :subscription-id="id"
-                  v-on:fetchSubscriptions="fetchSubscriptions"
-                />
-              </transition>
-            </div>
-          </li>
-        </ul>
-      </div>
+      <div v-if="isLoading">Spinner</div>
+      <ul v-else class="subscription-list">
+        <router-link
+          tag="li"
+          class="subscription-list-item"
+          :class="{selected: id === loadedSubscriptionId }"
+          :to="{path: `/app/dashboard/subscription/view/${id}`}"
+          v-for="({_id: id, name, paymentDates, price, color}, index) in subscriptions"
+          :key="index"
+          :style="{backgroundColor: color}"
+        >
+          <span class="name">{{name}}</span>
+          <span class="date">{{paymentDates[0] | moment("dddd, MMMM Do YYYY")}}</span>
+          <span class="price">{{price}}</span>
+        </router-link>
+      </ul>
     </div>
     <div id="right">
       <!-- // TODO: Fix this transition acting weird -->
@@ -154,11 +136,6 @@ export default {
         console.log(err);
       }
     },
-    toggleSubMenu: function (id) {
-      this.openedSubscriptionOptionsMenu === id
-        ? (this.openedSubscriptionOptionsMenu = false)
-        : (this.openedSubscriptionOptionsMenu = id);
-    },
     toggleMenu: function () {
       this.$emit("toggleMenu", true);
     },
@@ -181,84 +158,57 @@ export default {
 </script>
 
 <style lang="scss">
-li.subscription {
-  $card-height: 36px;
-
-  display: grid;
-  grid-template-columns: 1fr auto;
-  height: $card-height;
-  line-height: $card-height;
+li.subscription-list-item {
+  display: flex;
+  align-items: center;
   margin-bottom: 12px;
   font-size: 0.9rem;
+  padding: 1em;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
 
-  .s-right {
-    position: relative;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
 
-    > i {
-      font-size: 0.8em;
-      padding: 0 0.5em 0 1em;
-      color: rgba(255, 255, 255, 0.2);
-      cursor: pointer;
+  .name {
+    flex: auto;
+    max-width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .date {
+    font-size: 0.5em;
+    flex-basis: auto;
+    text-align: right;
+    white-space: nowrap;
+
+    @media screen and (max-width: 464px) {
+      display: none;
     }
   }
 
-  .subscription-preview-card {
-    display: flex;
-    align-items: center;
-    padding: 0 12px;
-    cursor: pointer;
-    transition: transform 80ms ease-in-out;
+  .price {
+    font-size: 0.8em;
+    font-weight: bold;
+    text-align: right;
+    padding-left: 16px;
+    flex-basis: 84px;
+    flex-shrink: 0;
 
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.05);
-    }
-
-    .name {
-      flex: auto;
-      max-width: 100%;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    .date {
-      font-size: 0.5em;
+    &::before {
+      content: "$";
+      font-size: 0.7em;
       opacity: 0.4;
-      flex-basis: auto;
-      text-align: right;
-      white-space: nowrap;
-
-      @media screen and (max-width: 464px) {
-        display: none;
-      }
-    }
-
-    .price {
-      font-size: 0.8em;
-      font-weight: bold;
-      text-align: right;
-      padding-left: 16px;
-      flex-basis: 84px;
-      flex-shrink: 0;
-
-      &::before {
-        content: "$";
-        font-size: 0.7em;
-        opacity: 0.4;
-        letter-spacing: 3px;
-      }
+      letter-spacing: 3px;
     }
   }
 
-  .subscription-line {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  &.selected {
-    .subscription-preview-card {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
+  &.router-link-active {
+    background-color: rgba(255, 255, 255, 0.1);
   }
 }
 
@@ -301,6 +251,8 @@ li.subscription {
     padding: 16px;
   }
 }
+
+// Transitions
 
 .slide-leave-active,
 .slide-enter-active {
