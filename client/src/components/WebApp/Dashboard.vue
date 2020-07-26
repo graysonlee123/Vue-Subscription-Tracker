@@ -18,7 +18,12 @@
           <i class="fas fa-ellipsis-h"></i>
         </span>
       </div>
-      <div v-if="isLoading">Spinner</div>
+      <div v-if="loading" class="spinner-container">
+        <i class="spinner"></i>
+      </div>
+      <div v-else-if="error">
+        There was an error with that request. Please try again later.
+      </div>
       <ul v-else class="subscription-list">
         <router-link
           tag="li"
@@ -48,18 +53,15 @@
 </template>
 
 <script>
-import SubscriptionMenu from "./SubscriptionMenu";
-import axios from "axios";
 import moment from "moment";
 
 export default {
   data: function () {
     return {
-      isLoading: true,
+      loading: true,
+      error: false,
       // User's subscriptions
-      subscriptions: [],
-      // ID of loaded subscription
-      openedSubscriptionOptionsMenu: false,
+      subscriptions: []
     };
   },
   methods: {
@@ -110,14 +112,14 @@ export default {
     },
     fetchSubscriptions: async function () {
       try {
-        this.isLoading = true;
+        this.loading = true;
         this.subscriptions = [];
 
-        const res = await axios.get("/api/subscription");
+        const res = await this.$http.get("/api/subscription");
         const subscriptions = res.data.subscriptions;
 
         if (!subscriptions) {
-          this.isLoading = false;
+          this.loading = false;
           return;
         }
 
@@ -129,19 +131,15 @@ export default {
         });
 
         this.subscriptions.push(...subscriptions);
-
-        this.openedSubscriptionOptionsMenu = false;
-        this.isLoading = false;
+        this.loading = false;
       } catch (err) {
+        this.error = true;
         console.log(err);
       }
     },
     toggleMenu: function () {
       this.$emit("toggleMenu", true);
     },
-  },
-  components: {
-    subscriptionMenu: SubscriptionMenu,
   },
   created: function () {
     this.fetchSubscriptions();

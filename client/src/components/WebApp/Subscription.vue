@@ -15,7 +15,7 @@
             :to="`/app/dashboard/subscription/edit/${subscriptionId}`"
             tag="li"
           >Edit subscription</router-link>
-          <li>Remove subscription</li>
+          <li @click="handleRemoveSubscription">Remove subscription</li>
         </ul>
       </div>
     </div>
@@ -143,6 +143,23 @@ export default {
     toggleShowOptions: function () {
       this.showOptions ? (this.showOptions = false) : (this.showOptions = true);
     },
+    handleRemoveSubscription: async function() {
+      try {
+        this.loading = true;
+        this.error = false;
+        this.showOptions = false;
+        this.showUpcomingPayments = false;
+
+        const req = await this.$http.delete(`/api/subscription/${this.subscriptionId}`);
+
+        this.loading = false;
+        this.$emit('refreshSubscriptions');
+        this.$router.push('/app/dashboard');
+      } catch (err) {
+        this.error = true;
+        console.log(err);
+      }
+    }
   },
   computed: {
     firstPaymentString: function () {
