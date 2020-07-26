@@ -10,6 +10,7 @@ import Dashboard from "../components/WebApp/Dashboard";
 import PickASubscription from "../components/WebApp/PickASubscription";
 import SubscriptionForm from "../components/WebApp/SubscriptionForm";
 import NewSubscriptionForm from "../components/WebApp/NewSubscriptionForm";
+import Subscription from "../components/WebApp/Subscription";
 import catchAll from "../components/404";
 
 import store from "../store";
@@ -56,6 +57,12 @@ let router = new Router({
               path: "",
               name: "No Subscription Loaded",
               component: PickASubscription
+            },
+            {
+              path: "subscription/view/:subscriptionId",
+              name: "View Subscription",
+              component: Subscription,
+              props: true
             },
             {
               path: "subscription/new",
