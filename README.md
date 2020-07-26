@@ -20,11 +20,9 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### General
 
-[] Mobile Responsiveness 
-- Right menu needs a back button on mobile
-[] Have upcoming payments on subscription forms for view only
-[] Add sorting to payments; maybe layout like TickTick's side menu. E.g. All, Today, This Week, This Month
-  [] For All, add accordion button 
+[] Make a subscription "display" with an edit button to send to the subscription form
+[] Add sorting links to main menu; ?filter=all, ?filter=month, ?filter=week
+  [] For All, add accordion  
 [] Year and day parsing for future payments
 [] No Subscription Found component
 [] account page - full screen route
@@ -34,6 +32,9 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Integrate Tags
 [] Landing page
 [] Look into making webapp only on /app, serve Home, About, Contact page on Node?
+[x] Have upcoming payments on subscription forms for view only
+[x] Mobile Responsiveness 
+- Right menu needs a back button on mobile
 [x] custom color picker
 [x] custom date picker
 [x] Empty dashboard 

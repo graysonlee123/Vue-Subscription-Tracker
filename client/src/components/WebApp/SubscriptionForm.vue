@@ -104,6 +104,20 @@
           v-if="formErrors.find(({field}) => field === 'duration')"
         >{{formErrors.find(({field}) => field ==='duration').msg}}</p>
       </div>
+      <!-- Upcoming Payments -->
+      <div class="field-wrapper">
+        <label for="">Upcoming Payments</label>
+        <div class="upcoming-payments-wrapper">
+          <div class="upcoming-payment" v-for="({dateString, fromNow}, index) in subscription.upcomingPaymentDates" :key="index">
+            <p class="title">
+              {{dateString}}
+            </p>
+            <p class="sub">
+              {{fromNow}}
+            </p>
+          </div>
+        </div>
+      </div>
       <!-- Divider -->
       <div class="field-wrapper">
         <hr class="divider" />
@@ -177,6 +191,7 @@
 
 <script>
 import axios from "axios";
+import moment from 'moment';
 import { formErrors } from "../../mixins/formErrors";
 
 import DatePicker from "./DatePicker.vue";
@@ -218,9 +233,25 @@ export default {
         const req = await axios.get(`/api/subscription/${this.id}`);
 
         this.subscription = req.data.subscription;
+        this.getUpcomingPayments();
         this.isLoading = false;
       } catch (err) {
         console.log(err);
+      }
+    },
+    getUpcomingPayments: function() {
+      const firstPaymentDate = moment(this.subscription.firstPaymentDate);
+      this.subscription.upcomingPaymentDates = [];
+
+      for (let i = 1; i <= 7; i++ ) {
+        firstPaymentDate.add({months: 1});
+        const dateString = firstPaymentDate.format("M/D/YY");
+        const fromNow = firstPaymentDate.fromNow(true);
+        
+        this.subscription.upcomingPaymentDates.push({
+          dateString,
+          fromNow: "in " + fromNow
+        });
       }
     },
     updateSubscription: async function () {
@@ -432,6 +463,32 @@ form {
 
     @media screen and (min-width: 767px) {
       display: block;
+    }
+  }
+}
+
+.upcoming-payments-wrapper { 
+  font-size: 0.8rem;
+  display: flex;
+  overflow-x: auto;
+  padding: 1em 0 0;
+
+  .upcoming-payment {
+    padding: 0.6em;
+    text-align: center;
+    flex-basis: 120px;
+    flex-shrink: 0;
+    background-color: #333;
+    border-radius: 5px;
+    margin: 0.2em;
+
+    .title {
+      font-weight: bold;
+      margin-bottom: 0.4em;
+    }
+
+    .sub {
+      color: rgba(255, 255, 255, 0.2);
     }
   }
 }
