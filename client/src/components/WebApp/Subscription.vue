@@ -8,6 +8,13 @@
       <h3>{{subscription.name}}</h3>
       <p class="description" v-if="subscription.description">{{subscription.description}}</p>
       <h2>${{subscription.price}}</h2>
+      <div class="options-wrapper">
+        <i class="fas fa-ellipsis-v" @click="toggleShowOptions"></i>
+        <ul v-if="showOptions" class="subscription-options">
+          <router-link :to="`/app/dashboard/subscription/edit/${subscriptionId}`" tag="li">Edit subscription</router-link>
+          <li>Remove subscription</li>
+        </ul>
+      </div>
     </div>
     <ul class="tags">
       <li>Productivity</li>
@@ -68,6 +75,7 @@ export default {
       error: false,
       subscription: null,
       showUpcomingPayments: false,
+      showOptions: false
     };
   },
   methods: {
@@ -75,6 +83,8 @@ export default {
       this.loading = true;
       this.error = false;
       this.subscription = null;
+      this.showOptions = false;
+      this.showUpcomingPayments = false;
 
       try {
         const req = await this.$http.get(
@@ -87,6 +97,7 @@ export default {
       } catch (err) {
         this.error = true;
         this.loading = false;
+
         console.log(err);
       }
     },
@@ -126,6 +137,9 @@ export default {
         pushDateToUpcoming(date);
       }
     },
+    toggleShowOptions: function() {
+      this.showOptions ? this.showOptions = false : this.showOptions = true;
+    }
   },
   computed: {
     firstPaymentString: function () {
@@ -135,6 +149,11 @@ export default {
   created: function () {
     this.fetchSubscription();
   },
+  watch: {
+    $route: function() {
+      this.fetchSubscription();
+    }
+  }
 };
 </script>
 
@@ -150,6 +169,7 @@ article.subscription {
     text-align: center;
     font-size: 1.2rem;
     margin-bottom: 1em;
+    position: relative;
 
     h2 {
       font-size: 1.8em;
@@ -163,6 +183,40 @@ article.subscription {
 
     p {
       font-size: 0.7em;
+    }
+  }
+
+  .options-wrapper {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    font-size: 0.8rem;
+    text-align: left;
+    white-space: nowrap;
+    user-select: none;
+
+    i {
+      padding: 0.4em;
+      cursor: pointer;
+    }
+
+    .subscription-options {
+      position: absolute;
+      top: 32px;
+      right: 0;
+      background-color: #333;
+      box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
+      font-size: 0.9em;
+      border-radius: 4px;
+
+      li {
+        padding: 1em;
+        cursor: pointer;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+      }
     }
   }
 
@@ -191,9 +245,6 @@ article.subscription {
       color: rgba(255, 255, 255, 0.5);
       margin-bottom: 0.3em;
       display: block;
-    }
-
-    p {
     }
 
     &.upcoming-payments {

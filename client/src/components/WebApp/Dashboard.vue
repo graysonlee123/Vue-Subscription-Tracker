@@ -31,7 +31,7 @@
               <router-link
                 tag="div"
                 class="subscription-preview-card"
-                :to="{path: `/app/dashboard/subscription/${id}`}"
+                :to="{path: `/app/dashboard/subscription/view/${id}`}"
               >
                 <span class="name">{{name}}</span>
                 <span class="date">{{paymentDates[0] | moment("dddd, MMMM Do YYYY")}}</span>
