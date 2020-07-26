@@ -1,13 +1,13 @@
 <template>
-  <div id="app-container" :class="{ leftMenuOpened: showLeftNav }">
+  <div id="app-container" :class="{ leftMenuOpened: showLeftNav, rightPaneOpened: showRightPane }">
+    <div id="nav-background-listener" @click="showLeftNav = false"></div>
     <transition name="slideToRight" mode="in-out">
-      <navigation
-        v-if="showLeftNav"
-      />
+      <navigation v-if="showLeftNav"/>
     </transition>
     <transition name="page" mode="out-in">
       <router-view
         @toggleMenu="() => this.showLeftNav ? this.showLeftNav = false : this.showLeftNav = true"
+        @closeRightMenu="() => this.showRightPane = false"
       />
     </transition>
   </div>
@@ -24,23 +24,40 @@ export default {
   data: function () {
     return {
       showLeftNav: true,
+      showRightPane: false,
     };
   },
   methods: {
-    checkWidth: function() {
+    checkWidth: function () {
       const width = $(document).width();
-  
+
       if (width <= desktopBreak) {
         this.showLeftNav = false;
       }
-    }
+    },
+    checkRightPane: function () {
+      // Checks to see if we need to open the right pane on mobile
+
+      if (this.$route.name === "Subscription") {
+        this.showRightPane = true;
+      } else if (this.$route.name === "New Subscription") {
+        this.showRightPane = true;
+      } else {
+        this.showRightPane = false;
+      }
+    },
   },
   components: {
     navigation: Navigation,
   },
-  beforeMount: function() {
+  beforeMount: function () {
     this.checkWidth();
-  }
+  },
+  watch: {
+    $route: function () {
+      this.checkRightPane();
+    },
+  },
 };
 </script>
 
@@ -58,25 +75,39 @@ $menuColor: #27282a;
 #app-container {
   height: 100%;
   color: #fafafa;
+
+  &.rightPaneOpened {
+    #right {
+      right: 0px;
+    }
+  }
+
+  &.leftMenuOpened {
+    #nav-background-listener {
+      display: block;
+    }
+  }
 }
 
 #dashboard-wrapper {
   width: 100%;
   height: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
 }
 
 #right {
-  font-size: 1rem;
   height: 100%;
+  font-size: 1rem;
   background-color: $backgroundColor;
   padding: 0;
-  border-left: $borderStyle;
   overflow: hidden;
+  position: fixed;
+  right: -100%;
+  top: 0;
+  width: 100%;
 }
 
 #left {
+  height: 100%;
   font-size: 1rem;
   background-color: $backgroundColor;
   padding: 1.2em;
@@ -87,6 +118,17 @@ $menuColor: #27282a;
   width: $navWidth;
   border-right: $borderStyle;
   background: $menuColor;
+}
+
+#nav-background-listener {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  // Only display when "leftMenuOpened" is active class
+  display: none;
 }
 
 // Global Stuff
@@ -154,6 +196,20 @@ $menuColor: #27282a;
     #dashboard-wrapper {
       padding-left: $navWidth;
     }
+  }
+
+  #dashboard-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    #right {
+      position: static;
+      border-left: $borderStyle;
+    }
+  }
+
+  #app-container.leftMenuOpened #nav-background-listener {
+    display: none;
   }
 }
 </style>
