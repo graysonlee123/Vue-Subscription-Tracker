@@ -20,6 +20,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### General
 
+[] Fix new sub form's default date
 [] Fix back arrow on mobile
 [] Make subscription component fixed width
 [] Add remove subscription logic to Subscription component dropdown

@@ -3,10 +3,8 @@ export const formErrors = {
     // @param   err           Error Object    Takes in error object from express validator
     // @param   elementId     String          Optional input element's ID to focus on error
     addFormError: function(err, elementId) {
-      const errors = err.response.data.errors;
-
-      if (errors) {
-        errors.forEach(({ param: field, msg }) =>
+      if (err && err.response && err.response.data) {
+        err.response.data.errors.forEach(({ param: field, msg }) =>
           this.formErrors.push({ field, msg })
         );
 

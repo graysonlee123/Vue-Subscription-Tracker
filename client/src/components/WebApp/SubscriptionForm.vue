@@ -170,7 +170,9 @@
       </div>
       <!-- Submit -->
       <div class="field-wrapper submit-wrapper">
-        <button type="submit">Update</button>
+        <button id="submit-btn" type="submit" :style="{backgroundColor: subscription.color}">
+          <i class="fa fa-save"></i> Save Subscription
+        </button>
       </div>
     </form>
   </div>
@@ -234,7 +236,7 @@ export default {
       } catch (err) {
         this.error = true;
         this.loading = false;
-        
+
         console.log(err);
       }
     },
@@ -253,7 +255,7 @@ export default {
 
           this.loading = false;
           this.$emit("refreshSubscriptions");
-          this.router.push(
+          this.$router.push(
             `/app/dashboard/subscription/view/${res.data.subscription._id}`
           );
         } else {
@@ -469,10 +471,23 @@ form {
   }
 
   &.submit-wrapper {
-    display: none;
+    text-align: center;
 
-    @media screen and (min-width: 767px) {
-      display: block;
+    #submit-btn {
+      font-size: 0.8rem;
+      padding: 1.3em 2em;
+      border-radius: 4em;
+      border: none;
+      box-shadow: 4px 4px 14px rgba(0, 0, 0, 0.3);
+      background: none;
+      background-color: #444;
+      color: #fff;
+      cursor: pointer;
+
+      i {
+        margin-right: 0.4em;
+        font-size: 1.2em;
+      }
     }
   }
 }
