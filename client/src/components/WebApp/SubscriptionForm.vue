@@ -10,6 +10,9 @@
         class="field-wrapper price-wrapper"
         :style="{backgroundColor: subscription.color}"
       >
+        <div class="back-arrow" @click="handleBackArrow">
+          <i class="fa fa-arrow-left"></i>
+        </div>
         <label for="price">Price</label>
         <div class="input-wrapper">
           <input
@@ -270,6 +273,15 @@ export default {
     pickColor: function (color) {
       this.subscription.color = color;
     },
+    handleBackArrow: async function() {
+      try {
+        await this.updateSubscription();
+        this.$router.go(-1);
+        this.$emit('closeRightMenu');
+      } catch (error) {
+        console.log(err);
+      }
+    }
   },
   created: function () {
     this.fetchSubscription();
@@ -374,6 +386,9 @@ form {
 
     .color-picker {
       cursor: pointer;
+      padding-top: 0;
+      padding-bottom: 0;
+      line-height: 44px;
     }
 
     .color-modal {
@@ -411,6 +426,14 @@ form {
       }
     }
   }
+
+  &.submit-wrapper {
+    display: none;
+
+    @media screen and (min-width: 767px) {
+      display: block;
+    }
+  }
 }
 
 #price-wrapper {
@@ -421,9 +444,23 @@ form {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 
   label {
     display: none;
+  }
+
+  .back-arrow {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    font-size: 1.2em;
+    display: none;
+    cursor: pointer;
+
+    @media screen and (max-width: 767px) {
+      display: block;
+    }
   }
 
   .input-wrapper {

@@ -29,8 +29,11 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] No Subscription Found component
 [] account page - full screen route
   [] settings page - integrate with account page
+[] Date picker needs to show previous month and next month days
 [] Handle removing error on lost focus for an error'd field's input
 [] Integrate Tags
+[] Landing page
+[] Look into making webapp only on /app, serve Home, About, Contact page on Node?
 [x] custom color picker
 [x] custom date picker
 [x] Empty dashboard 
