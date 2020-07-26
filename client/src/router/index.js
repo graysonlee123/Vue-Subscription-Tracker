@@ -65,15 +65,15 @@ let router = new Router({
               props: true
             },
             {
-              path: "subscription/new",
-              name: "New Subscription",
-              component: NewSubscriptionForm
-            },
-            {
-              path: "subscription/:id",
+              path: "subscription/edit/:subscriptionId",
               name: "Subscription",
               component: SubscriptionForm,
               props: true
+            },
+            {
+              path: "subscription/new",
+              name: "New Subscription",
+              component: NewSubscriptionForm
             },
             {
               path: "subscription",

@@ -198,7 +198,7 @@ import DatePicker from "./DatePicker.vue";
 
 export default {
   props: {
-    id: {
+    subscriptionId: {
       type: String,
       required: true,
     },
@@ -230,7 +230,7 @@ export default {
       this.subscription = null;
 
       try {
-        const req = await axios.get(`/api/subscription/${this.id}`);
+        const req = await axios.get(`/api/subscription/${this.subscriptionId}`);
 
         this.subscription = req.data.subscription;
         this.getUpcomingPayments();
@@ -263,12 +263,13 @@ export default {
           ...this.subscription,
         };
 
-        const res = await axios.post(`/api/subscription/${this.id}`, data);
+        const res = await axios.post(`/api/subscription/${this.subscriptionId}`, data);
 
         this.subscription = res.data.subscription;
         this.isLoading = false;
 
         this.$emit("refreshSubscriptions");
+        this.$router.push(`/app/dashboard/subscription/view/${this.subscriptionId}`);
       } catch (err) {
         console.log(err);
         this.isLoading = false;
