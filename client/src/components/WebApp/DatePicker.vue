@@ -1,8 +1,6 @@
 <template>
   <div class="date-wrapper">
-    <div class="date-text" @click="show = true">
-      {{inputDate | moment("MMMM DD, YYYY")}}
-    </div>
+    <div class="date-text" @click="show = true">{{inputDate | moment("MMMM DD, YYYY")}}</div>
     <div v-if="show" class="date-picker">
       <div class="header">
         <div class="left buttons" @click="decreaseMonth">
@@ -147,20 +145,20 @@ export default {
 
       return `${year}-${monthParse}-${dayParse}`;
     },
-    setDate: function() {
+    setDate: function () {
       this.selectedDate = this.parseDate(this.year, this.month, this.day);
       this.inputDate = this.selectedDate;
-    }
+    },
   },
   watch: {
     month: function () {
       this.loadMonth();
     },
-    show: function(val) {
+    show: function (val) {
       if (val) {
-        this.setDate
+        this.setDate;
       }
-    }
+    },
   },
   created: function () {
     if (this.date) {
@@ -172,7 +170,7 @@ export default {
 
       this.setDate();
     } else {
-      const currentDate = new Date.now();
+      const currentDate = new Date(Date.now());
 
       this.year = currentDate.getFullYear();
       this.month = currentDate.getMonth();

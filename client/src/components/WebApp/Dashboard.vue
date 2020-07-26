@@ -56,7 +56,10 @@
     <div id="right">
       <!-- // TODO: Fix this transition acting weird -->
       <transition name="slide" mode="out-in">
-        <router-view @refreshSubscriptions="fetchSubscriptions" @closeRightMenu="$emit('closeRightMenu')"></router-view>
+        <router-view
+          @refreshSubscriptions="fetchSubscriptions"
+          @closeRightMenu="$emit('closeRightMenu')"
+        ></router-view>
       </transition>
     </div>
   </main>

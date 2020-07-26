@@ -10,7 +10,7 @@ export const formErrors = {
           this.formErrors.push({ field, msg })
         );
 
-        if (elementId) {
+        if (document.getElementById(elementId)) {
           document.getElementById(elementId).focus();
         }
       }

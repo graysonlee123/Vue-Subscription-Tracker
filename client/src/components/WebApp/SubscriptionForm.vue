@@ -1,9 +1,10 @@
 <template>
-  <div v-if="isLoading" key="spinner" class="spinner-container">
+  <div v-if="loading" key="spinner" class="spinner-container">
     <i class="spinner"></i>
   </div>
+  <div v-else-if="error">There was a problem with that request. Please try again later.</div>
   <div v-else key="form" class="form-container">
-    <form @submit.prevent="updateSubscription">
+    <form @submit.prevent="handleSubmit">
       <!-- Price -->
       <div
         id="price-wrapper"
@@ -104,20 +105,6 @@
           v-if="formErrors.find(({field}) => field === 'duration')"
         >{{formErrors.find(({field}) => field ==='duration').msg}}</p>
       </div>
-      <!-- Upcoming Payments -->
-      <div class="field-wrapper">
-        <label for="">Upcoming Payments</label>
-        <div class="upcoming-payments-wrapper">
-          <div class="upcoming-payment" v-for="({dateString, fromNow}, index) in subscription.upcomingPaymentDates" :key="index">
-            <p class="title">
-              {{dateString}}
-            </p>
-            <p class="sub">
-              {{fromNow}}
-            </p>
-          </div>
-        </div>
-      </div>
       <!-- Divider -->
       <div class="field-wrapper">
         <hr class="divider" />
@@ -190,8 +177,7 @@
 </template>
 
 <script>
-import axios from "axios";
-import moment from 'moment';
+import moment from "moment";
 import { formErrors } from "../../mixins/formErrors";
 
 import DatePicker from "./DatePicker.vue";
@@ -200,13 +186,21 @@ export default {
   props: {
     subscriptionId: {
       type: String,
-      required: true,
     },
   },
   data: function () {
     return {
-      isLoading: true,
-      subscription: null,
+      loading: true,
+      error: false,
+      subscription: {
+        name: "",
+        description: "",
+        interval: "1",
+        duration: "month",
+        paymentMethod: "",
+        note: "",
+        color: "#0d8ace",
+      },
       formErrors: [],
       showColorModal: false,
       colors: [
@@ -221,59 +215,68 @@ export default {
         "#e36e9e",
         "#8b00ef",
       ],
+      postAsNew: false,
     };
   },
   mixins: [formErrors],
   methods: {
     fetchSubscription: async function () {
-      this.isLoading = true;
+      this.loading = true;
       this.subscription = null;
 
       try {
-        const req = await axios.get(`/api/subscription/${this.subscriptionId}`);
+        const req = await this.$http.get(
+          `/api/subscription/${this.subscriptionId}`
+        );
 
         this.subscription = req.data.subscription;
-        this.getUpcomingPayments();
-        this.isLoading = false;
+        this.loading = false;
       } catch (err) {
-        console.log(err);
-      }
-    },
-    getUpcomingPayments: function() {
-      const firstPaymentDate = moment(this.subscription.firstPaymentDate);
-      this.subscription.upcomingPaymentDates = [];
-
-      for (let i = 1; i <= 7; i++ ) {
-        firstPaymentDate.add({months: 1});
-        const dateString = firstPaymentDate.format("M/D/YY");
-        const fromNow = firstPaymentDate.fromNow(true);
+        this.error = true;
+        this.loading = false;
         
-        this.subscription.upcomingPaymentDates.push({
-          dateString,
-          fromNow: "in " + fromNow
-        });
+        console.log(err);
       }
     },
-    updateSubscription: async function () {
+    handleSubmit: async function () {
       this.formErrors = [];
-      this.isLoading = true;
+      this.loading = true;
 
+      // TODO: Make this more DRY
       try {
-        const data = {
-          ...this.subscription,
-        };
+        if (this.postAsNew) {
+          const data = {
+            ...this.subscription,
+          };
 
-        const res = await axios.post(`/api/subscription/${this.subscriptionId}`, data);
+          const res = await this.$http.post("/api/subscription", data);
 
-        this.subscription = res.data.subscription;
-        this.isLoading = false;
+          this.loading = false;
+          this.$emit("refreshSubscriptions");
+          this.router.push(
+            `/app/dashboard/subscription/view/${res.data.subscription._id}`
+          );
+        } else {
+          const data = {
+            ...this.subscription,
+          };
 
-        this.$emit("refreshSubscriptions");
-        this.$router.push(`/app/dashboard/subscription/view/${this.subscriptionId}`);
+          const res = await this.$http.post(
+            `/api/subscription/${this.subscriptionId}`,
+            data
+          );
+
+          this.loading = false;
+          this.$emit("refreshSubscriptions");
+          this.$router.push(
+            `/app/dashboard/subscription/view/${this.subscriptionId}`
+          );
+        }
       } catch (err) {
+        this.loading = false;
+        this.addFormError(err);
+
         console.log(err);
-        this.isLoading = false;
-        this.addFormError(err, "price");
       }
     },
     decodeHtml: function (html) {
@@ -305,21 +308,27 @@ export default {
     pickColor: function (color) {
       this.subscription.color = color;
     },
-    handleBackArrow: async function() {
+    handleBackArrow: async function () {
       try {
-        await this.updateSubscription();
+        await this.handleSubmit();
         this.$router.go(-1);
-        this.$emit('closeRightMenu');
+        this.$emit("closeRightMenu");
       } catch (error) {
         console.log(err);
       }
-    }
+    },
   },
   created: function () {
-    this.fetchSubscription();
-  },
-  watch: {
-    $route: "fetchSubscription",
+    // Detect id to know if we are serving a blank form or a populated form
+    if (this.subscriptionId) {
+      this.fetchSubscription();
+    } else {
+      this.loading = false;
+      this.postAsNew = true;
+      this.subscription.color = this.colors[
+        Math.floor(Math.random() * this.colors.length)
+      ];
+    }
   },
   components: {
     datePicker: DatePicker,
@@ -468,44 +477,23 @@ form {
   }
 }
 
-.upcoming-payments-wrapper { 
-  font-size: 0.8rem;
-  display: flex;
-  overflow-x: auto;
-  padding: 1em 0 0;
-
-  .upcoming-payment {
-    padding: 0.6em;
-    text-align: center;
-    flex-basis: 120px;
-    flex-shrink: 0;
-    background-color: #333;
-    border-radius: 5px;
-    margin: 0.2em;
-
-    .title {
-      font-weight: bold;
-      margin-bottom: 0.4em;
-    }
-
-    .sub {
-      color: rgba(255, 255, 255, 0.2);
-    }
-  }
-}
-
 #price-wrapper {
   width: 100%;
   height: 200px;
   background-color: #333;
   border-radius: 4px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
 
   label {
     display: none;
+  }
+
+  .field-error {
+    margin-top: 1em;
   }
 
   .back-arrow {
