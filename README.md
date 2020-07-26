@@ -20,7 +20,9 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### General
 
-[] Make a subscription "display" with an edit button to send to the subscription form
+[] Fix back arrow on mobile
+[] Make subscription component fixed width
+[] Add remove subscription logic to Subscription component dropdown
 [] Add sorting links to main menu; ?filter=all, ?filter=month, ?filter=week
   [] For All, add accordion  
 [] Year and day parsing for future payments
@@ -32,6 +34,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Integrate Tags
 [] Landing page
 [] Look into making webapp only on /app, serve Home, About, Contact page on Node?
+[x] Make a subscription "display" with an edit button to send to the subscription form
 [x] Have upcoming payments on subscription forms for view only
 [x] Mobile Responsiveness 
 - Right menu needs a back button on mobile

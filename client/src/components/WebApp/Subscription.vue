@@ -11,7 +11,10 @@
       <div class="options-wrapper">
         <i class="fas fa-ellipsis-v" @click="toggleShowOptions"></i>
         <ul v-if="showOptions" class="subscription-options">
-          <router-link :to="`/app/dashboard/subscription/edit/${subscriptionId}`" tag="li">Edit subscription</router-link>
+          <router-link
+            :to="`/app/dashboard/subscription/edit/${subscriptionId}`"
+            tag="li"
+          >Edit subscription</router-link>
           <li>Remove subscription</li>
         </ul>
       </div>
@@ -75,7 +78,7 @@ export default {
       error: false,
       subscription: null,
       showUpcomingPayments: false,
-      showOptions: false
+      showOptions: false,
     };
   },
   methods: {
@@ -114,7 +117,7 @@ export default {
           fromNow: date.fromNow(),
         });
       };
-      
+
       const duration = this.subscription.duration;
 
       // Set initial values in subscription data
@@ -137,9 +140,9 @@ export default {
         pushDateToUpcoming(date);
       }
     },
-    toggleShowOptions: function() {
-      this.showOptions ? this.showOptions = false : this.showOptions = true;
-    }
+    toggleShowOptions: function () {
+      this.showOptions ? (this.showOptions = false) : (this.showOptions = true);
+    },
   },
   computed: {
     firstPaymentString: function () {
@@ -150,10 +153,10 @@ export default {
     this.fetchSubscription();
   },
   watch: {
-    $route: function() {
+    $route: function () {
       this.fetchSubscription();
-    }
-  }
+    },
+  },
 };
 </script>
 

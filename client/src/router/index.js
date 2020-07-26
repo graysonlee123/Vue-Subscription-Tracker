@@ -9,7 +9,6 @@ import WebApp from "../components/WebApp/WebApp";
 import Dashboard from "../components/WebApp/Dashboard";
 import PickASubscription from "../components/WebApp/PickASubscription";
 import SubscriptionForm from "../components/WebApp/SubscriptionForm";
-import NewSubscriptionForm from "../components/WebApp/NewSubscriptionForm";
 import Subscription from "../components/WebApp/Subscription";
 import catchAll from "../components/404";
 
@@ -73,7 +72,7 @@ let router = new Router({
             {
               path: "subscription/new",
               name: "New Subscription",
-              component: NewSubscriptionForm
+              component: SubscriptionForm
             },
             {
               path: "subscription",
