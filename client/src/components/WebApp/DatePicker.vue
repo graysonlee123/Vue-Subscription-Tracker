@@ -1,6 +1,10 @@
 <template>
   <div class="date-wrapper">
-    <div class="date-text" @click="show = true">{{inputDate | moment("MMMM DD, YYYY")}}</div>
+    <div
+      class="date-text"
+      :class="{'date-selected': selectedDate}"
+      @click="show = true"
+    >{{inputText || selectedDate }}</div>
     <div v-if="show" class="date-picker">
       <div class="header">
         <div class="left buttons" @click="decreaseMonth">
@@ -49,7 +53,7 @@ export default {
   },
   data: function () {
     return {
-      inputDate: "",
+      inputText: "Select a date...",
       selectedDate: "",
       day: "",
       month: "",
@@ -134,10 +138,10 @@ export default {
       this.selectedDate = date;
     },
     submitForm: function () {
-      this.inputDate = this.selectedDate;
+      this.inputText = this.selectedDate;
       this.show = false;
 
-      this.$emit("dateUpdated", this.inputDate);
+      this.$emit("dateUpdated", this.selectedDate);
     },
     parseDate: function (year, month, day) {
       const monthParse = month + 1 < 10 ? `0${month + 1}` : `${month + 1}`;
@@ -147,7 +151,6 @@ export default {
     },
     setDate: function () {
       this.selectedDate = this.parseDate(this.year, this.month, this.day);
-      this.inputDate = this.selectedDate;
     },
   },
   watch: {
@@ -169,14 +172,13 @@ export default {
       this.day = newDate.getDate();
 
       this.setDate();
+      this.inputText = this.selectedDate;
     } else {
       const currentDate = new Date(Date.now());
 
       this.year = currentDate.getFullYear();
       this.month = currentDate.getMonth();
       this.day = currentDate.getDate();
-
-      this.setDate();
     }
   },
 };

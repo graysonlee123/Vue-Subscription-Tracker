@@ -202,6 +202,7 @@ export default {
         paymentMethod: "",
         note: "",
         color: "#0d8ace",
+        firstPaymentDate: ''
       },
       formErrors: [],
       showColorModal: false,

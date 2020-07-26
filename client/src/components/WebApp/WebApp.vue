@@ -1,12 +1,9 @@
 <template>
-  <div id="app-container" :class="{ leftMenuOpened: showLeftNav, rightPaneOpened: showRightPane }">
-    <div id="nav-background-listener" @click="showLeftNav = false"></div>
-    <transition name="slideToRight" mode="in-out">
-      <navigation v-if="showLeftNav"/>
-    </transition>
+  <div id="app-container" :class="{ 'nav-open': showNav, rightPaneOpened: showRightPane }">
+    <navigation />
     <transition name="page" mode="out-in">
       <router-view
-        @toggleMenu="() => this.showLeftNav ? this.showLeftNav = false : this.showLeftNav = true"
+        @toggleMenu="() => this.showNav ? this.showNav = false : this.showNav = true"
         @closeRightMenu="() => this.showRightPane = false"
       />
     </transition>
@@ -18,12 +15,12 @@ import Navigation from "./Navigation";
 import $ from "jquery";
 
 // Width in px for different menu logic to take over
-const desktopBreak = 1020;
+const navBreak = 1200;
 
 export default {
   data: function () {
     return {
-      showLeftNav: true,
+      showNav: true,
       showRightPane: false,
     };
   },
@@ -31,8 +28,8 @@ export default {
     checkWidth: function () {
       const width = $(document).width();
 
-      if (width <= desktopBreak) {
-        this.showLeftNav = false;
+      if (width <= navBreak) {
+        this.showNav = false;
       }
     },
     checkRightPane: function () {
@@ -58,33 +55,73 @@ export default {
       this.checkRightPane();
     },
   },
+  created: function () {
+    // Navigation click off listener
+    $(document).click((e) => {
+      const $nav = $("#nav-menu");
+      const $navMenu = $("#show-menu-btn");
+
+      if (
+        // If it isn't the nav itself
+        !$nav.is(e.target) &&
+        // And it's not a child of the nav component
+        $nav.has(e.target).length === 0 &&
+        // And it's not the open menu button
+        $navMenu.has(e.target).length === 0 &&
+        // And it's not a child of the open menu button
+        !$navMenu.is(e.target) &&
+        // And we're in the CSS breakpoint
+        $(document).width() < navBreak
+      ) {
+        this.showNav = false;
+      }
+    });
+  },
 };
 </script>
 
 <style lang="scss">
 $navWidth: 260px;
-
-$rightWidthDesktop: 36%;
-$rightWidthMobile: 70%;
+$navBreak: 1200px;
+$navTransitionDuration: 600ms;
 
 $borderStyle: 1px solid grey;
-
 $backgroundColor: #1c1d1f;
-$menuColor: #27282a;
 
 #app-container {
   height: 100%;
   color: #fafafa;
+  transition: padding-left $navTransitionDuration + 200 ease;
+
+  #nav-menu {
+    width: $navWidth;
+    height: 100%;
+    position: absolute;
+    left: -1 * $navWidth;
+    padding: 1rem;
+    font-size: 0.7rem;
+    border-right: $borderStyle;
+    background: #27282a;
+    z-index: 5;
+    user-select: none;
+    opacity: 0;
+    transition: opacity 400ms ease, left $navTransitionDuration ease;
+  }
 
   &.rightPaneOpened {
-    #right {
-      right: 0px;
+  }
+
+  &.nav-open {
+    #nav-menu {
+      left: 0;
+      opacity: 1;
     }
   }
 
-  &.leftMenuOpened {
-    #nav-background-listener {
-      display: block;
+  @media screen and (min-width: $navBreak) {
+    &.nav-open {
+      padding-left: $navWidth;
+      transition-duration: $navTransitionDuration - 200;
     }
   }
 }
@@ -112,23 +149,6 @@ $menuColor: #27282a;
   background-color: $backgroundColor;
   padding: 1.2em;
   position: relative;
-}
-
-#nav-menu {
-  width: $navWidth;
-  border-right: $borderStyle;
-  background: $menuColor;
-}
-
-#nav-background-listener {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  // Only display when "leftMenuOpened" is active class
-  display: none;
 }
 
 // Global Stuff
@@ -165,23 +185,6 @@ $menuColor: #27282a;
   opacity: 0;
 }
 
-.slideToRight-enter-active,
-.slideToRight-leave-active {
-  transition: transform 200ms ease, opacity 100ms ease-in-out;
-}
-
-.slideToRight-enter-to,
-.slideToRight-leave {
-  transform: translateX(0px);
-  opacity: 1;
-}
-
-.slideToRight-enter,
-.slideToRight-leave-to {
-  transform: translateX(-1 * $navWidth);
-  opacity: 0;
-}
-
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -192,24 +195,14 @@ $menuColor: #27282a;
 }
 
 @media screen and (min-width: 767px) {
-  #app-container.leftMenuOpened {
-    #dashboard-wrapper {
-      padding-left: $navWidth;
-    }
-  }
-
   #dashboard-wrapper {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 400px;
 
     #right {
       position: static;
       border-left: $borderStyle;
     }
-  }
-
-  #app-container.leftMenuOpened #nav-background-listener {
-    display: none;
   }
 }
 </style>

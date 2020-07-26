@@ -20,7 +20,6 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### General
 
-[] Fix new sub form's default date
 [] Fix back arrow on mobile
 [] Make subscription component fixed width
 [] Add remove subscription logic to Subscription component dropdown
@@ -30,11 +29,12 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] No Subscription Found component
 [] account page - full screen route
   [] settings page - integrate with account page
-[] Date picker needs to show previous month and next month days
+[] Date picker needs to show previous month and next month days - make look and interact more like ticktick's
 [] Handle removing error on lost focus for an error'd field's input
 [] Integrate Tags
 [] Landing page
 [] Look into making webapp only on /app, serve Home, About, Contact page on Node?
+[x] Fix new sub form's date default date
 [x] Make a subscription "display" with an edit button to send to the subscription form
 [x] Have upcoming payments on subscription forms for view only
 [x] Mobile Responsiveness 
