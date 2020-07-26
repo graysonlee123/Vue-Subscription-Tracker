@@ -68,25 +68,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#nav-menu {
-  font-size: 0.7rem;
-  height: 100%;
-  z-index: 5;
-  padding: 1rem;
-  position: absolute;
-  left: 0;
-  user-select: none;
-
-  nav {
-    height: 100%;
-  }
-
-  #nav-background {
-    z-index: 4;
-    flex-grow: 1;
-  }
-}
-
 .nav-header {
   display: flex;
   align-items: center;
