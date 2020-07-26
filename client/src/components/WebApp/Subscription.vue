@@ -7,55 +7,39 @@
     <div class="price-box" :style="{backgroundColor: subscription.color}">
       <h3>{{subscription.name}}</h3>
       <p class="description" v-if="subscription.description">{{subscription.description}}</p>
-      <h2>{{subscription.price}}</h2>
+      <h2>${{subscription.price}}</h2>
     </div>
     <ul class="tags">
       <li>Productivity</li>
     </ul>
     <div class="field billing-period">
       <label>Billing period</label>
-      <p>every {{subscription.duration}}</p>
+      <p>every {{subscription.interval > 1 ? subscription.interval : ''}} {{subscription.duration}}{{subscription.interval > 1 ? 's' : ''}}</p>
     </div>
     <div class="field upcoming-payments">
       <label>Next payment</label>
       <div class="upcoming-payment">
-        <p>in ___ months (00/00/00)</p>
+        <p>{{subscription.upcomingPayments[0].fromNow}} ({{subscription.upcomingPayments[0].dateString}})</p>
         <i class="fa fa-chevron-down" @click="toggleUpcomingPayments()"></i>
       </div>
       <div class="upcoming-dropdown" v-if="showUpcomingPayments">
-        <div class="upcoming-box">
-          <p class="box-header">00/00/00</p>
-          <p class="box-sub">in 1 year</p>
-        </div>
-        <div class="upcoming-box">
-          <p class="box-header">00/00/00</p>
-          <p class="box-sub">in 1 year</p>
-        </div>
-        <div class="upcoming-box">
-          <p class="box-header">00/00/00</p>
-          <p class="box-sub">in 1 year</p>
-        </div>
-        <div class="upcoming-box">
-          <p class="box-header">00/00/00</p>
-          <p class="box-sub">in 1 year</p>
-        </div>
-        <div class="upcoming-box">
-          <p class="box-header">00/00/00</p>
-          <p class="box-sub">in 1 year</p>
-        </div>
-        <div class="upcoming-box">
-          <p class="box-header">00/00/00</p>
-          <p class="box-sub">in 1 year</p>
+        <div
+          class="upcoming-box"
+          v-for="(date, index) in subscription.upcomingPayments"
+          :key="index"
+        >
+          <p class="box-header">{{date.dateString}}</p>
+          <p class="box-sub">{{date.fromNow}}</p>
         </div>
       </div>
     </div>
     <div class="field first-payment">
       <label>First payment</label>
-      <p>every ...</p>
+      <p>{{firstPaymentString}}</p>
     </div>
     <div class="field paid-in-total">
       <label>Total amount paid</label>
-      <p>every ...</p>
+      <p>${{subscription.totalAmountPaid.toFixed(2)}}</p>
     </div>
     <div v-if="subscription.paymentMethod" class="field payment-method">
       <label>Payment method</label>
@@ -69,6 +53,8 @@
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
   props: {
     subscriptionId: {
@@ -96,6 +82,7 @@ export default {
         );
 
         this.subscription = req.data.subscription;
+        this.getUpcomingPayments();
         this.loading = false;
       } catch (err) {
         this.error = true;
@@ -108,13 +95,46 @@ export default {
         ? (this.showUpcomingPayments = false)
         : (this.showUpcomingPayments = true);
     },
+    getUpcomingPayments: function () {
+      // Should remain an arrow function to remain this binding
+      const pushDateToUpcoming = (date) => {
+        this.subscription.upcomingPayments.push({
+          dateString: date.format("MM/DD/YY"),
+          fromNow: date.fromNow(),
+        });
+      };
+      
+      const duration = this.subscription.duration;
+
+      // Set initial values in subscription data
+      this.subscription.upcomingPayments = [];
+      this.subscription.totalAmountPaid = 0;
+
+      // Logic Begins
+      const date = moment(this.subscription.firstPaymentDate);
+
+      // "fast forward" until we find the next payment date
+      while (moment().isAfter(date)) {
+        date.add(this.subscription.interval, this.subscription.duration + "s");
+        this.subscription.totalAmountPaid += this.subscription.price;
+      }
+
+      pushDateToUpcoming(date);
+
+      for (let i = 0; i < 7; i++) {
+        date.add(this.subscription.interval, this.subscription.duration + "s");
+        pushDateToUpcoming(date);
+      }
+    },
+  },
+  computed: {
+    firstPaymentString: function () {
+      return moment(this.subscription.firstPaymentDate).format("MM/DD/YY");
+    },
   },
   created: function () {
     this.fetchSubscription();
   },
-  getUpcomingPayments: function() {
-    
-  }
 };
 </script>
 
@@ -134,10 +154,6 @@ article.subscription {
     h2 {
       font-size: 1.8em;
       margin-top: 0.6em;
-
-      &::before {
-        content: "$"
-      }
     }
 
     h3 {
