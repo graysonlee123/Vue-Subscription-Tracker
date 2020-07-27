@@ -29,22 +29,24 @@
       <label>Billing period</label>
       <p>every {{subscription.interval > 1 ? subscription.interval : ''}} {{subscription.duration}}{{subscription.interval > 1 ? 's' : ''}}</p>
     </div>
-    <div class="field upcoming-payments">
+    <div class="field upcoming-payments" :class="{open: showUpcomingPayments}">
       <label>Next payment</label>
       <div class="upcoming-payment">
         <p>{{subscription.upcomingPayments[0].fromNow}} ({{subscription.upcomingPayments[0].dateString}})</p>
         <i class="fa fa-chevron-down" @click="toggleUpcomingPayments()"></i>
       </div>
-      <div class="upcoming-dropdown" v-if="showUpcomingPayments">
-        <div
-          class="upcoming-box"
-          v-for="(date, index) in subscription.upcomingPayments"
-          :key="index"
-        >
-          <p class="box-header">{{date.dateString}}</p>
-          <p class="box-sub">{{date.fromNow}}</p>
+      <transition name="expand">
+        <div class="upcoming-dropdown" v-if="showUpcomingPayments">
+          <div
+            class="upcoming-box"
+            v-for="(date, index) in subscription.upcomingPayments"
+            :key="index"
+          >
+            <p class="box-header">{{date.dateString}}</p>
+            <p class="box-sub">{{date.fromNow}}</p>
+          </div>
         </div>
-      </div>
+      </transition>
     </div>
     <div class="field first-payment">
       <label>First payment</label>
@@ -166,7 +168,7 @@ export default {
       }
     },
     handleGoBack: function () {
-      this.$router.push('/app/dashboard');
+      this.$router.push("/app/dashboard");
     },
   },
   computed: {
@@ -279,17 +281,24 @@ article.subscription {
     label {
       font-size: 0.7em;
       color: rgba(255, 255, 255, 0.5);
-      margin-bottom: 0.3em;
+      margin-bottom: 0.5em;
       display: block;
     }
 
     &.upcoming-payments {
+      &.open {
+        .upcoming-payment i {
+          transform: rotate(180deg);
+        }
+      }
+
       .upcoming-payment {
         display: flex;
         justify-content: space-between;
 
         i {
           margin-right: 0.4em;
+          transition: transform 200ms ease;
         }
       }
 
@@ -297,6 +306,7 @@ article.subscription {
         display: flex;
         font-size: 0.8rem;
         overflow-x: auto;
+        overflow-y: hidden;
 
         .upcoming-box {
           background-color: rgba(255, 255, 255, 0.3);
@@ -328,4 +338,24 @@ article.subscription {
     }
   }
 }
+
+// Transitions
+
+.expand-enter-active,
+.expand-leave-active {
+  transition: transform 400ms cubic-bezier(.785, .135, .15, .86), opacity 600ms ease;
+}
+
+.expand-enter,
+.expand-leave-to {
+  transform: translateY(-10px);
+  opacity: 0;
+}
+
+.expand-enter-to, 
+.expand-leave {
+  transform: translateY(0px);
+  opacity: 1;
+}
+
 </style>

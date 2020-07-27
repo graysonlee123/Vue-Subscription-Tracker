@@ -9,31 +9,32 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ### Urgent
 
 [] Fix dates going back a day on save 
-- Save dates as ISO string in DB
-- Dates are being parsed to local time in browser, need to only use no timezone
+- Saved dates as ISO string in DB no timezone offset
+- Dates are being parsed to local timezone in browser, need to only use no timezone offset
 [] Need to fine tune inputs for sub form
-- Check input types for phones
-- Encode / Decode HTML
-- style update button
+-x Check input types for phones
+-x Encode / Decode HTML
+-x style update button
 - Add plus / minus buttons for interval (?)
-- Form errors
+-x Form errors
 
 ### General
 
-[] Fix back arrow on mobile
-[] Make subscription component fixed width
-[] Add remove subscription logic to Subscription component dropdown
-[] Add sorting links to main menu; ?filter=all, ?filter=month, ?filter=week
-  [] For All, add accordion  
-[] Year and day parsing for future payments
-[] No Subscription Found component
 [] account page - full screen route
   [] settings page - integrate with account page
+[] Add sorting links to main menu; ?filter=all, ?filter=month, ?filter=week
+  [] For All, add accordion
+[] Year and day parsing for future payments
 [] Date picker needs to show previous month and next month days - make look and interact more like ticktick's
 [] Handle removing error on lost focus for an error'd field's input
-[] Integrate Tags
 [] Landing page
 [] Look into making webapp only on /app, serve Home, About, Contact page on Node?
+[] Sanitize user information on signup
+[x] Rotate arrow on Subscription component
+[x] No Subscription Found component
+[x] Add remove subscription logic to Subscription component dropdown
+[x] Make subscription component fixed width
+[x] Fix back arrow on mobile
 [x] Fix new sub form's date default date
 [x] Make a subscription "display" with an edit button to send to the subscription form
 [x] Have upcoming payments on subscription forms for view only
@@ -52,6 +53,10 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [x] Polish dashboard look and feel
   [x] Work on right form menu
 
+### Icebox
+[] Integrate Tags
+
 ## Quick Links
 - https://stackoverflow.com/questions/46389267/using-async-await-with-webpack-simple-configuration-throwing-error-regeneratorr
 - https://vuejs.org/v2/cookbook/debugging-in-vscode.html
+- https://t.co/d4GPfuwRBd?amp=1

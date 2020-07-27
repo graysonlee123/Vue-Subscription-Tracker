@@ -25,6 +25,7 @@
             placeholder="0.00"
             v-model="subscription.price"
             v-on:blur="handlePriceBlur"
+            inputmode="decimal"
             autofocus
           />
         </div>
@@ -83,7 +84,7 @@
       <div class="field-wrapper interval-wrapper">
         <label for="interval">Interval</label>
         <div class="input-wrapper">
-          <input id="interval" type="number" default="1" v-model="subscription.interval" />
+          <input id="interval" type="number" default="1" v-model="subscription.interval" inputmode="numeric" />
         </div>
         <p
           class="field-error"
@@ -369,6 +370,16 @@ form {
     border-top-width: 1px;
     border-color: rgba(255, 255, 255, 0.3);
     margin: 0;
+  }
+
+  .field-error {
+    margin-top: 0.2em;
+    color: #ff9f9f;
+    background-color: rgb(169, 53, 53);
+    padding: 0.6em;
+    border-radius: 5px;
+    font-size: 0.9em;
+    text-transform: capitalize;
   }
 }
 
