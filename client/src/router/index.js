@@ -65,7 +65,7 @@ let router = new Router({
             },
             {
               path: "subscription/edit/:subscriptionId",
-              name: "Subscription",
+              name: "Edit Subscription",
               component: SubscriptionForm,
               props: true
             },

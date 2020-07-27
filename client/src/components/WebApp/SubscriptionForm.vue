@@ -11,7 +11,7 @@
         class="field-wrapper price-wrapper"
         :style="{backgroundColor: subscription.color}"
       >
-        <div class="back-arrow" @click="handleBackArrow">
+        <div class="back-arrow" @click="handleGoBack">
           <i class="fa fa-arrow-left"></i>
         </div>
         <label for="price">Price</label>
@@ -311,11 +311,9 @@ export default {
     pickColor: function (color) {
       this.subscription.color = color;
     },
-    handleBackArrow: async function () {
+    handleGoBack: async function () {
       try {
-        await this.handleSubmit();
-        this.$router.go(-1);
-        this.$emit("closeRightMenu");
+        this.$router.push('/app/dashboard');
       } catch (error) {
         console.log(err);
       }
