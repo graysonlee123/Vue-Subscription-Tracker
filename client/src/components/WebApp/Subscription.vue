@@ -18,6 +18,9 @@
           <li @click="handleRemoveSubscription">Remove subscription</li>
         </ul>
       </div>
+      <div class="back-arrow-wrapper" @click="handleGoBack">
+        <i class="fa fa-arrow-left"></i>
+      </div>
     </div>
     <ul class="tags">
       <li>Productivity</li>
@@ -143,23 +146,28 @@ export default {
     toggleShowOptions: function () {
       this.showOptions ? (this.showOptions = false) : (this.showOptions = true);
     },
-    handleRemoveSubscription: async function() {
+    handleRemoveSubscription: async function () {
       try {
         this.loading = true;
         this.error = false;
         this.showOptions = false;
         this.showUpcomingPayments = false;
 
-        const req = await this.$http.delete(`/api/subscription/${this.subscriptionId}`);
+        const req = await this.$http.delete(
+          `/api/subscription/${this.subscriptionId}`
+        );
 
         this.loading = false;
-        this.$emit('refreshSubscriptions');
-        this.$router.push('/app/dashboard');
+        this.$emit("refreshSubscriptions");
+        this.$router.push("/app/dashboard");
       } catch (err) {
         this.error = true;
         console.log(err);
       }
-    }
+    },
+    handleGoBack: function () {
+      this.$router.push('/app/dashboard');
+    },
   },
   computed: {
     firstPaymentString: function () {
@@ -238,6 +246,14 @@ article.subscription {
         }
       }
     }
+  }
+
+  .back-arrow-wrapper {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    font-size: 0.9rem;
+    user-select: none;
   }
 
   .tags {

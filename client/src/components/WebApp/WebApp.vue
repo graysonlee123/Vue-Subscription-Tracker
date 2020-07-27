@@ -1,10 +1,9 @@
 <template>
-  <div id="app-container" :class="{ 'nav-open': showNav, rightPaneOpened: showRightPane }">
+  <div id="app-container" :class="{ 'nav-open': showNav, 'panel-open': showPanel }">
     <navigation />
     <transition name="page" mode="out-in">
       <router-view
         @toggleMenu="() => this.showNav ? this.showNav = false : this.showNav = true"
-        @closeRightMenu="() => this.showRightPane = false"
       />
     </transition>
   </div>
@@ -16,12 +15,13 @@ import $ from "jquery";
 
 // Width in px for different menu logic to take over
 const navBreak = 1200;
+const panelBreak = 920;
 
 export default {
   data: function () {
     return {
       showNav: true,
-      showRightPane: false,
+      showPanel: false,
     };
   },
   methods: {
@@ -32,17 +32,16 @@ export default {
         this.showNav = false;
       }
     },
-    checkRightPane: function () {
-      // Checks to see if we need to open the right pane on mobile
-
-      if (this.$route.name === "Subscription") {
-        this.showRightPane = true;
-      } else if (this.$route.name === "New Subscription") {
-        this.showRightPane = true;
+    checkPanelLogic: function() {
+      // Open the right menu on these pages
+      const showPanelOn = ["View Subscription", "New Subscription", "Edit Subscription"];
+  
+      if (showPanelOn.includes(this.$route.name)) {
+        this.showPanel = true;
       } else {
-        this.showRightPane = false;
+        this.showPanel = false;
       }
-    },
+    }
   },
   components: {
     navigation: Navigation,
@@ -52,7 +51,7 @@ export default {
   },
   watch: {
     $route: function () {
-      this.checkRightPane();
+      this.checkPanelLogic();
     },
   },
   created: function () {
@@ -76,6 +75,9 @@ export default {
         this.showNav = false;
       }
     });
+
+    // Check if panel should be open
+    this.checkPanelLogic();
   },
 };
 </script>
@@ -85,6 +87,11 @@ $navWidth: 260px;
 $navBreak: 1200px;
 $navTransitionDuration: 600ms;
 
+$panelWidth: 460px;
+$panelBreak: 920px;
+$panelBreakSm: 484px;
+$panelTransitionDuration: 300ms;
+
 $borderStyle: 1px solid grey;
 $backgroundColor: #1c1d1f;
 
@@ -92,6 +99,7 @@ $backgroundColor: #1c1d1f;
   height: 100%;
   color: #fafafa;
   transition: padding-left $navTransitionDuration + 200 ease;
+  background-color: $backgroundColor;
 
   #nav-menu {
     width: $navWidth;
@@ -108,7 +116,30 @@ $backgroundColor: #1c1d1f;
     transition: opacity 400ms ease, left $navTransitionDuration ease;
   }
 
-  &.rightPaneOpened {
+  #dashboard-wrapper {
+    width: 100%;
+    height: 100%;
+
+    #left {
+      position: relative;
+      padding: 1.2em;
+      font-size: 1rem;
+      height: 100%;
+    }
+
+    #right {
+      height: 100%;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      right: -1 * $panelWidth;
+      padding: 0;
+      font-size: 1rem;
+      overflow: hidden;
+      background-color: $backgroundColor;
+      transition: opacity 400ms ease, right $panelTransitionDuration ease;
+      opacity: 0;
+    }
   }
 
   &.nav-open {
@@ -118,37 +149,43 @@ $backgroundColor: #1c1d1f;
     }
   }
 
+  &.panel-open {
+    #dashboard-wrapper {
+      #right {
+        right: 0;
+        opacity: 1;
+      }
+    }
+  }
+
   @media screen and (min-width: $navBreak) {
     &.nav-open {
       padding-left: $navWidth;
       transition-duration: $navTransitionDuration - 200;
     }
   }
-}
 
-#dashboard-wrapper {
-  width: 100%;
-  height: 100%;
-}
+  @media screen and (min-width: $panelBreak) {
+    #dashboard-wrapper {
+      display: grid;
+      grid-template-columns: auto $panelWidth;
 
-#right {
-  height: 100%;
-  font-size: 1rem;
-  background-color: $backgroundColor;
-  padding: 0;
-  overflow: hidden;
-  position: fixed;
-  right: -100%;
-  top: 0;
-  width: 100%;
-}
+      #right {
+        position: static;
+        border-left: $borderStyle;
+        opacity: 1;
+      }
+    }
+  }
 
-#left {
-  height: 100%;
-  font-size: 1rem;
-  background-color: $backgroundColor;
-  padding: 1.2em;
-  position: relative;
+  @media screen and (min-width: $panelBreakSm) {
+    #dashboard-wrapper {
+      #right {
+        width: $panelWidth;
+        border-left: $borderStyle;
+      }
+    }
+  }
 }
 
 // Global Stuff
@@ -191,18 +228,6 @@ $backgroundColor: #1c1d1f;
   }
   100% {
     transform: rotate(360deg);
-  }
-}
-
-@media screen and (min-width: 767px) {
-  #dashboard-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 400px;
-
-    #right {
-      position: static;
-      border-left: $borderStyle;
-    }
   }
 }
 </style>
