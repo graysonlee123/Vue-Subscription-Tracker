@@ -4,6 +4,7 @@ const auth = require("../utils/auth");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { check, validationResult, body } = require("express-validator");
+const he = require('he');
 
 const User = require("../models/User");
 const Subscription = require("../models/Subscriptions");
@@ -18,6 +19,14 @@ router.get("/", auth, async (req, res) => {
     if (!subscriptions) {
       return res.status(404).json({ msg: "Subscriptions not found" });
     }
+
+    subscriptions.forEach((sub, index) => {
+      // Decode anything that was escaped in the sanitizer
+      subscriptions[index].name = he.decode(subscriptions[index].name);
+      subscriptions[index].description = he.decode(subscriptions[index].description);
+      subscriptions[index].paymentMethod = he.decode(subscriptions[index].paymentMethod);
+      subscriptions[index].note = he.decode(subscriptions[index].note);
+    });
 
     res.json({ subscriptions });
   } catch (err) {
@@ -36,6 +45,13 @@ router.get("/:id", auth, async (req, res) => {
     if (!subscription) {
       return res.status(404).json({ msg: "Subscription not found" });
     }
+
+    // Decode anything that was escaped in the sanitizer
+    subscription.name = he.decode(subscription.name);
+    subscription.description = he.decode(subscription.description);
+    subscription.paymentMethod = he.decode(subscription.paymentMethod);
+    subscription.note = he.decode(subscription.note);
+
 
     res.json({ subscription });
   } catch (err) {
@@ -103,7 +119,8 @@ router.post(
       .isString()
       .withMessage("must be a string")
       .isLength({ max: 24 })
-      .withMessage("is too long"),
+      .withMessage("is too long")
+      .escape(),
     check("note")
       .optional()
       .isString()
@@ -207,7 +224,8 @@ router.post(
       .isString()
       .withMessage("must be a string")
       .isLength({ max: 24 })
-      .withMessage("is too long"),
+      .withMessage("is too long")
+      .escape(),
     check("note")
       .optional()
       .isString()

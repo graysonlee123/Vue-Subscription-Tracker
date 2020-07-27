@@ -107,7 +107,7 @@ $backgroundColor: #1c1d1f;
     position: absolute;
     left: -1 * $navWidth;
     padding: 1rem;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     border-right: $borderStyle;
     background: #27282a;
     z-index: 5;
