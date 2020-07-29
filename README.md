@@ -8,30 +8,32 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Urgent
 
-[] Fix dates going back a day on save 
+[] Add update email, password, delete account, name functionality
+[] Fix dates parsing to local time in browser
 - Saved dates as ISO string in DB no timezone offset
 - Dates are being parsed to local timezone in browser, need to only use no timezone offset
-[] Need to fine tune inputs for sub form
--x Check input types for phones
--x Encode / Decode HTML
--x style update button
-- Add plus / minus buttons for interval (?)
--x Form errors
 
 ### General
 
+[] New design for subscription list cards
 [] account page - full screen route
   [] settings page - integrate with account page
 [] Add sorting links to main menu; ?filter=all, ?filter=month, ?filter=week
   [] For All, add accordion
 [] Make slider for upcoming payments in Subscription component instead of a scrollbar
-[] New color scheme for better legibility of white text
 [] Year and day parsing for future payments
 [] Date picker needs to show previous month and next month days - make look and interact more like ticktick's
 [] Handle removing error on lost focus for an error'd field's input
 [] Landing page
 [] Look into making webapp only on /app, serve Home, About, Contact page on Node?
 [] Sanitize user information on signup
+[x] Need to fine tune inputs for sub form
+-x Check input types for phones
+-x Encode / Decode HTML
+-x style update button
+- Add plus / minus buttons for interval (?)
+-x Form errors
+[x] New color scheme for better legibility of white text
 [x] Rotate arrow on Subscription component
 [x] No Subscription Found component
 [x] Add remove subscription logic to Subscription component dropdown
@@ -62,3 +64,4 @@ To start vue webpack server, run `npm run dev` from the client folder.
 - https://stackoverflow.com/questions/46389267/using-async-await-with-webpack-simple-configuration-throwing-error-regeneratorr
 - https://vuejs.org/v2/cookbook/debugging-in-vscode.html
 - https://t.co/d4GPfuwRBd?amp=1
+- http://colorsafe.co/
