@@ -31,9 +31,9 @@
     </div>
     <div class="field upcoming-payments" :class="{open: showUpcomingPayments}">
       <label>Next payment</label>
-      <div class="upcoming-payment">
+      <div class="upcoming-payment" @click="toggleUpcomingPayments">
         <p>{{subscription.upcomingPayments[0].fromNow}} ({{subscription.upcomingPayments[0].dateString}})</p>
-        <i class="fa fa-chevron-down" @click="toggleUpcomingPayments()"></i>
+        <i class="fa fa-chevron-down"></i>
       </div>
       <transition name="expand">
         <div class="upcoming-dropdown" v-if="showUpcomingPayments">
@@ -256,6 +256,7 @@ article.subscription {
     left: 24px;
     font-size: 0.9rem;
     user-select: none;
+    cursor: pointer;
   }
 
   .tags {
@@ -286,6 +287,9 @@ article.subscription {
     }
 
     &.upcoming-payments {
+
+      cursor: pointer;
+      
       &.open {
         .upcoming-payment i {
           transform: rotate(180deg);

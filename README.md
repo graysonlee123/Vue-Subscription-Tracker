@@ -24,6 +24,8 @@ To start vue webpack server, run `npm run dev` from the client folder.
   [] settings page - integrate with account page
 [] Add sorting links to main menu; ?filter=all, ?filter=month, ?filter=week
   [] For All, add accordion
+[] Make slider for upcoming payments in Subscription component instead of a scrollbar
+[] New color scheme for better legibility of white text
 [] Year and day parsing for future payments
 [] Date picker needs to show previous month and next month days - make look and interact more like ticktick's
 [] Handle removing error on lost focus for an error'd field's input
