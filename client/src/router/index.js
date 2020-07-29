@@ -10,6 +10,9 @@ import Dashboard from "../components/WebApp/Dashboard";
 import PickASubscription from "../components/WebApp/PickASubscription";
 import SubscriptionForm from "../components/WebApp/SubscriptionForm";
 import Subscription from "../components/WebApp/Subscription";
+import Settings from "../components/WebApp/Settings/Settings";
+import Preferences from "../components/WebApp/Settings/Preferences";
+import Profile from "../components/WebApp/Settings/Profile";
 import catchAll from "../components/404";
 
 import store from "../store";
@@ -77,6 +80,29 @@ let router = new Router({
             {
               path: "subscription",
               redirect: "/app/dashboard"
+            }
+          ]
+        },
+        {
+          path: "settings",
+          name: "Settings",
+          component: Settings,
+          children: [
+            {
+              path: "profile",
+              name: "Profile settings",
+              component: Profile
+            },
+            {
+              path: "theme",
+              name: "Theme settings",
+              component: Preferences
+            },
+            {
+              path: "preferences",
+              name: "Preferences",
+              alias: "",
+              component: Preferences
             }
           ]
         }
