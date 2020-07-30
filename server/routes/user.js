@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../utils/auth");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { check, validationResult } = require("express-validator");
 
 const User = require("../models/User");
+const { Mongoose } = require("mongoose");
 
 // * @route   POST api/user
 // ? @desc    Register user
@@ -84,6 +86,54 @@ router.post(
           res.json({ token, user });
         }
       );
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server error");
+    }
+  }
+);
+
+// * @route   POST api/user/:id
+// ? @desc    Update a user
+// ! @access  Private
+router.post(
+  "/:id",
+  [
+    auth,
+    check("first_name")
+      .optional()
+      .isAlpha()
+      .withMessage("should only by alphabetic")
+      .bail()
+      .trim(),
+    check("last_name")
+      .optional()
+      .isAlpha()
+      .withMessage("should only by alphabetic")
+      .bail()
+      .trim()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    try {
+      let data = {};
+
+      if (req.body.first_name) {
+        data.first_name = req.body.first_name;
+      }
+
+      if (req.body.last_name) {
+        data.last_name = req.body.last_name;
+      }
+
+      const dbUser = await User.findOneAndUpdate(data);
+
+      res.json(dbUser);
     } catch (err) {
       console.error(err.message);
       res.status(500).send("Server error");
