@@ -52,7 +52,6 @@ router.get("/:id", auth, async (req, res) => {
     subscription.paymentMethod = he.decode(subscription.paymentMethod);
     subscription.note = he.decode(subscription.note);
 
-
     res.json({ subscription });
   } catch (err) {
     console.log(err);

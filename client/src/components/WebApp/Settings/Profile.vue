@@ -118,7 +118,7 @@ header {
 }
 
 .input-group {
-  margin-bottom: 3em;
+  margin-bottom: 2em;
 
   label {
     display: block;

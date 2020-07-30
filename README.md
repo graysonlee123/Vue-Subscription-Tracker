@@ -12,6 +12,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Fix dates parsing to local time in browser
 - Saved dates as ISO string in DB no timezone offset
 - Dates are being parsed to local timezone in browser, need to only use no timezone offset
+[] Errors when registering - userId not being set in Axios
 
 ### General
 
