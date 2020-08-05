@@ -16,7 +16,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### General
 
-[] New design for subscription list cards
+[] New design
 [] account page - full screen route
   [] settings page - integrate with account page
 [] Add sorting links to main menu; ?filter=all, ?filter=month, ?filter=week

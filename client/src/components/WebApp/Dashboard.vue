@@ -21,31 +21,19 @@
       <div v-if="loading" class="spinner-container">
         <i class="spinner"></i>
       </div>
-      <div v-else-if="error">
-        There was an error with that request. Please try again later.
-      </div>
+      <div v-else-if="error">There was an error with that request. Please try again later.</div>
       <ul v-else class="subscription-list">
-        <router-link
-          tag="li"
-          class="subscription-list-item"
-          :class="{selected: id === loadedSubscriptionId }"
-          :to="{path: `/app/dashboard/subscription/view/${id}`}"
-          v-for="({_id: id, name, paymentDates, price, color}, index) in subscriptions"
+        <subscription-preview
+          v-for="(subscription, index) in subscriptions"
           :key="index"
-          :style="{backgroundColor: color}"
-        >
-          <span class="name">{{name}}</span>
-          <span class="date">{{paymentDates[0] | moment("dddd, MMMM Do YYYY")}}</span>
-          <span class="price">{{price}}</span>
-        </router-link>
+          :subscription="subscription"
+        ></subscription-preview>
       </ul>
     </div>
     <div id="right">
       <!-- // TODO: Fix this transition acting weird -->
       <transition name="slide" mode="out-in">
-        <router-view
-          @refreshSubscriptions="fetchSubscriptions"
-        ></router-view>
+        <router-view @refreshSubscriptions="fetchSubscriptions"></router-view>
       </transition>
     </div>
   </main>
@@ -53,6 +41,7 @@
 
 <script>
 import moment from "moment";
+import SubscriptionPreview from "./SubscriptionPreview";
 
 export default {
   data: function () {
@@ -60,7 +49,7 @@ export default {
       loading: true,
       error: false,
       // User's subscriptions
-      subscriptions: []
+      subscriptions: [],
     };
   },
   methods: {
@@ -127,6 +116,8 @@ export default {
             subscription,
             index
           );
+
+          subscriptions[index].price = subscription.price.toFixed(2);
         });
 
         this.subscriptions.push(...subscriptions);
@@ -150,6 +141,9 @@ export default {
       if (data.id) return data.id;
       else return false;
     },
+  },
+  components: {
+    subscriptionPreview: SubscriptionPreview,
   },
 };
 </script>
