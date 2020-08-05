@@ -71,7 +71,11 @@ router.post(
       .withMessage("cannot be empty")
       .isNumeric()
       .withMessage("must be a number")
-      .toFloat(),
+      .customSanitizer(value => {
+        console.log({value: parseFloat(value).toFixed(2)});
+
+        return parseFloat(value).toFixed(2);
+      }),
     check("name")
       .notEmpty()
       .withMessage("cannot be empty")
@@ -176,7 +180,11 @@ router.post(
       .withMessage("cannot be empty")
       .isNumeric()
       .withMessage("must be a number")
-      .toFloat(),
+      .customSanitizer(value => {
+        console.log({value: parseFloat(value).toFixed(2)});
+
+        return parseFloat(value).toFixed(2);
+      }),
     check("name")
       .notEmpty()
       .withMessage("cannot be empty")

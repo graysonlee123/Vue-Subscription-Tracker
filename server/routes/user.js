@@ -111,7 +111,20 @@ router.post(
       .isAlpha()
       .withMessage("should only by alphabetic")
       .bail()
-      .trim()
+      .trim(),
+    check("email")
+      .optional()
+      .normalizeEmail()
+      .isEmail()
+      .withMessage("Must be a valid email format")
+      .bail()
+      .custom(value => {
+        return User.findOne({ email: value }).then(user => {
+          if (user) {
+            return Promise.reject("Email is already in use");
+          }
+        });
+      })
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -131,7 +144,11 @@ router.post(
         data.last_name = req.body.last_name;
       }
 
-      const dbUser = await User.findOneAndUpdate(data);
+      if (req.body.email) {
+        data.email = req.body.email;
+      }
+
+      const dbUser = await User.findOneAndUpdate(null, data, { new: true });
 
       res.json(dbUser);
     } catch (err) {

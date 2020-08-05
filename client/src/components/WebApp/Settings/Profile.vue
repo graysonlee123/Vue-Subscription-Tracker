@@ -5,7 +5,7 @@
         <img src="http://via.placeholder.com/200" alt="Avatar" />
       </div>
       <div class="header-text">
-        <h2>{{fullName}}</h2>
+        <h2>{{computeFullName}}</h2>
         <p>
           3 Subscriptions
           <span class="text-divider">|</span> 44 something
@@ -17,9 +17,14 @@
     <hr class="divider" />
     <div class="input-group">
       <label>Email</label>
-      <p>
-        {{email}}
-        <a>Change Email</a>
+      <p v-if="email.showForm">
+        <input type="text" v-model="email.value" />
+        <input @click="handleSubmit('email')" type="button" value="Submit" />
+        <input @click="handleClose('email')" type="button" value="Cancel" />
+      </p>
+      <p v-else>
+        {{computeEmail}}
+        <a @click="handleLoadForm('email')">Change Email</a>
       </p>
     </div>
     <div class="input-group">
@@ -32,16 +37,26 @@
     <div class="col2">
       <div class="input-group">
         <label>First Name</label>
-        <p>
-          {{firstName}}
-          <a>Update</a>
+        <p v-if="firstName.showForm">
+          <input type="text" v-model="firstName.value" />
+          <input @click="handleSubmit('firstName')" type="button" value="Submit" />
+          <input @click="handleClose('firstName')" type="button" value="Cancel" />
+        </p>
+        <p v-else>
+          {{computeFirstName}}
+          <a @click="handleLoadForm('firstName')">Update</a>
         </p>
       </div>
       <div class="input-group">
         <label>Last Name</label>
-        <p>
-          {{lastName}}
-          <a>Update</a>
+        <p v-if="lastName.showForm">
+          <input type="text" v-model="lastName.value" />
+          <input @click="handleSubmit('lastName')" type="button" value="Submit" />
+          <input @click="handleClose('lastName')" type="button" value="Cancel" />
+        </p>
+        <p v-else>
+          {{computeLastName}}
+          <a @click="handleLoadForm('lastName')">Update</a>
         </p>
       </div>
     </div>
@@ -55,17 +70,87 @@
 
 <script>
 export default {
+  data: function () {
+    return {
+      lastName: {
+        showForm: false,
+        value: "",
+      },
+      firstName: {
+        showForm: false,
+        value: "",
+      },
+      email: {
+        showForm: false,
+        value: "",
+      },
+    };
+  },
+  methods: {
+    handleLoadForm: function (name) {
+      if (name === "lastName") {
+        this.lastName.value = this.computeLastName;
+        this.lastName.showForm = true;
+      } else if (name === "firstName") {
+        this.firstName.value = this.computeFirstName;
+        this.firstName.showForm = true;
+      } else if (name === "email") {
+        this.email.value = this.computeEmail;
+        this.email.showForm = true;
+      }
+    },
+    handleSubmit: async function (name) {
+      const userId = this.$store.state.user._id;
+
+      // TODO: Make more DRY
+
+      switch (name) {
+        case "lastName": {
+          const user = await this.$http.post(`/api/user/${userId}`, {
+            last_name: this.lastName.value,
+          });
+
+          console.log(user);
+          break;
+        }
+        case "firstName": {
+          const user = await this.$http.post(`/api/user/${userId}`, {
+            first_name: this.firstName.value,
+          });
+
+          console.log(user);
+          break;
+        }
+        case "email": {
+          const user = await this.$http.post(`/api/user/${userId}`, {
+            email: this.email.value,
+          });
+
+          console.log(user);
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+
+      // TODO: Need to update store with new information
+    },
+    handleClose: function (name) {
+      this[name].showForm = false;
+    },
+  },
   computed: {
-    firstName: function () {
+    computeFirstName: function () {
       return this.$store.state.user.first_name;
     },
-    lastName: function () {
+    computeLastName: function () {
       return this.$store.state.user.last_name;
     },
-    fullName: function () {
-      return `${this.firstName} ${this.lastName}`;
+    computeFullName: function () {
+      return `${this.computeFirstName} ${this.computeLastName}`;
     },
-    email: function () {
+    computeEmail: function () {
       return this.$store.state.user.email;
     },
   },

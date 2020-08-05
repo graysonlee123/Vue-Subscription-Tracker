@@ -81,6 +81,7 @@ export default {
     border-radius: $size / 2;
     overflow: hidden;
     margin-right: 0.8em;
+    flex-shrink: 0;
 
     img {
       width: 100%;
