@@ -1,47 +1,15 @@
 <template>
-  <main id="dashboard-wrapper">
-    <div id="left">
-      <div class="new-subscription-wrapper">
-        <router-link to="/app/dashboard/subscription/new" class="add-subscription-button">
-          <i class="fas fa-plus"></i>
-        </router-link>
-      </div>
-      <div class="header">
-        <span id="show-menu-btn" @click="toggleMenu">
-          <i class="fa fa-bars"></i>
-        </span>
-        <h5>Subscriptions</h5>
-        <span id="sort-button">
-          <i class="fa fa-sort-amount-down"></i>
-        </span>
-        <span id="subscriptions-options-btn">
-          <i class="fas fa-ellipsis-h"></i>
-        </span>
-      </div>
-      <div v-if="loading" class="spinner-container">
-        <i class="spinner"></i>
-      </div>
-      <div v-else-if="error">There was an error with that request. Please try again later.</div>
-      <ul v-else class="subscription-list">
-        <subscription-preview
-          v-for="(subscription, index) in subscriptions"
-          :key="index"
-          :subscription="subscription"
-        ></subscription-preview>
-      </ul>
-    </div>
-    <div id="right">
-      <!-- // TODO: Fix this transition acting weird -->
-      <transition name="slide" mode="out-in">
-        <router-view @refreshSubscriptions="fetchSubscriptions"></router-view>
-      </transition>
-    </div>
-  </main>
+  <div id="dashboard">
+    <navigation />
+    <main-menu />
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
 import moment from "moment";
-import SubscriptionPreview from "./SubscriptionPreview";
+import Navigation from "./Navigation";
+import MainMenu from "./MainMenu";
 
 export default {
   data: function () {
@@ -52,230 +20,28 @@ export default {
       subscriptions: [],
     };
   },
-  methods: {
-    getPaymentDates: function ({ firstPaymentDate, duration }) {
-      const upcomingPaymentsCount = 10;
-
-      // These should return future payment dates in unix timestamps
-
-      switch (duration) {
-        case "year": {
-          return [Date.now()];
-        }
-        default:
-        case "month": {
-          const dates = [];
-
-          const paymentDay = moment(firstPaymentDate).date();
-          const now = moment();
-          const todaysDay = now.date();
-
-          if (paymentDay < todaysDay) {
-            for (let i = 1; i <= upcomingPaymentsCount; i++) {
-              dates.push(
-                moment(firstPaymentDate)
-                  .year(now.year())
-                  .month(now.month() + i)
-                  .valueOf()
-              );
-            }
-          } else {
-            for (let i = 0; i < upcomingPaymentsCount; i++) {
-              dates.push(
-                moment(firstPaymentDate)
-                  .year(now.year())
-                  .month(now.month() + i)
-                  .valueOf()
-              );
-            }
-          }
-
-          return dates;
-        }
-        case "day": {
-          console.log("day");
-          return [Date.now()];
-        }
-      }
-    },
-    fetchSubscriptions: async function () {
-      try {
-        this.loading = true;
-        this.subscriptions = [];
-
-        const res = await this.$http.get("/api/subscription");
-        const subscriptions = res.data.subscriptions;
-
-        if (!subscriptions) {
-          this.loading = false;
-          return;
-        }
-
-        subscriptions.forEach((subscription, index) => {
-          subscriptions[index].paymentDates = this.getPaymentDates(
-            subscription,
-            index
-          );
-
-          subscriptions[index].price = subscription.price.toFixed(2);
-        });
-
-        this.subscriptions.push(...subscriptions);
-        this.loading = false;
-      } catch (err) {
-        this.error = true;
-        console.log(err);
-      }
-    },
-    toggleMenu: function () {
-      this.$emit("toggleMenu", true);
-    },
-  },
-  created: function () {
-    this.fetchSubscriptions();
-  },
-  computed: {
-    loadedSubscriptionId: function () {
-      const data = this.$route.params;
-
-      if (data.id) return data.id;
-      else return false;
-    },
-  },
   components: {
-    subscriptionPreview: SubscriptionPreview,
+    navigation: Navigation,
+    mainMenu: MainMenu
   },
 };
 </script>
 
 <style lang="scss">
-li.subscription-list-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
-  font-size: 0.9rem;
-  padding: 1em;
-  border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.1);
-  cursor: pointer;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-
-  .name {
-    flex: auto;
-    max-width: 100%;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-
-  .date {
-    font-size: 0.5em;
-    flex-basis: auto;
-    text-align: right;
-    white-space: nowrap;
-
-    @media screen and (max-width: 464px) {
-      display: none;
-    }
-  }
-
-  .price {
-    font-size: 0.8em;
-    font-weight: bold;
-    text-align: right;
-    padding-left: 16px;
-    flex-basis: 84px;
-    flex-shrink: 0;
-
-    &::before {
-      content: "$";
-      font-size: 0.7em;
-      opacity: 0.4;
-      letter-spacing: 3px;
-    }
-  }
-
-  &.router-link-active {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
+#dashboard {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  grid-template-rows: 80px 1fr;
+  grid-template-areas: "nav menu" "nav main";
+  height: 100%;
 }
 
-.header {
-  display: flex;
-  margin-bottom: 1.5em;
-  align-items: center;
-
-  #show-menu-btn {
-    cursor: pointer;
-    margin-right: 16px;
-    padding: 8px;
-  }
-
-  h5 {
-    flex-grow: 1;
-    text-transform: capitalize;
-  }
-
-  #subscriptions-options-btn {
-    margin-left: 12px;
-  }
+#navigation {
+  grid-area: nav;
+  background-color: var(--containerBackground);
 }
 
-// Add Subscription Button
-
-.new-subscription-wrapper {
-  margin: 32px;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-
-  .add-subscription-button {
-    display: block;
-    opacity: 1;
-    color: white;
-    cursor: pointer;
-    background-color: cadetblue;
-    border-radius: 50%;
-    padding: 16px;
-  }
-}
-
-// Transitions
-
-.slide-leave-active,
-.slide-enter-active {
-  transition: transform 600ms ease, opacity 900ms ease;
-}
-
-.slide-enter,
-.slide-leave-to {
-  transform: translateX(10px);
-  opacity: 0;
-}
-
-.slide-enter-to,
-.slide-leave {
-  transform: translateX(0px);
-  opacity: 1;
-}
-
-.fade-up-short-leave-active,
-.fade-up-short-enter-active {
-  transition: transform 100ms ease-in-out, opacity 50ms ease;
-}
-
-.fade-up-short-enter,
-.fade-up-short-leave-to {
-  transform: translateY(6px);
-  opacity: 0;
-}
-
-.fade-up-short-enter-to,
-.fade-up-short-leave {
-  transform: translateY(0px);
-  opacity: 1;
+#main-menu {
+  grid-area: menu;
 }
 </style>

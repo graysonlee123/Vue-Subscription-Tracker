@@ -278,7 +278,7 @@ export default {
           this.loading = false;
           this.$emit("refreshSubscriptions");
           this.$router.push(
-            `/app/dashboard/subscription/view/${this.subscriptionId}`
+            `/dashboard/`
           );
         }
       } catch (err) {

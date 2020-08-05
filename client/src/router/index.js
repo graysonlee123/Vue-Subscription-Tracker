@@ -5,7 +5,6 @@ import Router from "vue-router";
 import Homepage from "../components/Homepage";
 import Login from "../components/Auth/Login";
 import Register from "../components/Auth/Register";
-import WebApp from "../components/WebApp/WebApp";
 import Dashboard from "../components/WebApp/Dashboard";
 import PickASubscription from "../components/WebApp/PickASubscription";
 import SubscriptionForm from "../components/WebApp/SubscriptionForm";
@@ -14,6 +13,7 @@ import Settings from "../components/WebApp/Settings/Settings";
 import Preferences from "../components/WebApp/Settings/Preferences";
 import Profile from "../components/WebApp/Settings/Profile";
 import catchAll from "../components/404";
+import SubscriptionsList from "../components/WebApp/SubscriptionsList";
 
 import store from "../store";
 
@@ -21,17 +21,8 @@ Vue.use(Router);
 
 let router = new Router({
   mode: "history",
+  base: "/app",
   routes: [
-    {
-      path: "/",
-      name: "Landing",
-      component: Homepage
-    },
-    {
-      path: "/about",
-      name: "about",
-      component: Homepage
-    },
     {
       path: "/login",
       name: "login",
@@ -43,45 +34,32 @@ let router = new Router({
       component: Register
     },
     {
-      path: "/app",
-      name: "App",
-      component: WebApp,
+      path: "/dashboard",
+      name: "Dashboard",
+      component: Dashboard,
       meta: {
         requiresAuth: true
       },
       children: [
         {
-          path: "dashboard",
-          name: "Dashboard",
-          component: Dashboard,
-          children: [
-            {
-              path: "",
-              name: "No Subscription Loaded",
-              component: PickASubscription
-            },
-            {
-              path: "subscription/view/:subscriptionId",
-              name: "View Subscription",
-              component: Subscription,
-              props: true
-            },
-            {
-              path: "subscription/edit/:subscriptionId",
-              name: "Edit Subscription",
-              component: SubscriptionForm,
-              props: true
-            },
-            {
-              path: "subscription/new",
-              name: "New Subscription",
-              component: SubscriptionForm
-            },
-            {
-              path: "subscription",
-              redirect: "/app/dashboard"
-            }
-          ]
+          path: "",
+          name: "Subscriptions List",
+          component: SubscriptionsList
+        },
+        {
+          path: "subscription/edit/:subscriptionId",
+          name: "Edit Subscription",
+          component: SubscriptionForm,
+          props: true
+        },
+        {
+          path: "subscription/new",
+          name: "New Subscription",
+          component: SubscriptionForm
+        },
+        {
+          path: "subscription",
+          redirect: "/app/dashboard"
         },
         {
           path: "settings",
