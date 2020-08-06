@@ -72,8 +72,6 @@ router.post(
       .isNumeric()
       .withMessage("must be a number")
       .customSanitizer(value => {
-        console.log({value: parseFloat(value).toFixed(2)});
-
         return parseFloat(value).toFixed(2);
       }),
     check("name")
@@ -181,8 +179,6 @@ router.post(
       .isNumeric()
       .withMessage("must be a number")
       .customSanitizer(value => {
-        console.log({value: parseFloat(value).toFixed(2)});
-
         return parseFloat(value).toFixed(2);
       }),
     check("name")
