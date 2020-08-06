@@ -8,7 +8,20 @@
         <p>{{subscriptions.length}} total</p>
         <p>
           Sort by:
-          <strong>{{sortMethod}}</strong>
+          <select name="sortOption" id="sortOptions" v-model="sortMethod">
+            <option value="name">Name</option>
+            <option value="price">Price</option>
+            <option value="paidToDate">Paid To Date</option>
+            <option value="duration">Billing Period</option>
+            <option value="paymentMethod">Payment Method</option>
+            <option value="firstPayment">First Payment</option>
+            <option value="nextPayment">Next Payment</option>
+          </select>
+          <div class="sortDirection" :class="{ sortDirection_rotate: sortDirection === -1 }">
+            <div @click="switchSortDirection()" class="sortDirection__clicker">
+              <i class="fa fa-chevron-down"></i>
+            </div>
+          </div>
         </p>
       </div>
       <div class="subscriptionsList__headerRight">
@@ -42,9 +55,16 @@
         <div class="nextPayment">Next Payment</div>
         <div class="options"></div>
       </div>
-      <ul>
+      <ul v-if="sortDirection === 1">
         <subscription-list-item
           v-for="(subscription, index) in subscriptions"
+          :key="index"
+          :subscription="subscription"
+        />
+      </ul>
+      <ul v-else-if="sortDirection === -1">
+        <subscription-list-item
+          v-for="(subscription, index) in reverseSubscriptions"
           :key="index"
           :subscription="subscription"
         />
@@ -55,7 +75,8 @@
 
 <script>
 import SubscriptionListItem from "./SubscriptionListItem";
-import {EventBus} from "../../EventBus";
+import { EventBus } from "../../EventBus";
+import moment from "moment";
 
 export default {
   components: {
@@ -66,10 +87,64 @@ export default {
       loading: true,
       error: false,
       subscriptions: [],
-      sortMethod: "Upcoming Payment",
+      sortDirection: -1,
+      sortMethod: "nextPayment",
     };
   },
+  watch: {
+    sortMethod: function () {
+      this.sortSubscriptions();
+    },
+  },
   methods: {
+    sortSubscriptions: function () {
+      // TODO: Make this more DRY
+      switch (this.sortMethod) {
+        case "name":
+        case "duration":
+        case "paymentMethod": {
+          this.subscriptions.sort((a, b) => {
+            const x = a[this.sortMethod].toLowerCase();
+            const y = b[this.sortMethod].toLowerCase();
+
+            if (x > y) return -1;
+            if (x < y) return 1;
+            return 0;
+          });
+          break;
+        }
+        case "price":
+        case "paidToDate": {
+          this.subscriptions.sort(
+            (a, b) => a[this.sortMethod] - b[this.sortMethod]
+          );
+          break;
+        }
+        case "firstPayment": {
+          this.subscriptions.sort((a, b) => {
+            const x = moment(a.firstPaymentDate).valueOf();
+            const y = moment(b.firstPaymentDate).valueOf();
+
+            if (x < y) return -1;
+            if (x > y) return 1;
+            return 0;
+          });
+          break;
+        }
+        default:
+        case "nextPayment": {
+          this.subscriptions.sort((a, b) => {
+            const x = moment(a.upcomingPayments[0].dateString).valueOf();
+            const y = moment(b.upcomingPayments[0].dateString).valueOf();
+
+            if (x < y) return -1;
+            if (x > y) return 1;
+            return 0;
+          });
+          break;
+        }
+      }
+    },
     fetchSubscriptions: async function () {
       try {
         this.loading = true;
@@ -92,17 +167,26 @@ export default {
           this.subscriptions.push(...subscriptions);
           this.loading = false;
         }, 400);
-
       } catch (err) {
         this.error = true;
         console.log(err);
       }
     },
+    switchSortDirection: function () {
+      this.sortDirection === -1
+        ? (this.sortDirection = 1)
+        : (this.sortDirection = -1);
+    },
+  },
+  computed: {
+    reverseSubscriptions: function () {
+      return this.subscriptions.slice().reverse();
+    },
   },
   created: function () {
     this.fetchSubscriptions();
 
-    EventBus.$on('refreshSubscriptions', () => {
+    EventBus.$on("refreshSubscriptions", () => {
       this.fetchSubscriptions();
     });
   },
@@ -130,6 +214,39 @@ export default {
     h1,
     p {
       margin-right: 32px;
+    }
+
+    #sortOptions {
+      border: none;
+      height: auto;
+      display: inline-block;
+      width: auto;
+      color: var(--textLight);
+      font-weight: bold;
+      padding: 0;
+      font-size: inherit;
+      border-radius: 0;
+      width: auto;
+      // Hide arrow
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      text-indent: 1px;
+      text-overflow: "";
+    }
+
+    .sortDirection {
+      &.sortDirection_rotate {
+        i {
+          transform: rotate(180deg);
+        }
+      }
+
+      .sortDirection__clicker {
+        background-color: rgba(0, 0, 0, 0.07);
+        padding: 8px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
     }
   }
 
@@ -173,7 +290,7 @@ export default {
   .subscriptionsList__items {
     .subscriptionsList__labels {
       $height: 62px;
-      
+
       display: flex;
       padding: 0 0 1em;
       font-size: 80%;
