@@ -59,6 +59,10 @@ export default {
       color: var(--mainAccent);
       border-left-color: var(--mainAccent);
     }
+
+    &:hover {
+      background-color: var(--mainAccentFaint);
+    }
   }
 }
 </style>

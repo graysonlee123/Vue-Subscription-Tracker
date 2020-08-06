@@ -6,7 +6,6 @@ import Homepage from "../components/Homepage";
 import Login from "../components/Auth/Login";
 import Register from "../components/Auth/Register";
 import Dashboard from "../components/WebApp/Dashboard";
-import PickASubscription from "../components/WebApp/PickASubscription";
 import SubscriptionForm from "../components/WebApp/SubscriptionForm";
 import Subscription from "../components/WebApp/Subscription";
 import Settings from "../components/WebApp/Settings/Settings";
@@ -35,7 +34,6 @@ let router = new Router({
     },
     {
       path: "/dashboard",
-      name: "Dashboard",
       component: Dashboard,
       meta: {
         requiresAuth: true
@@ -43,23 +41,20 @@ let router = new Router({
       children: [
         {
           path: "",
+          name: "Dashboard",
           name: "Subscriptions List",
           component: SubscriptionsList
         },
         {
-          path: "subscription/edit/:subscriptionId",
+          path: "subscription/:subscriptionId",
           name: "Edit Subscription",
           component: SubscriptionForm,
           props: true
         },
         {
-          path: "subscription/new",
+          path: "subscription",
           name: "New Subscription",
           component: SubscriptionForm
-        },
-        {
-          path: "subscription",
-          redirect: "/app/dashboard"
         },
         {
           path: "settings",
