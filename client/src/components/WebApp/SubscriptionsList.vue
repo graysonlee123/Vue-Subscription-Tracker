@@ -20,7 +20,7 @@
           Filter
           <i class="fa fa-filter"></i>
         </div>
-        <router-link to="/dashboard/subscription/new" tag="div" class="button button__add">
+        <router-link to="/dashboard/subscription/" tag="div" class="button button__add">
           Add Subscription
           <i class="fa fa-plus"></i>
         </router-link>
@@ -55,6 +55,7 @@
 
 <script>
 import SubscriptionListItem from "./SubscriptionListItem";
+import {EventBus} from "../../EventBus";
 
 export default {
   components: {
@@ -86,8 +87,12 @@ export default {
           subscriptions[index].price = subscription.price.toFixed(2);
         });
 
-        this.subscriptions.push(...subscriptions);
-        this.loading = false;
+        // TODO: Remove this timeout when live
+        setTimeout(() => {
+          this.subscriptions.push(...subscriptions);
+          this.loading = false;
+        }, 400);
+
       } catch (err) {
         this.error = true;
         console.log(err);
@@ -96,6 +101,10 @@ export default {
   },
   created: function () {
     this.fetchSubscriptions();
+
+    EventBus.$on('refreshSubscriptions', () => {
+      this.fetchSubscriptions();
+    });
   },
 };
 </script>
@@ -118,11 +127,6 @@ export default {
   }
 
   .subscriptionsList__headerLeft {
-    h1 {
-      color: var(--mainAccent);
-      font-size: 2em;
-    }
-
     h1,
     p {
       margin-right: 32px;

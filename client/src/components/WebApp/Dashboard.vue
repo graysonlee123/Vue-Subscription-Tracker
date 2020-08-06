@@ -14,10 +14,8 @@ import MainMenu from "./MainMenu";
 export default {
   data: function () {
     return {
-      loading: true,
+      loading: false,
       error: false,
-      // User's subscriptions
-      subscriptions: [],
     };
   },
   components: {

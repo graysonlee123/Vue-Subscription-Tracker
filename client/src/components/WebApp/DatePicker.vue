@@ -27,7 +27,7 @@
             v-for="(col, index) in row"
             :key="index"
             :class="{'current-month': col.datem}"
-            :style="[col.isToday ? {color} : col.date ? {'color': '#fff'} : {'color': '#666'}]"
+            :style="[col.isToday ? {color: 'var(--mainAccent)'} : {'color': 'var(--textLight)'}]"
           >
             <div
               class="date-button"
@@ -192,16 +192,16 @@ export default {
   position: relative;
 
   .date-text {
-    $height: 44px;
+    $height: 42px;
 
-    width: 100%;
-    border: none;
-    padding: 0.8em;
-    font-size: 0.8em;
-    background-color: #333;
-    color: #eee;
-    border-radius: 5px;
     height: $height;
+    width: 100%;
+    border: 2px solid var(--textLight);
+    border-radius: $height / 2;
+    padding: 0 1.4em;
+    font-size: 0.8em;
+    color: var(--textDark);
+    line-height: $height - 4px;
     cursor: pointer;
   }
 }
@@ -209,12 +209,12 @@ export default {
 .date-picker {
   position: absolute;
   z-index: 2;
-  top: 60px;
+  bottom: 60px;
   left: 0;
   width: 220px;
   font-size: 0.6rem;
   padding: 1em;
-  background-color: #333;
+  background-color: var(--containerBackground);
   border-radius: 5px;
   box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.2);
 
@@ -226,7 +226,7 @@ export default {
     .title {
       flex-grow: 1;
       text-align: center;
-      color: rgba(255, 255, 255, 0.3);
+      color: var(--textLight);
       font-weight: bold;
       font-size: 0.9em;
     }
@@ -240,7 +240,8 @@ export default {
   table {
     width: 100%;
     text-align: center;
-    color: rgba(255, 255, 255, 0.3);
+    color: var(--textDark);
+    font-weight: bold;
 
     tr {
       td {
@@ -257,7 +258,7 @@ export default {
 
           &:hover,
           &.selected {
-            background-color: rgba(0, 0, 0, 0.3);
+            background-color: rgba(0, 0, 0, 0.07);
           }
         }
 

@@ -28,7 +28,7 @@ export default {
   },
   components: {
     navigation: Navigation,
-    mainMenu: MainMenu
+    mainMenu: MainMenu,
   },
   beforeCreate: function () {
     // When the app is first created (or the page is refreshed),
@@ -71,7 +71,7 @@ export default {
   --containerBackground: #ffffff;
   --bodyBackground: #f4f8f9;
   --mainAccent: #8369fe;
-  --mainAccentFaint: #EEEBFF;
+  --mainAccentFaint: #eeebff;
   --textLight: #829fae;
   --textDark: #3c4346;
   --danger: #fd6a2b;
@@ -80,7 +80,9 @@ export default {
   --borderRadius: 5px;
 }
 
-*, ::after, ::before {
+*,
+::after,
+::before {
   box-sizing: border-box;
 }
 
@@ -93,10 +95,51 @@ body,
 body {
   background-color: var(--bodyBackground);
   color: var(--textLight);
-  font-family:Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+  font-size: 2em;
+  color: var(--mainAccent);
 }
 
 strong {
   font-weight: bold;
+}
+
+// Default input styling
+input[type="text"],
+input[type="number"],
+select {
+  $height: 42px;
+
+  width: 100%;
+  border: 2px solid var(--textLight);
+  font-size: 0.8em;
+  background-color: transparent;
+  color: var(--textDark);
+  border-radius: 21px;
+  height: $height;
+  line-height: $height;
+  padding: 0 1.4em;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+input[type="number"] {
+  // Chrome, safari, edge, opera
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  -moz-appearance: textfield;
+
+  &::-webkit-input-placeholder {
+    // color: transparentize($color: #eee, $amount: 0.5);
+  }
 }
 </style>
