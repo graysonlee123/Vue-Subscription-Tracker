@@ -6,23 +6,26 @@
       <div class="subscriptionsList__headerLeft">
         <h1>Subscriptions</h1>
         <p>{{subscriptions.length}} total</p>
-        <p>
-          Sort by:
-          <select name="sortOption" id="sortOptions" v-model="sortMethod">
-            <option value="name">Name</option>
-            <option value="price">Price</option>
-            <option value="paidToDate">Paid To Date</option>
-            <option value="duration">Billing Period</option>
-            <option value="paymentMethod">Payment Method</option>
-            <option value="firstPayment">First Payment</option>
-            <option value="nextPayment">Next Payment</option>
-          </select>
+        <div class="sortMethod__wrapper">
+          <p>Sort by:</p>
+          <div class="sortMethod">
+            <p @click="handleDisplaySortMenu()">{{sortMethodDisplayName}}</p>
+            <ul class="sortMethod__options" v-if="showSortMenu">
+              <li @click="sortMethod = 'name'">Name</li>
+              <li @click="sortMethod = 'duration'">Billing Period</li>
+              <li @click="sortMethod = 'paymentMethod'">Payment Method</li>
+              <li @click="sortMethod = 'price'">Price</li>
+              <li @click="sortMethod = 'paidToDate'">Paid To Date</li>
+              <li @click="sortMethod = 'firstPayment'">First Payment</li>
+              <li @click="sortMethod = 'nextPayment'">Next Payment</li>
+            </ul>
+          </div>
           <div class="sortDirection" :class="{ sortDirection_rotate: sortDirection === -1 }">
             <div @click="switchSortDirection()" class="sortDirection__clicker">
-              <i class="fa fa-chevron-down"></i>
+              <img width="10" height="auto" src="/assets/sort-arrow.svg" alt />
             </div>
           </div>
-        </p>
+        </div>
       </div>
       <div class="subscriptionsList__headerRight">
         <div class="button">
@@ -89,11 +92,13 @@ export default {
       subscriptions: [],
       sortDirection: -1,
       sortMethod: "nextPayment",
+      showSortMenu: false,
     };
   },
   watch: {
     sortMethod: function () {
       this.sortSubscriptions();
+      this.showSortMenu = false;
     },
   },
   methods: {
@@ -177,10 +182,51 @@ export default {
         ? (this.sortDirection = 1)
         : (this.sortDirection = -1);
     },
+    handleDisplaySortMenu: function (bool) {
+      if (typeof bool === "boolean") {
+        this.showSortMenu = bool;
+      } else {
+        this.showSortMenu
+          ? (this.showSortMenu = false)
+          : (this.showSortMenu = true);
+      }
+    },
   },
   computed: {
     reverseSubscriptions: function () {
       return this.subscriptions.slice().reverse();
+    },
+    sortMethodDisplayName: function () {
+      switch (this.sortMethod) {
+        case "name": {
+          return "Name";
+          break;
+        }
+        case "duration": {
+          return "Billing Period";
+          break;
+        }
+        case "paymentMethod": {
+          return "Payment Method";
+          break;
+        }
+        case "price": {
+          return "Price";
+          break;
+        }
+        case "paidToDate": {
+          return "Paid To Date";
+          break;
+        }
+        case "firstPayment": {
+          return "First Payment";
+          break;
+        }
+        case "nextPayment": {
+          return "Next Payment";
+          break;
+        }
+      }
     },
   },
   created: function () {
@@ -202,6 +248,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 3em;
+    user-select: none;
   }
 
   .subscriptionsList__headerLeft,
@@ -211,41 +258,69 @@ export default {
   }
 
   .subscriptionsList__headerLeft {
-    h1,
-    p {
+    & > h1,
+    & > p {
       margin-right: 32px;
     }
 
-    #sortOptions {
-      border: none;
-      height: auto;
-      display: inline-block;
-      width: auto;
-      color: var(--textLight);
-      font-weight: bold;
-      padding: 0;
-      font-size: inherit;
-      border-radius: 0;
-      width: auto;
-      // Hide arrow
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      text-indent: 1px;
-      text-overflow: "";
+    .sortMethod__wrapper {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+
+      .sortMethod {
+        position: relative;
+        margin-left: 12px;
+        margin-right: 3px;
+
+        p {
+          font-weight: bold;
+          cursor: pointer;
+        }
+
+        ul.sortMethod__options {
+          position: absolute;
+          top: 24px;
+          left: 0;
+          background-color: var(--containerBackground);
+          box-shadow: 0 8px 4px rgba(0, 0, 0, 0.15);
+          white-space: nowrap;
+
+          li {
+            padding: 1em 2em;
+            cursor: pointer;
+
+            &:hover {
+              background-color: rgba(0, 0, 0, 0.07);
+            }
+          }
+        }
+      }
     }
 
     .sortDirection {
+      img {
+        transition: transform 100ms ease-in-out;
+      }
+
       &.sortDirection_rotate {
-        i {
+        img {
           transform: rotate(180deg);
         }
       }
 
       .sortDirection__clicker {
-        background-color: rgba(0, 0, 0, 0.07);
         padding: 8px;
-        border-radius: 4px;
+        border-radius: 32px;
+        width: 24px;
+        height: 24px;
         cursor: pointer;
+        display: grid;
+        place-items: center;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.07);
+        }
       }
     }
   }
