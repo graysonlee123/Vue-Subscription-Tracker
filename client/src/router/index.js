@@ -73,7 +73,7 @@ let router = new Router({
             },
             {
               path: "account",
-              name: "Account settings",
+              name: "Account",
               component: Account
             },
             {
@@ -83,7 +83,7 @@ let router = new Router({
             },
             {
               path: "advanced",
-              name: "Advanced Settings",
+              name: "Advanced",
               component: AdvancedSettings
             }
           ]
