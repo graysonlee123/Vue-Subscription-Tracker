@@ -1,5 +1,11 @@
 <template>
   <div id="app">
+    <div id="modal" v-if="modal" :class="{[modal.type]: true}">
+      <p>{{modal.message}}</p>
+      <div class="modal__close" @click="handleCloseModal(modal.uuid)">
+        <i class="fa fa-times"></i>
+      </div>
+    </div>
     <router-view />
   </div>
 </template>
@@ -13,6 +19,9 @@ export default {
     isLoggedIn: function () {
       return this.$store.getters.isAuthenticated;
     },
+    modal: function () {
+      return this.$store.getters.alert;
+    },
   },
   methods: {
     logout: function () {
@@ -24,6 +33,9 @@ export default {
         .catch((err) => {
           console.error(err);
         });
+    },
+    handleCloseModal: function (uuid) {
+      this.$store.commit("remove_modal", uuid);
     },
   },
   components: {
@@ -50,6 +62,9 @@ export default {
     } else {
       delete this.$http.defaults.headers.common["x-auth-token"];
     }
+
+    // Also, we want to clear any previous alerts
+    this.$store.commit("clear_modals");
   },
   created: function () {
     // Intercepting axios calls to determine if we get 401 unauthorized
@@ -75,7 +90,9 @@ export default {
   --textLight: #829fae;
   --textDark: #3c4346;
   --danger: #fd6a2b;
+  --dangerFaint: #ecdad5;
   --success: #7bd171;
+  --successFaint: #e4ffd1;
 
   --borderRadius: 5px;
 }
@@ -105,6 +122,40 @@ h1 {
 
 strong {
   font-weight: bold;
+}
+
+#modal {
+  position: fixed;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  background-color: #eee;
+  color: var(--textDark);
+  border-radius: var(--borderRadius);
+  box-shadow: 0 3px 16px rgba(0, 0, 0, 0.25);
+  display: flex;
+
+  &.success {
+    background-color: var(--success);
+    color: var(--successFaint);
+  }
+
+  &.danger {
+    background-color: var(--danger);
+    color: var(--dangerFaint);
+  }
+
+  p {
+    padding: 1em;
+    flex-grow: 1;
+  }
+
+  div.modal__close {
+    padding: 1em;
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+  }
 }
 
 // Default input styling
