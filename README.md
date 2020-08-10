@@ -10,17 +10,19 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 [] Refresh /dashboard/settings/account
 [] Fix dates parsing to local time in browser
-- Saved dates as ISO string in DB no timezone offset
-- Dates are being parsed to local timezone in browser, need to only use no timezone offset
+- [x] Saved dates as ISO string in DB no timezone offset
+- [] Dates are being parsed to local timezone in browser, need to only use no timezone offset, look into moment "locale"
 
 ### General
 
+[] Add avatar options menu in main menu, with logout, account settings, help / faq maybe
 [] Maybe add a modals popup - for updating password, things like that
+[] Add avatar uploading!!!
 [] Handle removing error on lost focus for an error'd field's input
 [] Date picker needs to show previous month and next month days - make look and interact more like ticktick's
-[] Landing page
+[] Landing page - just serve in node
 [] Sanitize user information on signup
-[] Redirect logged in users away from login / register screen
+[] Redirect logged in users away from login / register screen (? what's conventional ?)
 [x] Logic for password change
 [x] Logic for account deletion
 [x] Errors when registering - userId was not being stored in jwt properly

@@ -26,7 +26,7 @@ router.post(
       .custom(value => {
         return User.findOne({ email: value }).then(user => {
           if (user) {
-            return Promise.reject("Email is already in use");
+            return Promise.reject("is already in use");
           }
         });
       }),
@@ -168,12 +168,12 @@ router.patch(
       .optional()
       .normalizeEmail()
       .isEmail()
-      .withMessage("Must be a valid email format")
+      .withMessage("must be a valid email format")
       .bail()
       .custom(value => {
         return User.findOne({ email: value }).then(user => {
           if (user) {
-            return Promise.reject("Email is already in use");
+            return Promise.reject("is already in use");
           }
         });
       })
@@ -200,7 +200,9 @@ router.patch(
         data.email = req.body.email;
       }
 
-      const dbUser = await User.findByIdAndUpdate(req.userId, data, { new: true });
+      const dbUser = await User.findByIdAndUpdate(req.userId, data, {
+        new: true
+      });
 
       res.json(dbUser);
     } catch (err) {
@@ -221,6 +223,24 @@ router.delete("/", auth, async (req, res) => {
     });
 
     res.json({ user, subscriptions });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+// * @route   GET api/user
+// ? @desc    Get user
+// ! @access  Private
+router.get("/", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(402);
+    }
+
+    res.json({ user });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");

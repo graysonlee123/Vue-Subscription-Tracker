@@ -20,27 +20,7 @@
 <script>
 export default {
   data: function () {
-    return {
-      tagsAccordionOpen: true,
-    };
-  },
-  methods: {
-    handleLogout: function () {
-      this.$store.dispatch("logout").finally(() => {
-        this.$router.push("/login");
-      });
-    },
-    handleTagsAccordion: function () {
-      this.tagsAccordionOpen = !this.tagsAccordionOpen;
-    },
-  },
-  computed: {
-    fullName: function () {
-      const firstName = this.$store.state.user.first_name;
-      const lastName = this.$store.state.user.last_name;
-
-      return `${firstName} ${lastName}`;
-    },
+    return {};
   },
 };
 </script>
