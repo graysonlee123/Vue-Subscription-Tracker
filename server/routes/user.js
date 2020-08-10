@@ -145,11 +145,11 @@ router.post(
   }
 );
 
-// * @route   POST api/user/:id
+// * @route   PATCH api/user/
 // ? @desc    Update a user
 // ! @access  Private
-router.post(
-  "/:id",
+router.patch(
+  "/",
   [
     auth,
     check("first_name")
@@ -200,7 +200,7 @@ router.post(
         data.email = req.body.email;
       }
 
-      const dbUser = await User.findOneAndUpdate(null, data, { new: true });
+      const dbUser = await User.findByIdAndUpdate(req.userId, data, { new: true });
 
       res.json(dbUser);
     } catch (err) {
