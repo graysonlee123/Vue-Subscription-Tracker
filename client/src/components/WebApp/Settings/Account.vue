@@ -100,13 +100,11 @@ export default {
       }
     },
     handleSubmit: async function (name) {
-      const userId = this.$store.state.user._id;
-
       // TODO: Make more DRY
 
       switch (name) {
         case "lastName": {
-          const user = await this.$http.post(`/api/user/${userId}`, {
+          const user = await this.$http.patch(`/api/user`, {
             last_name: this.lastName.value,
           });
 
@@ -114,7 +112,7 @@ export default {
           break;
         }
         case "firstName": {
-          const user = await this.$http.post(`/api/user/${userId}`, {
+          const user = await this.$http.patch(`/api/user`, {
             first_name: this.firstName.value,
           });
 
@@ -122,7 +120,7 @@ export default {
           break;
         }
         case "email": {
-          const user = await this.$http.post(`/api/user/${userId}`, {
+          const user = await this.$http.patch(`/api/user`, {
             email: this.email.value,
           });
 

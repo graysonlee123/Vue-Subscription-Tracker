@@ -15,6 +15,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### General
 
+[] Maybe add a modals popup - for updating password, things like that
 [] Handle removing error on lost focus for an error'd field's input
 [] Date picker needs to show previous month and next month days - make look and interact more like ticktick's
 [] Landing page
