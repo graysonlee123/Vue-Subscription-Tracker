@@ -47,6 +47,7 @@
 <script>
 import moment from "moment";
 import { EventBus } from "../../EventBus";
+import { v4 as uuidv4 } from "uuid";
 
 export default {
   props: {
@@ -70,6 +71,11 @@ export default {
         // this.$emit("refreshSubscriptions");
         EventBus.$emit("refreshSubscriptions");
         this.$router.push("/dashboard");
+        this.$store.dispatch("addModal", {
+          type: "success",
+          message: "Subscription was removed.",
+          uuid: uuidv4(),
+        });
       } catch (err) {
         console.log(err);
       }
@@ -95,10 +101,23 @@ export default {
 
         EventBus.$emit("refreshSubscriptions");
 
-        // TODO: Reroute to edit this subscription
-        this.$router.push(`/dashboard/subscription/${req.data.subscription._id}`);
+        this.$router.push(
+          `/dashboard/subscription/${req.data.subscription._id}`
+        );
+
+        this.$store.dispatch("addModal", {
+          type: "success",
+          message: "Subscription was duplicated.",
+          uuid: uuidv4(),
+        });
       } catch (err) {
         console.log(err);
+        this.$store.dispatch("addModal", {
+          type: "danger",
+          message:
+            "There was an error duplicating that subscription. Please try again later.",
+          uuid: uuidv4(),
+        });
       }
     },
     handleOptionsMenu: function (bool) {
@@ -206,7 +225,7 @@ $height: 62px;
     flex-grow: 1;
 
     .tag {
-      background-color: #E9F7EC;
+      background-color: #e9f7ec;
       padding: 12px 16px;
       font-size: 70%;
       border-radius: var(--borderRadius);

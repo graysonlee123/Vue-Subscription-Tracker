@@ -91,7 +91,6 @@ export default {
               this.$store.dispatch("addModal", {
                 type: "success",
                 message: "Your accout was succesfully updated.",
-                duration: 202000,
                 uuid: uuidv4(),
               });
             })
