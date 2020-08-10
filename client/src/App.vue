@@ -129,6 +129,27 @@ select {
   }
 }
 
+input[type="button"].roundedButton {
+  background-color: var(--success);
+  border-radius: 32px;
+  text-align: center;
+  display: inline-block;
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 12px 28px;
+  color: #eef6ed;
+  cursor: pointer;
+  border: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  &.danger {
+    background-color: var(--danger);
+  }
+}
+
 input[type="number"] {
   // Chrome, safari, edge, opera
   &::-webkit-outer-spin-button,

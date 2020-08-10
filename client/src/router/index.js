@@ -10,7 +10,9 @@ import SubscriptionForm from "../components/WebApp/SubscriptionForm";
 import Subscription from "../components/WebApp/Subscription";
 import Settings from "../components/WebApp/Settings/Settings";
 import Preferences from "../components/WebApp/Settings/Preferences";
-import Profile from "../components/WebApp/Settings/Profile";
+import AdvancedSettings from "../components/WebApp/Settings/AdvancedSettings";
+import Account from "../components/WebApp/Settings/Account";
+import Password from "../components/WebApp/Settings/Password";
 import catchAll from "../components/404";
 import SubscriptionsList from "../components/WebApp/SubscriptionsList";
 
@@ -58,24 +60,28 @@ let router = new Router({
         },
         {
           path: "settings",
-          name: "Settings",
           component: Settings,
           children: [
             {
-              path: "profile",
-              name: "Profile settings",
-              component: Profile
-            },
-            {
-              path: "theme",
-              name: "Theme settings",
-              component: Preferences
-            },
-            {
-              path: "preferences",
+              path: "",
+              alias: "preferences",
               name: "Preferences",
-              alias: "",
               component: Preferences
+            },
+            {
+              path: "account",
+              name: "Account settings",
+              component: Account
+            },
+            {
+              path: "password",
+              name: "Password",
+              component: Password
+            },
+            {
+              path: "advanced",
+              name: "Advanced Settings",
+              component: AdvancedSettings
             }
           ]
         }

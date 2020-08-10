@@ -2,7 +2,7 @@
 
 > A small web application to help track your subscriptions 
 
-To start api server, run `node server/index.js`.
+To start api server, run `nodemon server`.
 To start vue webpack server, run `npm run dev` from the client folder.
 
 ## TODOs
@@ -16,19 +16,16 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### General
 
-[] Filters
 [] account page - full screen route
   [] settings page - integrate with account page
-[] Add sorting links to main menu; ?filter=all, ?filter=month, ?filter=week
-  [] For All, add accordion
 [] Make slider for upcoming payments in Subscription component instead of a scrollbar
-[] Year and day parsing for future payments
 [] Date picker needs to show previous month and next month days - make look and interact more like ticktick's
 [] Handle removing error on lost focus for an error'd field's input
 [] Landing page
-[] Look into making webapp only on /app, serve Home, About, Contact page on Node?
 [] Sanitize user information on signup
 [] Redirect logged in users away from login / register screen
+[x] Look into making webapp only on /app, serve Home, About, Contact page on Node?
+[x] Filters
 [x] New design
 [x] Need to fine tune inputs for sub form
 -x Check input types for phones
