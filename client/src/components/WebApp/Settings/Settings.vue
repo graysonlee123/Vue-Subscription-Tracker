@@ -4,13 +4,25 @@
       <div v-if="loading">Loading...</div>
       <div v-if="error">Error, please try again later.</div>
       <div v-else>
-        <h1 class="settingsTitle">Account</h1>
+        <h1 class="settingsTitle">{{tabName}}</h1>
         <div class="settingsNav">
           <ul class="settingsNav__links">
-            <router-link class="settingsNav_link" to="/dashboard/settings/preferences" tag="li">Preferences</router-link>
+            <router-link
+              class="settingsNav_link"
+              to="/dashboard/settings/preferences"
+              tag="li"
+            >Preferences</router-link>
             <router-link class="settingsNav_link" to="/dashboard/settings/account" tag="li">Account</router-link>
-            <router-link class="settingsNav_link" to="/dashboard/settings/password" tag="li">Password</router-link>
-            <router-link class="settingsNav_link" to="/dashboard/settings/advanced" tag="li">Advanced</router-link>
+            <router-link
+              class="settingsNav_link"
+              to="/dashboard/settings/password"
+              tag="li"
+            >Password</router-link>
+            <router-link
+              class="settingsNav_link"
+              to="/dashboard/settings/advanced"
+              tag="li"
+            >Advanced</router-link>
           </ul>
         </div>
         <router-view></router-view>
@@ -30,10 +42,17 @@ export default {
     return {
       loading: true,
       error: false,
+      tabName: "",
     };
+  },
+  watch: {
+    $route: function () {
+      this.tabName = this.$route.name;
+    },
   },
   created: function () {
     this.loading = false;
+    this.tabName = this.$route.name;
   },
 };
 </script>
