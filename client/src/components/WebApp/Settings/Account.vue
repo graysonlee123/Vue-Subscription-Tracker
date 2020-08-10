@@ -1,141 +1,103 @@
 <template>
-  <div>
+  <div class="account__wrapper">
     <header>
       <div class="img-container">
         <img src="http://via.placeholder.com/200" alt="Avatar" />
       </div>
       <div class="header-text">
         <h2>{{computeFullName}}</h2>
-        <p>
-          3 Subscriptions
-          <span class="text-divider">|</span> 44 something
-          <span class="text-divider">|</span> 23 Something else
-        </p>
-        <p>Some sort of interesting fact here.</p>
+        <p>{{computeEmail}}</p>
       </div>
     </header>
     <hr class="divider" />
-    <div class="input-group">
-      <label>Email</label>
-      <p v-if="email.showForm">
-        <input type="text" v-model="email.value" />
-        <input @click="handleSubmit('email')" type="button" value="Submit" />
-        <input @click="handleClose('email')" type="button" value="Cancel" />
-      </p>
-      <p v-else>
-        {{computeEmail}}
-        <a @click="handleLoadForm('email')">Change Email</a>
-      </p>
-    </div>
-    <div class="input-group">
-      <label>Password</label>
-      <p>
-        ••••••••••
-        <a>Change Password</a>
-      </p>
-    </div>
-    <div class="col2">
-      <div class="input-group">
-        <label>First Name</label>
-        <p v-if="firstName.showForm">
-          <input type="text" v-model="firstName.value" />
-          <input @click="handleSubmit('firstName')" type="button" value="Submit" />
-          <input @click="handleClose('firstName')" type="button" value="Cancel" />
-        </p>
-        <p v-else>
-          {{computeFirstName}}
-          <a @click="handleLoadForm('firstName')">Update</a>
-        </p>
+    <form @submit.prevent="handleSubmit">
+      <div class="inputGroup">
+        <label for="email" class="inputGroup__label">
+          Email
+          <span
+            class="fieldError"
+            v-if="formErrors.find(({field}) => field === 'email')"
+          >{{formErrors.find(({field}) => field ==='email').msg}}</span>
+        </label>
+        <input type="text" v-model="email" />
       </div>
-      <div class="input-group">
-        <label>Last Name</label>
-        <p v-if="lastName.showForm">
-          <input type="text" v-model="lastName.value" />
-          <input @click="handleSubmit('lastName')" type="button" value="Submit" />
-          <input @click="handleClose('lastName')" type="button" value="Cancel" />
-        </p>
-        <p v-else>
-          {{computeLastName}}
-          <a @click="handleLoadForm('lastName')">Update</a>
-        </p>
+      <div class="col2">
+        <div class="inputGroup">
+          <label for="first_name" class="inputGroup__label">
+            First name
+            <span
+              class="fieldError"
+              v-if="formErrors.find(({field}) => field === 'first_name')"
+            >{{formErrors.find(({field}) => field ==='first_name').msg}}</span>
+          </label>
+          <input type="text" v-model="first_name" />
+        </div>
+        <div class="inputGroup">
+          <label for="last_name" class="inputGroup__label">
+            Last name
+            <span
+              class="fieldError"
+              v-if="formErrors.find(({field}) => field === 'last_name')"
+            >{{formErrors.find(({field}) => field ==='last_name').msg}}</span>
+          </label>
+          <input type="text" v-model="last_name" />
+        </div>
       </div>
-    </div>
-    <hr class="divider" />
-    <div class="input-group">
-      <label>Delete Account</label>
-      <button>Delete Account</button>
-    </div>
+      <div class="submitWrapper">
+        <input type="submit" class="roundedButton" value="Submit" />
+      </div>
+    </form>
   </div>
 </template>
 
 <script>
+import { formErrors } from "../../../mixins/formErrors";
+
 export default {
   data: function () {
     return {
-      lastName: {
-        showForm: false,
-        value: "",
-      },
-      firstName: {
-        showForm: false,
-        value: "",
-      },
-      email: {
-        showForm: false,
-        value: "",
-      },
+      formErrors: [],
+      last_name: "",
+      first_name: "",
+      email: "",
     };
   },
+  mixins: [formErrors],
   methods: {
-    handleLoadForm: function (name) {
-      if (name === "lastName") {
-        this.lastName.value = this.computeLastName;
-        this.lastName.showForm = true;
-      } else if (name === "firstName") {
-        this.firstName.value = this.computeFirstName;
-        this.firstName.showForm = true;
-      } else if (name === "email") {
-        this.email.value = this.computeEmail;
-        this.email.showForm = true;
-      }
-    },
     handleSubmit: async function (name) {
       // TODO: Make more DRY
+      const data = {};
 
-      switch (name) {
-        case "lastName": {
-          const user = await this.$http.patch(`/api/user`, {
-            last_name: this.lastName.value,
-          });
-
-          console.log(user);
-          break;
-        }
-        case "firstName": {
-          const user = await this.$http.patch(`/api/user`, {
-            first_name: this.firstName.value,
-          });
-
-          console.log(user);
-          break;
-        }
-        case "email": {
-          const user = await this.$http.patch(`/api/user`, {
-            email: this.email.value,
-          });
-
-          console.log(user);
-          break;
-        }
-        default: {
-          break;
-        }
+      if (this.email !== this.computeEmail) {
+        data.email = this.email;
       }
 
-      // TODO: Need to update store with new information
-    },
-    handleClose: function (name) {
-      this[name].showForm = false;
+      if (this.first_name !== this.computeFirstName) {
+        data.first_name = this.first_name;
+      }
+
+      if (this.last_name !== this.computeLastName) {
+        data.last_name = this.last_name;
+      }
+
+      if (Object.keys(data).length > 0) {
+        try {
+          const user = await this.$http.patch(`/api/user`, data);
+
+          this.$store
+            .dispatch("refreshUser")
+            .then(() => {
+              // TODO: Dispatch success modal popup
+            })
+            .catch((err) => {
+              // TODO: Dispatch danger modal popup
+              console.error(err);
+            });
+        } catch (err) {
+          this.addFormError(err);
+          console.log(err);
+        }
+      }
     },
   },
   computed: {
@@ -152,11 +114,28 @@ export default {
       return this.$store.state.user.email;
     },
   },
+  created: function () {
+    if (this.computeEmail) {
+      this.email = this.computeEmail;
+    }
+
+    if (this.computeFirstName) {
+      this.first_name = this.computeFirstName;
+    }
+
+    if (this.computeLastName) {
+      this.last_name = this.computeLastName;
+    }
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 $navBreak: 991px;
+
+.account__wrapper {
+  padding: 2em 0;
+}
 
 header {
   display: flex;
@@ -183,14 +162,11 @@ header {
     h2 {
       font-size: 2em;
       text-transform: capitalize;
+      color: var(--textDark);
     }
 
     p {
-      margin-top: 1em;
-
-      span.text-divider {
-        color: transparentize($color: white, $amount: 0.75);
-      }
+      margin-top: 0.6em;
     }
   }
 }
@@ -200,31 +176,8 @@ header {
   border-color: transparentize($color: white, $amount: 0.8);
 }
 
-.input-group {
+.inputGroup {
   margin-bottom: 2em;
-
-  label {
-    display: block;
-    color: transparentize($color: white, $amount: 0.7);
-    margin-bottom: 1em;
-  }
-
-  p {
-    a {
-      color: cadetblue;
-      display: block;
-      margin-top: 0.8em;
-    }
-  }
-}
-
-@media screen and (min-width: 446px) {
-  .input-group p {
-    a {
-      display: inline;
-      padding-left: 2em;
-    }
-  }
 }
 
 @media screen and (min-width: $navBreak) {
@@ -244,8 +197,12 @@ header {
   .col2 {
     display: flex;
 
-    .input-group {
+    .inputGroup {
       width: 50%;
+
+      &:first-of-type {
+        margin-right: 2em;
+      }
     }
   }
 }

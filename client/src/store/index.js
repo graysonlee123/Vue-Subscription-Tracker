@@ -30,6 +30,9 @@ export default new Vuex.Store({
         (state.token = null),
         (state.user = {});
     },
+    refresh_user(state, user) {
+      state.user = user;
+    },
     logout(state) {
       state.token = null;
       state.user = {};
@@ -125,6 +128,20 @@ export default new Vuex.Store({
     },
     languageChange({ commit }, lang) {
       commit("change_language", lang);
+    },
+    refreshUser({ commit }) {
+      return new Promise((resolve, reject) =>  {
+        axios({
+          url: "/api/user",
+          method: "GET"
+        }).then(res => {
+          const { user } = res.data;
+          commit("refresh_user", user);
+          resolve(res);
+        }).catch(err => {
+          reject(err);
+        })
+      })
     }
   },
   // Use a vuex getter to get a value of vuex state
