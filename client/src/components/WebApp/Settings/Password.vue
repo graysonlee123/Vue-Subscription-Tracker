@@ -45,6 +45,7 @@
 
 <script>
 import { formErrors } from "../../../mixins/formErrors";
+import { v4 as uuidv4 } from "uuid";
 
 export default {
   data: function () {
@@ -85,7 +86,15 @@ export default {
           newPassword: this.confirmPassword,
         });
 
-        alert('Password change successful');
+        this.$store.dispatch("addModal", {
+          type: "success",
+          message: "Password was succesfully changed.",
+          uuid: uuidv4(),
+        });
+
+        this.currentPassword = "";
+        this.newPassword = "";
+        this.confirmPassword = "";
       } catch (err) {
         console.log(err);
         this.addFormError(err, "newPassword");

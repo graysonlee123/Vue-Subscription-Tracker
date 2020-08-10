@@ -162,6 +162,12 @@ export default {
         this.loading = false;
         this.$emit("refreshSubscriptions");
         this.$router.push("/app/dashboard");
+        this.$store.dispatch("addModal", {
+          type: "success",
+          message:
+            "Subscription was sent to trash.",
+          uuid: uuidv4(),
+        });
       } catch (err) {
         this.error = true;
         console.log(err);
@@ -287,9 +293,8 @@ article.subscription {
     }
 
     &.upcoming-payments {
-
       cursor: pointer;
-      
+
       &.open {
         .upcoming-payment i {
           transform: rotate(180deg);
@@ -347,7 +352,8 @@ article.subscription {
 
 .expand-enter-active,
 .expand-leave-active {
-  transition: transform 400ms cubic-bezier(.785, .135, .15, .86), opacity 600ms ease;
+  transition: transform 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86),
+    opacity 600ms ease;
 }
 
 .expand-enter,
@@ -356,10 +362,9 @@ article.subscription {
   opacity: 0;
 }
 
-.expand-enter-to, 
+.expand-enter-to,
 .expand-leave {
   transform: translateY(0px);
   opacity: 1;
 }
-
 </style>

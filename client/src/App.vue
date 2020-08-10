@@ -1,11 +1,13 @@
 <template>
   <div id="app">
-    <div id="modal" v-if="modal" :class="{[modal.type]: true}">
-      <p>{{modal.message}}</p>
-      <div class="modal__close" @click="handleCloseModal(modal.uuid)">
-        <i class="fa fa-times"></i>
+    <transition name="modal" mode="out-in">
+      <div id="modal" v-if="modal" :class="{[modal.type]: true}">
+        <p>{{modal.message}}</p>
+        <div class="modal__close" @click="handleCloseModal(modal.uuid)">
+          <i class="fa fa-times"></i>
+        </div>
       </div>
-    </div>
+    </transition>
     <router-view />
   </div>
 </template>
@@ -128,7 +130,7 @@ strong {
   position: fixed;
   top: 50px;
   left: 50%;
-  transform: translateX(-50%);
+  margin-left: -200px + 40px;  // Should be half self width and half navbar width
   width: 400px;
   background-color: #eee;
   color: var(--textDark);
@@ -236,5 +238,24 @@ input[type="number"] {
       border-color: var(--danger);
     }
   }
+}
+
+// Vue Transitions
+
+.modal-enter-active, 
+.modal-leave-active {
+  transition: opacity 300ms ease-in-out, transform 200ms ease;
+}
+
+.modal-enter-to, 
+.modal-leave {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.modal-enter,
+.modal-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
 }
 </style>
