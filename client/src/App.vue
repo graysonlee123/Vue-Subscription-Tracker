@@ -110,6 +110,7 @@ strong {
 // Default input styling
 input[type="text"],
 input[type="number"],
+input[type="password"],
 select {
   $height: 42px;
 

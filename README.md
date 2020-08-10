@@ -16,7 +16,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### General
 
-[] New design
+[] Filters
 [] account page - full screen route
   [] settings page - integrate with account page
 [] Add sorting links to main menu; ?filter=all, ?filter=month, ?filter=week
@@ -28,6 +28,8 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Landing page
 [] Look into making webapp only on /app, serve Home, About, Contact page on Node?
 [] Sanitize user information on signup
+[] Redirect logged in users away from login / register screen
+[x] New design
 [x] Need to fine tune inputs for sub form
 -x Check input types for phones
 -x Encode / Decode HTML

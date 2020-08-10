@@ -5,7 +5,7 @@
     <div class="subscriptionsList__header">
       <div class="subscriptionsList__headerLeft">
         <h1>Subscriptions</h1>
-        <p>{{subscriptions.length}} total</p>
+        <p>{{organizedSubscriptions.length}} total <span v-if="filter !== 'all'">(filtered)</span></p>
         <div class="sortMethod__wrapper">
           <p>Sort by:</p>
           <div class="sortMethod">
@@ -32,9 +32,17 @@
           View
           <i class="fa fa-list"></i>
         </div>
-        <div class="button">
-          Filter
-          <i class="fa fa-filter"></i>
+        <div class="button filter" @click="handleDisplayFilterMenu()">
+          <span>
+            Filter
+            <i class="fa fa-filter"></i>
+          </span>
+          <ul class="filter__options" v-if="showFilterMenu">
+            <li @click="filter = 'all'">Show All</li>
+            <li @click="filter = 'week'">In a week</li>
+            <li @click="filter = 'month'">In a month</li>
+            <li @click="filter = 'year'">In a year</li>
+          </ul>
         </div>
         <router-link to="/dashboard/subscription/" tag="div" class="button button__add">
           Add Subscription
@@ -58,16 +66,9 @@
         <div class="nextPayment">Next Payment</div>
         <div class="options"></div>
       </div>
-      <ul v-if="sortDirection === 1">
+      <ul>
         <subscription-list-item
-          v-for="(subscription, index) in subscriptions"
-          :key="index"
-          :subscription="subscription"
-        />
-      </ul>
-      <ul v-else-if="sortDirection === -1">
-        <subscription-list-item
-          v-for="(subscription, index) in reverseSubscriptions"
+          v-for="(subscription, index) in organizedSubscriptions"
           :key="index"
           :subscription="subscription"
         />
@@ -93,63 +94,19 @@ export default {
       sortDirection: -1,
       sortMethod: "nextPayment",
       showSortMenu: false,
+      filter: "all",
+      showFilterMenu: false,
     };
   },
   watch: {
     sortMethod: function () {
-      this.sortSubscriptions();
       this.showSortMenu = false;
+    },
+    filter: function () {
+      this.showFilterMenu = false;
     },
   },
   methods: {
-    sortSubscriptions: function () {
-      // TODO: Make this more DRY
-      switch (this.sortMethod) {
-        case "name":
-        case "duration":
-        case "paymentMethod": {
-          this.subscriptions.sort((a, b) => {
-            const x = a[this.sortMethod].toLowerCase();
-            const y = b[this.sortMethod].toLowerCase();
-
-            if (x > y) return -1;
-            if (x < y) return 1;
-            return 0;
-          });
-          break;
-        }
-        case "price":
-        case "paidToDate": {
-          this.subscriptions.sort(
-            (a, b) => a[this.sortMethod] - b[this.sortMethod]
-          );
-          break;
-        }
-        case "firstPayment": {
-          this.subscriptions.sort((a, b) => {
-            const x = moment(a.firstPaymentDate).valueOf();
-            const y = moment(b.firstPaymentDate).valueOf();
-
-            if (x < y) return -1;
-            if (x > y) return 1;
-            return 0;
-          });
-          break;
-        }
-        default:
-        case "nextPayment": {
-          this.subscriptions.sort((a, b) => {
-            const x = moment(a.upcomingPayments[0].dateString).valueOf();
-            const y = moment(b.upcomingPayments[0].dateString).valueOf();
-
-            if (x < y) return -1;
-            if (x > y) return 1;
-            return 0;
-          });
-          break;
-        }
-      }
-    },
     fetchSubscriptions: async function () {
       try {
         this.loading = true;
@@ -165,6 +122,8 @@ export default {
 
         subscriptions.forEach((subscription, index) => {
           subscriptions[index].price = subscription.price.toFixed(2);
+
+          this.getUpcomingPayments(subscription);
         });
 
         // TODO: Remove this timeout when live
@@ -175,6 +134,41 @@ export default {
       } catch (err) {
         this.error = true;
         console.log(err);
+      }
+    },
+    getUpcomingPayments: function (subscription) {
+      // Should remain an arrow function to remain this binding
+      const pushDateToUpcoming = (date) => {
+        subscription.upcomingPayments.push({
+          momentDate: moment(date),
+          dateString: date.format("MM/DD/YY"),
+          fromNow: date.fromNow(),
+        });
+      };
+
+      // Set initial values in subscription data
+      subscription.upcomingPayments = [];
+      subscription.paidToDate = 0;
+
+      // Logic Begins
+      const date = moment(subscription.firstPaymentDate);
+
+      // "fast forward" until we find the next payment date
+      while (moment().isAfter(date)) {
+        date.add(subscription.interval, subscription.duration + "s");
+        subscription.paidToDate =
+          subscription.paidToDate + parseFloat(subscription.price);
+      }
+
+      subscription.paidToDate = subscription.paidToDate.toFixed(2);
+
+      // Get the next payment date
+      pushDateToUpcoming(date);
+
+      // And get 7 more
+      for (let i = 0; i < 7; i++) {
+        date.add(subscription.interval, subscription.duration + "s");
+        pushDateToUpcoming(date);
       }
     },
     switchSortDirection: function () {
@@ -191,10 +185,118 @@ export default {
           : (this.showSortMenu = true);
       }
     },
+    handleDisplayFilterMenu: function (bool) {
+      if (typeof bool === "boolean") {
+        this.showFilterMenu = bool;
+      } else {
+        this.showFilterMenu
+          ? (this.showFilterMenu = false)
+          : (this.showFilterMenu = true);
+      }
+    },
   },
   computed: {
-    reverseSubscriptions: function () {
-      return this.subscriptions.slice().reverse();
+    organizedSubscriptions: function () {
+      let organizedSubs = this.subscriptions;
+
+      // First, filter the subscriptions if necessary
+      // ? Filter creates a new array
+
+      // TODO: Make this more DRY
+      switch (this.filter) {
+        default:
+        case "all": {
+          organizedSubs = organizedSubs.filter((sub) => {
+            return sub;
+          });
+          break;
+        }
+        case "week": {
+          organizedSubs = organizedSubs.filter((sub) => {
+            const nextPaymentDate = moment(sub.upcomingPayments[0].momentDate);
+            const weekFromNow = moment().add(1, "weeks");
+
+            if (nextPaymentDate.isBefore(weekFromNow)) {
+              return true;
+            }
+          });
+          break;
+        }
+        case "month": {
+          organizedSubs = organizedSubs.filter((sub) => {
+            const nextPaymentDate = moment(sub.upcomingPayments[0].momentDate);
+            const monthFromNow = moment().add(1, "months");
+
+            if (nextPaymentDate.isBefore(monthFromNow)) {
+              return true;
+            }
+          });
+          break;
+        }
+        case "year": {
+          organizedSubs = organizedSubs.filter((sub) => {
+            const nextPaymentDate = moment(sub.upcomingPayments[0].momentDate);
+            const yearFromNow = moment().add(1, "years");
+
+            if (nextPaymentDate.isBefore(yearFromNow)) {
+              return true;
+            }
+          });
+          break;
+        }
+      }
+
+      // Then sort them
+      switch (this.sortMethod) {
+        case "name":
+        case "duration":
+        case "paymentMethod": {
+          organizedSubs.sort((a, b) => {
+            const x = a[this.sortMethod].toLowerCase();
+            const y = b[this.sortMethod].toLowerCase();
+
+            if (x > y) return -1;
+            if (x < y) return 1;
+            return 0;
+          });
+          break;
+        }
+        case "price":
+        case "paidToDate": {
+          organizedSubs.sort((a, b) => a[this.sortMethod] - b[this.sortMethod]);
+          break;
+        }
+        case "firstPayment": {
+          organizedSubs.sort((a, b) => {
+            const x = moment(a.firstPaymentDate).valueOf();
+            const y = moment(b.firstPaymentDate).valueOf();
+
+            if (x < y) return -1;
+            if (x > y) return 1;
+            return 0;
+          });
+          break;
+        }
+        default:
+        case "nextPayment": {
+          organizedSubs.sort((a, b) => {
+            const x = moment(a.upcomingPayments[0].dateString).valueOf();
+            const y = moment(b.upcomingPayments[0].dateString).valueOf();
+
+            if (x < y) return -1;
+            if (x > y) return 1;
+            return 0;
+          });
+          break;
+        }
+      }
+
+      if (this.sortDirection === 1) {
+        organizedSubs.reverse();
+        console.log("reverse");
+      }
+
+      return organizedSubs;
     },
     sortMethodDisplayName: function () {
       switch (this.sortMethod) {
@@ -257,6 +359,31 @@ export default {
     align-items: center;
   }
 
+  .filter,
+  .sortMethod {
+    position: relative;
+  }
+
+  ul.filter__options,
+  .sortMethod__options {
+    position: absolute;
+    top: 24px;
+    left: 0;
+    background-color: var(--containerBackground);
+    box-shadow: 0 8px 4px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+
+    li {
+      padding: 1em 2em;
+      cursor: pointer;
+      line-height: 16px;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.07);
+      }
+    }
+  }
+
   .subscriptionsList__headerLeft {
     & > h1,
     & > p {
@@ -269,31 +396,12 @@ export default {
       align-items: center;
 
       .sortMethod {
-        position: relative;
         margin-left: 12px;
         margin-right: 3px;
 
         p {
           font-weight: bold;
           cursor: pointer;
-        }
-
-        ul.sortMethod__options {
-          position: absolute;
-          top: 24px;
-          left: 0;
-          background-color: var(--containerBackground);
-          box-shadow: 0 8px 4px rgba(0, 0, 0, 0.15);
-          white-space: nowrap;
-
-          li {
-            padding: 1em 2em;
-            cursor: pointer;
-
-            &:hover {
-              background-color: rgba(0, 0, 0, 0.07);
-            }
-          }
         }
       }
     }

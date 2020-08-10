@@ -20,7 +20,7 @@
     >{{subscription.firstPaymentDate | moment("MMMM DD, YYYY")}}</div>
     <div
       class="flexChild textContainer nextPayment"
-    >{{subscription.upcomingPayments[0].fromNow}} ({{subscription.upcomingPayments[0].dateString | moment("MMMM DD, YYYY")}})</div>
+    >{{subscription.upcomingPayments[0].fromNow}} ({{subscription.upcomingPayments[0].momentDate | moment("MMMM DD, YYYY")}})</div>
     <div class="flexChild options">
       <div
         class="options__clickZone"
@@ -61,38 +61,6 @@ export default {
     };
   },
   methods: {
-    getUpcomingPayments: function () {
-      // Should remain an arrow function to remain this binding
-      const pushDateToUpcoming = (date) => {
-        this.subscription.upcomingPayments.push({
-          dateString: date.format("MM/DD/YY"),
-          fromNow: date.fromNow(),
-        });
-      };
-
-      // Set initial values in subscription data
-      this.subscription.upcomingPayments = [];
-      this.subscription.paidToDate = 0;
-
-      // Logic Begins
-      const date = moment(this.subscription.firstPaymentDate);
-
-      // "fast forward" until we find the next payment date
-      while (moment().isAfter(date)) {
-        date.add(this.subscription.interval, this.subscription.duration + "s");
-        this.subscription.paidToDate =
-          this.subscription.paidToDate + parseFloat(this.subscription.price);
-      }
-
-      this.subscription.paidToDate = this.subscription.paidToDate.toFixed(2);
-
-      pushDateToUpcoming(date);
-
-      for (let i = 0; i < 7; i++) {
-        date.add(this.subscription.interval, this.subscription.duration + "s");
-        pushDateToUpcoming(date);
-      }
-    },
     handleRemoveSubscription: async function () {
       try {
         const req = await this.$http.delete(
@@ -165,9 +133,6 @@ export default {
         }
       }
     },
-  },
-  created: function () {
-    this.getUpcomingPayments();
   },
 };
 </script>
