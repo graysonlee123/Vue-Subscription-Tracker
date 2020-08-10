@@ -1,6 +1,6 @@
 # Vue Subscription Tracker
 
-> A small web application to help track your subscriptions 
+> A small web application to help track your subscriptions and monthly expenses
 
 To start api server, run `nodemon server`.
 To start vue webpack server, run `npm run dev` from the client folder.
@@ -8,22 +8,21 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Urgent
 
-[] Add update email, password, delete account, name functionality
+[] Refresh /dashboard/settings/account
 [] Fix dates parsing to local time in browser
 - Saved dates as ISO string in DB no timezone offset
 - Dates are being parsed to local timezone in browser, need to only use no timezone offset
-[] Errors when registering - userId not being set in Axios
 
 ### General
 
-[] account page - full screen route
-  [] settings page - integrate with account page
-[] Make slider for upcoming payments in Subscription component instead of a scrollbar
-[] Date picker needs to show previous month and next month days - make look and interact more like ticktick's
 [] Handle removing error on lost focus for an error'd field's input
+[] Date picker needs to show previous month and next month days - make look and interact more like ticktick's
 [] Landing page
 [] Sanitize user information on signup
 [] Redirect logged in users away from login / register screen
+[x] Logic for password change
+[x] Logic for account deletion
+[x] Errors when registering - userId was not being stored in jwt properly
 [x] Look into making webapp only on /app, serve Home, About, Contact page on Node?
 [x] Filters
 [x] New design
@@ -59,6 +58,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### Icebox
 [] Integrate Tags
+[] Incorporate theme picker
 
 ## Quick Links
 - https://stackoverflow.com/questions/46389267/using-async-await-with-webpack-simple-configuration-throwing-error-regeneratorr

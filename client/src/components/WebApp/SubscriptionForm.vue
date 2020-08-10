@@ -13,10 +13,10 @@
         <!-- Price -->
         <div
           id="price-wrapper"
-          class="field-wrapper price-wrapper"
+          class="inputGroup price-wrapper"
           :class="{hasError: formErrors.find(({field}) => field === 'price')}"
         >
-          <label for="price">
+          <label class="inputGroup__label" for="price">
             Price
             <span
               class="fieldError"
@@ -40,10 +40,10 @@
         </div>
         <!-- Name -->
         <div
-          class="field-wrapper name-wrapper"
+          class="inputGroup name-wrapper"
           :class="{hasError: formErrors.find(({field}) => field === 'name')}"
         >
-          <label for="name">
+          <label class="inputGroup__label" for="name">
             Name
             <span
               class="fieldError"
@@ -55,8 +55,8 @@
           </div>
         </div>
         <!-- Description -->
-        <div class="field-wrapper desc-wrapper">
-          <label for="description" class="optional">Description</label>
+        <div class="inputGroup desc-wrapper">
+          <label class="inputGroup__label optional" for="description" >Description</label>
           <div class="input-wrapper">
             <input
               id="description"
@@ -75,10 +75,10 @@
         </div>
         <!-- Payment Date -->
         <div
-          class="field-wrapper date-wrapper"
+          class="inputGroup date-wrapper"
           :class="{hasError: formErrors.find(({field}) => field === 'firstPaymentDate')}"
         >
-          <label for="firstPaymentDate">
+          <label class="inputGroup__label" for="firstPaymentDate">
             First Payment
             <span
               class="fieldError"
@@ -95,10 +95,10 @@
         </div>
         <!-- Interval and Duration-->
         <div
-          class="field-wrapper interval-wrapper"
+          class="inputGroup interval-wrapper"
           :class="{hasError: formErrors.find(({field}) => field === 'interval')}"
         >
-          <label for="interval">
+          <label class="inputGroup__label" for="interval">
             Payment Interval
             <span
               class="fieldError"
@@ -122,10 +122,10 @@
         </div>
         <!-- Color -->
         <div
-          class="field-wrapper color-wrapper"
+          class="inputGroup color-wrapper"
           :class="{hasError: formErrors.find(({field}) => field === 'color')}"
         >
-          <label for="color">
+          <label class="inputGroup__label" for="color">
             Color
             <span
               class="fieldError"
@@ -138,10 +138,10 @@
         </div>
         <!-- Payment Method -->
         <div
-          class="field-wrapper method-wrapper"
+          class="inputGroup method-wrapper"
           :class="{hasError: formErrors.find(({field}) => field === 'paymentMethod')}"
         >
-          <label for="paymentMethod" class="optional">
+          <label class="inputGroup__label optional" for="paymentMethod">
             Payment Method
             <span
               class="fieldError"
@@ -347,10 +347,6 @@ form {
   grid-column-gap: 1em;
   max-width: 100%;
 
-  .fieldError {
-    color: var(--danger);
-  }
-
   .input-wrapper.splitInput {
     display: flex;
     justify-content: space-between;
@@ -366,7 +362,7 @@ form {
   }
 }
 
-.field-wrapper {
+.inputGroup {
   label {
     display: block;
     margin-bottom: 0.8em;
@@ -384,12 +380,6 @@ form {
 
   &.desc-wrapper {
     grid-column: 1 / 3;
-  }
-
-  &.hasError {
-    input {
-      border-color: var(--danger);
-    }
   }
 
   &.submit-wrapper {

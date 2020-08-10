@@ -97,42 +97,42 @@ import LanguageSelect from "../Global/LanguageSelect.vue";
 import { formErrors } from "../../mixins/formErrors";
 
 export default {
-  data: function() {
+  data: function () {
     return {
       email: "",
       first_name: "",
       last_name: "",
       password: "",
       showPassword: false,
-      formErrors: []
+      formErrors: [],
     };
   },
   mixins: [formErrors],
   components: {
-    languageSelect: LanguageSelect
+    languageSelect: LanguageSelect,
   },
   methods: {
-    handleSubmit: function() {
+    handleSubmit: function () {
       this.formErrors = [];
 
       const data = {
         email: this.email,
         first_name: this.first_name,
         last_name: this.last_name,
-        password: this.password
+        password: this.password,
       };
 
       this.$store
         .dispatch("register", data)
         .then(() => {
-          this.$router.push("/app/dashboard");
+          this.$router.push("/dashboard");
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
-          this.addFormError(err, 'first_name');
+          this.addFormError(err, "first_name");
         });
     },
-    handleShowPassword: function() {
+    handleShowPassword: function () {
       const passEl = document.getElementById("password");
       const eyeEl = document.getElementById("password-icon");
 
@@ -150,13 +150,13 @@ export default {
         eyeEl.classList.add("fa-eye-slash");
       }
     },
-    handleLostFocus: function(e) {
+    handleLostFocus: function (e) {
       const elementId = e.target.id;
       if (this.formErrors.length) {
         this.removeFormError(elementId);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
