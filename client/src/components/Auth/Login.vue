@@ -87,7 +87,7 @@ export default {
       this.$store
         .dispatch("login", data)
         .then(() => {
-          this.$router.push("/app/dashboard");
+          this.$router.push("/dashboard");
         })
         .catch(err => {
           console.error(err);

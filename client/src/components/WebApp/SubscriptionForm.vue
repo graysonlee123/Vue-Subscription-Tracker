@@ -297,7 +297,7 @@ export default {
 .formContainer {
   max-height: 100%;
   width: 100%;
-  max-width: 736px;
+  max-width: 596px;
   margin: 2em auto;
   display: flex;
   flex-flow: column nowrap;
