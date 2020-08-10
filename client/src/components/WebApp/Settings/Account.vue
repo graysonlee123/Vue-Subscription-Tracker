@@ -52,6 +52,7 @@
 
 <script>
 import { formErrors } from "../../../mixins/formErrors";
+import { v4 as uuidv4 } from "uuid";
 
 export default {
   data: function () {
@@ -87,11 +88,19 @@ export default {
           this.$store
             .dispatch("refreshUser")
             .then(() => {
-              // TODO: Dispatch success modal popup
+              this.$store.dispatch("addModal", {
+                type: "success",
+                message: "Your accout was succesfully updated.",
+                duration: 202000,
+                uuid: uuidv4(),
+              });
             })
             .catch((err) => {
-              // TODO: Dispatch danger modal popup
-              console.error(err);
+              this.$store.dispatch("addModal", {
+                type: "danger",
+                message: "There was a problem with that request. Please try again later.",
+                uuid: uuidv4(),
+              });
             });
         } catch (err) {
           this.addFormError(err);
