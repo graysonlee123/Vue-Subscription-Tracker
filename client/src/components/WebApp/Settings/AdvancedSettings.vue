@@ -1,6 +1,11 @@
 <template>
   <div class="advanced__wrapper">
-    <input type="button" value="Delete Account" class="roundedButton danger" @click="deleteAccount()"/>
+    <input
+      type="button"
+      value="Delete Account"
+      class="roundedButton danger"
+      @click="deleteAccount()"
+    />
   </div>
 </template>
 
@@ -10,14 +15,27 @@ export default {
     return {};
   },
   methods: {
-    deleteAccount: function () {
+    deleteAccount: async function () {
       if (
         confirm(
           "Are you sure you want to delete your account? This action cannot be undone. All data associated with the account will be erased."
         )
       ) {
-        console.log('Delete Account');
+        const data = await this.$http.delete("/api/user");
+
+        console.log(data);
+        this.logout();
       }
+    },
+    logout: function () {
+      this.$store
+        .dispatch("logout")
+        .then(() => {
+          this.$router.push("/login");
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
   },
 };

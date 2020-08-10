@@ -64,7 +64,10 @@ let router = new Router({
           children: [
             {
               path: "",
-              alias: "preferences",
+              redirect: "preferences"
+            },
+            {
+              path: "preferences",
               name: "Preferences",
               component: Preferences
             },

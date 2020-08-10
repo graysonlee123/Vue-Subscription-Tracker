@@ -44,6 +44,7 @@ export default new Vuex.Store({
     login({ commit }, user) {
       return new Promise((resolve, reject) => {
         commit("auth_request");
+
         axios({
           url: "/api/auth/login",
           data: user,
@@ -81,6 +82,8 @@ export default new Vuex.Store({
             const { token, user } = res.data;
 
             localStorage.setItem("token", token);
+
+            // Sets the header auth header for future axios requests
             axios.defaults.headers.common["x-auth-token"] = token;
 
             commit("auth_success", { token, user });

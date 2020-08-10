@@ -129,7 +129,8 @@ select {
   }
 }
 
-input[type="button"].roundedButton {
+input[type="button"].roundedButton,
+input[type="submit"].roundedButton {
   background-color: var(--success);
   border-radius: 32px;
   text-align: center;
@@ -162,6 +163,27 @@ input[type="number"] {
 
   &::-webkit-input-placeholder {
     // color: transparentize($color: #eee, $amount: 0.5);
+  }
+}
+
+.inputGroup {
+  .inputGroup__label {
+    display: block;
+    margin-bottom: 0.8em;
+    color: var(--textLight);
+    font-size: 0.8em;
+    font-weight: bold;
+    padding-left: 1.6em;
+
+    .fieldError {
+      color: var(--danger);
+    }
+  }
+
+  &.hasError {
+    input {
+      border-color: var(--danger);
+    }
   }
 }
 </style>
