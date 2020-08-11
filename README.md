@@ -8,19 +8,22 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Urgent
 
-[] Fix dates parsing to local time in browser
-- [x] Saved dates as ISO string in DB no timezone offset
-- [] Dates are being parsed to local timezone in browser, need to only use no timezone offset https://momentjs.com/docs/#/parsing/utc/
 
 ### General
 
-[] Add avatar uploading!!!
+[] Fix nav menu highlights
+[] Add avatar photo uploading!
 [] Handle removing error on lost focus for an error'd field's input
 [] Date picker needs to show previous month and next month days - make look and interact more like ticktick's
-[] Landing page - just serve in node
+[] Landing page - just serve in node and link correspondingly
 [] Sanitize user information on signup
-[] Redirect logged in users away from login / register screen (? what's conventional ?)
 [] Clicking off of menus
+[] Login and Register form front-end feedback
+[x] Redirect logged in users away from login / register screen (? what's conventional ?)
+- Looks like check if logged in on login page and redirect if so
+[x] Fix dates parsing to local time in browser
+- [x] Saved dates as ISO string in DB no timezone offset
+- [x] Dates are being parsed to local timezone in browser, need to only use no timezone offset https://momentjs.com/docs/#/parsing/utc/
 [x] Add avatar options menu in main menu, with logout, account settings, help / faq maybe
 [x] Refresh /dashboard/settings/account
 [x] Maybe add a modals popup - for updating password, things like that

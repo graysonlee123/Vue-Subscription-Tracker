@@ -118,7 +118,12 @@ export default {
         this.removeFormError(elementId);
       }
     }
-  }
+  },
+  beforeCreate() {
+    if (this.$store.state.isAuthenticated) {
+      this.$router.push("/dashboard");
+    }
+  },
 };
 </script>
 
