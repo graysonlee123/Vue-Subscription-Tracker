@@ -2,7 +2,7 @@
   <div v-if="loading" key="spinner" class="spinner-container">
     <i class="spinner"></i>
   </div>
-  <div v-else-if="error">There was a problem with that request. Please try again later.</div>
+  <div v-else-if="error">There was a problem with that request. Please try again later. <router-link to="/dashboard">Go back</router-link></div>
   <div v-else key="form" class="formContainer">
     <div class="formWrapper">
       <h1>{{subscriptionId ? 'Edit Subscription' : 'New Subscription'}}</h1>
@@ -56,7 +56,7 @@
         </div>
         <!-- Description -->
         <div class="inputGroup desc-wrapper">
-          <label class="inputGroup__label optional" for="description" >Description</label>
+          <label class="inputGroup__label optional" for="description">Description</label>
           <div class="input-wrapper">
             <input
               id="description"
@@ -87,7 +87,7 @@
           </label>
           <div class="input-wrapper">
             <date-picker
-              :date="subscription.firstPaymentDate"
+              :dateProp="subscription.firstPaymentDate"
               :color="subscription.color"
               @dateUpdated="(data) => subscription.firstPaymentDate = data"
             ></date-picker>
@@ -170,6 +170,7 @@
 <script>
 import moment from "moment";
 import { formErrors } from "../../mixins/formErrors";
+import { v4 as uuidv4 } from "uuid";
 
 import { EventBus } from "../../EventBus";
 
@@ -217,6 +218,13 @@ export default {
       } catch (err) {
         this.error = true;
         this.loading = false;
+
+        this.$store.dispatch("addModal", {
+          type: "danger",
+          message:
+            "There was an error loading that subscription. Please try again later.",
+          uuid: uuidv4(),
+        });
 
         console.log(err);
       }

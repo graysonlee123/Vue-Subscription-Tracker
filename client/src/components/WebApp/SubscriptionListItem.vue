@@ -15,12 +15,8 @@
       <span class="tag">media</span>
       <span class="tag">essential</span>
     </div>
-    <div
-      class="flexChild textContainer firstPayment"
-    >{{subscription.firstPaymentDate | moment("MMMM DD, YYYY")}}</div>
-    <div
-      class="flexChild textContainer nextPayment"
-    >{{subscription.upcomingPayments[0].fromNow}} ({{subscription.upcomingPayments[0].momentDate | moment("MMMM DD, YYYY")}})</div>
+    <div class="flexChild textContainer firstPayment">{{firstPaymentDateString}}</div>
+    <div class="flexChild textContainer nextPayment">{{upcomingPaymentString}}</div>
     <div class="flexChild options">
       <div
         class="options__clickZone"
@@ -68,8 +64,8 @@ export default {
           `/api/subscription/${this.subscription._id}`
         );
 
-        // this.$emit("refreshSubscriptions");
         EventBus.$emit("refreshSubscriptions");
+
         this.$router.push("/dashboard");
         this.$store.dispatch("addModal", {
           type: "success",
@@ -77,6 +73,11 @@ export default {
           uuid: uuidv4(),
         });
       } catch (err) {
+        this.$store.dispatch("addModal", {
+          type: "danger",
+          message: "There was an error removing that subscription. Please try again later.",
+          uuid: uuidv4(),
+        });
         console.log(err);
       }
     },
@@ -132,6 +133,25 @@ export default {
     },
   },
   computed: {
+    firstPaymentDateString: function () {
+      return moment
+        .utc(this.subscription.firstPaymentDate)
+        .format("MMMM DD, YYYY");
+    },
+    upcomingPaymentString: function () {
+      return `
+        ${moment
+          .utc(this.subscription.upcomingPayments[0].isoString)
+          .calendar(null, {
+            sameDay: "[Today]",
+            nextDay: "[Tomorrow]",
+            nextWeek: "dddd (MMMM DD, YYYY)",
+            lastDay: "[Yesterday] (MMMM DD, YYYY)",
+            lastWeek: "[Last] dddd (MMMM DD, YYYY)",
+            sameElse: "MMMM DD, YYYY",
+          })}
+      `;
+    },
     billingPeriod: function () {
       if (this.subscription.interval > 1) {
         return `Every ${this.subscription.interval} ${this.subscription.duration}s`;
