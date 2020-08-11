@@ -4,12 +4,6 @@
       <router-link to="/dashboard" tag="li">
         <i aria-hidden="true" class="fas fa-house-user"></i>
       </router-link>
-      <router-link to="/favorites" tag="li">
-        <i aria-hidden="true" class="fa fa-star"></i>
-      </router-link>
-      <router-link to="/trash" tag="li">
-        <i aria-hidden="true" class="fa fa-trash"></i>
-      </router-link>
       <router-link to="/dashboard/settings" tag="li">
         <i aria-hidden="true" class="fa fa-cog"></i>
       </router-link>

@@ -25,13 +25,10 @@
             >Advanced</router-link>
           </ul>
         </div>
-        <router-view></router-view>
+        <transition name="slide" mode="out-in">
+          <router-view></router-view>
+        </transition>
       </div>
-    </div>
-    <div class="settingsSubmit_wrapper">
-      <button @click="handleSubmit()">
-        <i class="fa fa-save"></i> Update
-      </button>
     </div>
   </div>
 </template>
@@ -63,33 +60,15 @@ export default {
   width: 100%;
   max-width: 596px;
   margin: 2em auto;
-  display: flex;
-  flex-flow: column nowrap;
 
   .settings__form {
     overflow-y: auto;
     border-radius: var(--borderRadius);
     background-color: var(--containerBackground);
     width: 100%;
+    height: 100%;
     padding: 2em;
-    flex-grow: 1;
     margin-bottom: 2em;
-  }
-
-  .settingsSubmit_wrapper {
-    text-align: center;
-
-    button {
-      background: none;
-      background-color: var(--success);
-      border: none;
-      border-radius: 50px;
-      padding: 12px 28px;
-      color: #eef6ed;
-      cursor: pointer;
-      text-transform: uppercase;
-      font-weight: bold;
-    }
   }
 }
 
@@ -99,6 +78,8 @@ export default {
   padding: 0 2em;
 
   ul {
+    user-select: none;
+    
     li {
       display: inline;
       margin-right: 1.2em;
@@ -113,5 +94,23 @@ export default {
       }
     }
   }
+}
+
+// Transitions
+.slide-enter-active,
+.slide-leave-active {
+  transition: opacity 300ms ease, transform 200ms ease-in-out;
+}
+
+.slide-enter-to,
+.slide-leave {
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+.slide-enter,
+.slide-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
 }
 </style>

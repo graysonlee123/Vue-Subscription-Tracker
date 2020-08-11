@@ -2,7 +2,9 @@
   <div id="dashboard">
     <navigation />
     <main-menu />
-    <router-view></router-view>
+    <transition name="fade" mode="out-in">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -41,5 +43,21 @@ export default {
 
 #main-menu {
   grid-area: menu;
+}
+
+// Transitions
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 300ms ease;
+}
+
+.fade-enter-to,
+.fade-leave {
+  opacity: 1
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

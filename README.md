@@ -8,7 +8,6 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Urgent
 
-[] Refresh /dashboard/settings/account
 [] Fix dates parsing to local time in browser
 - [x] Saved dates as ISO string in DB no timezone offset
 - [] Dates are being parsed to local timezone in browser, need to only use no timezone offset, look into moment "locale"
@@ -22,6 +21,8 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Landing page - just serve in node
 [] Sanitize user information on signup
 [] Redirect logged in users away from login / register screen (? what's conventional ?)
+[] Clicking off of menus
+[x] Refresh /dashboard/settings/account
 [x] Maybe add a modals popup - for updating password, things like that
 [x] Logic for password change
 [x] Logic for account deletion
