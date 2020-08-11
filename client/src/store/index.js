@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 Vue.use(Vuex);
 
@@ -113,11 +114,17 @@ export default new Vuex.Store({
           });
       });
     },
-    logout({ commit }) {
-      return new Promise(resolve => {
+    logout({ dispatch, commit }) {
+      return new Promise(async resolve => {
         commit("logout");
         localStorage.removeItem("token");
         delete axios.defaults.headers.common["x-auth-token"];
+
+        await dispatch("addModal", {
+          type: "success",
+          message: "You have been logged out.",
+          uuid: uuidv4()
+        });
         resolve();
       });
     },

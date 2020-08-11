@@ -66,7 +66,7 @@ export default {
     }
 
     // Also, we want to clear any previous alerts
-    this.$store.commit("clear_modals");
+    // this.$store.commit("clear_modals");
   },
   created: function () {
     // Intercepting axios calls to determine if we get 401 unauthorized
@@ -137,6 +137,7 @@ strong {
   border-radius: var(--borderRadius);
   box-shadow: 0 3px 16px rgba(0, 0, 0, 0.25);
   display: flex;
+  z-index: 10;
 
   &.success {
     background-color: var(--success);

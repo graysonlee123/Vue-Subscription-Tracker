@@ -2,12 +2,10 @@ import Vue from "vue";
 import Router from "vue-router";
 
 // Components
-import Homepage from "../components/Homepage";
 import Login from "../components/Auth/Login";
 import Register from "../components/Auth/Register";
 import Dashboard from "../components/WebApp/Dashboard";
 import SubscriptionForm from "../components/WebApp/SubscriptionForm";
-import Subscription from "../components/WebApp/Subscription";
 import Settings from "../components/WebApp/Settings/Settings";
 import Preferences from "../components/WebApp/Settings/Preferences";
 import AdvancedSettings from "../components/WebApp/Settings/AdvancedSettings";
