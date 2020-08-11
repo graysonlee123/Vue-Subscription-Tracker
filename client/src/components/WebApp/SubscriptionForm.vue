@@ -2,7 +2,10 @@
   <div v-if="loading" key="spinner" class="spinner-container">
     <i class="spinner"></i>
   </div>
-  <div v-else-if="error">There was a problem with that request. Please try again later. <router-link to="/dashboard">Go back</router-link></div>
+  <div v-else-if="error">
+    There was a problem with that request. Please try again later.
+    <router-link to="/dashboard">Go back</router-link>
+  </div>
   <div v-else key="form" class="formContainer">
     <div class="formWrapper">
       <h1>{{subscriptionId ? 'Edit Subscription' : 'New Subscription'}}</h1>
@@ -245,6 +248,12 @@ export default {
           this.loading = false;
           EventBus.$emit("refreshSubscriptions");
           this.$router.push(`/dashboard`);
+
+          this.$store.dispatch("addModal", {
+            type: "success",
+            message: "Your subscription was succesfully added.",
+            uuid: uuidv4(),
+          });
         } else {
           const data = {
             ...this.subscription,
@@ -258,6 +267,12 @@ export default {
           this.loading = false;
           EventBus.$emit("refreshSubscriptions");
           this.$router.push(`/dashboard`);
+
+          this.$store.dispatch("addModal", {
+            type: "success",
+            message: "Your subscription was succesfully updated.",
+            uuid: uuidv4(),
+          });
         }
       } catch (err) {
         this.loading = false;

@@ -6,19 +6,24 @@ To start api server, run `nodemon server`.
 To start vue webpack server, run `npm run dev` from the client folder.
 
 ## TODOs
-### Urgent
+### Priority
 
+[] Add avatar photo uploading!
+- Maybe link default avatars to via.placeholder.com/200?text=${firstInitial}${lastInitial}
+[] Login and Register form front-end feedback
 
 ### General
 
-[] Fix nav menu highlights
-[] Add avatar photo uploading!
 [] Handle removing error on lost focus for an error'd field's input
-[] Date picker needs to show previous month and next month days - make look and interact more like ticktick's
-[] Landing page - just serve in node and link correspondingly
 [] Sanitize user information on signup
 [] Clicking off of menus
-[] Login and Register form front-end feedback
+[] Sort by clicking on column label (?)
+[] "Flash" subscription on update / creation in list
+[] "Add new" button in nav
+[] Landing page - just serve in node and link correspondingly
+[] Look into removing vue-moment dependency
+[x] Date picker needs to show previous month and next month days - make look and interact more like ticktick's
+[x] Fix nav menu highlights
 [x] Redirect logged in users away from login / register screen (? what's conventional ?)
 - Looks like check if logged in on login page and redirect if so
 [x] Fix dates parsing to local time in browser
@@ -66,6 +71,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ### Icebox
 [] Integrate Tags
 [] Incorporate theme picker
+[] Add "zoom out" month picker for date picker component
 
 ## Quick Links
 - https://stackoverflow.com/questions/46389267/using-async-await-with-webpack-simple-configuration-throwing-error-regeneratorr
