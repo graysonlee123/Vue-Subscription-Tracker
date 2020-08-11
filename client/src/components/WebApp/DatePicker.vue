@@ -4,13 +4,13 @@
       class="date-text"
       :class="{'date-selected': selectedDate}"
       @click="show = true"
-    >{{inputText || selectedDate }}</div>
+    >{{selectedDateString}}</div>
     <div v-if="show" class="date-picker">
       <div class="header">
         <div class="left buttons" @click="decreaseMonth">
           <i class="fa fa-chevron-left"></i>
         </div>
-        <p class="title">{{months[month]}} {{year}}</p>
+        <p class="title">{{months[month - 1]}} {{year}}</p>
         <div class="right buttons" @click="increaseMonth">
           <i class="fa fa-chevron-right"></i>
         </div>
@@ -26,34 +26,34 @@
           <td
             v-for="(col, index) in row"
             :key="index"
-            :class="{'current-month': col.datem}"
             :style="[col.isToday ? {color: 'var(--mainAccent)'} : {'color': 'var(--textLight)'}]"
           >
             <div
               class="date-button"
               :class="{'selected': selectedDate === col.date}"
-              @click="selectDate(col.date)"
+              @click="selectedDate = col.date"
             >{{col.dayCount || '.'}}</div>
           </td>
         </tr>
       </table>
       <div class="footer">
         <input type="button" value="Close" @click="show = false" />
-        <input type="button" value="Submit" @click="submitForm" :style="{backgroundColor: color}" />
+        <input type="button" value="Submit" @click="submitForm" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
   props: {
-    date: String,
+    dateProp: String,
     color: String,
   },
   data: function () {
     return {
-      inputText: "Select a date...",
       selectedDate: "",
       day: "",
       month: "",
@@ -81,12 +81,14 @@ export default {
     loadMonth: function () {
       this.calendarList = [];
 
+      const month = moment.utc(`${this.year}-${this.month}`, "YYYY-M", true);
+
       // Get first day of the month's day of the week
-      let offset = new Date(this.year, this.month, 1).getDay();
+      let offset = month.day();
       let dayCount = 1;
 
       // Number of days in the month
-      const daysInMonth = new Date(this.year, this.month + 1, 0).getDate();
+      const daysInMonth = month.daysInMonth();
 
       // Build the data for Vue to use
       for (let rows = 0; rows < 6; rows++) {
@@ -96,15 +98,18 @@ export default {
           if (dayCount > daysInMonth) {
             row.push({});
           } else if (offset == 0) {
-            const now = new Date(Date.now());
+            // We want to show today in local time
+            const now = moment();
             const isToday =
-              now.getDate() === dayCount &&
-              now.getMonth() === this.month &&
-              now.getFullYear() === this.year;
+              now.date() === dayCount &&
+              now.month() + 1 === this.month &&
+              now.year() === this.year;
 
             row.push({
               dayCount,
-              date: this.parseDate(this.year, this.month, dayCount),
+              date: moment
+                .utc(`${this.year}-${this.month}-${dayCount}`, "YYYY-M-D", true)
+                .toISOString(),
               isToday,
             });
 
@@ -119,67 +124,57 @@ export default {
       }
     },
     decreaseMonth: function () {
-      if (this.month > 0) {
+      if (this.month > 1) {
         this.month = this.month - 1;
       } else {
         this.year = this.year - 1;
-        this.month = 11;
+        this.month = 12;
       }
     },
     increaseMonth: function () {
-      if (this.month < 11) {
+      if (this.month < 12) {
         this.month = this.month + 1;
       } else {
         this.year = this.year + 1;
-        this.month = 0;
+        this.month = 1;
       }
     },
-    selectDate: function (date) {
-      this.selectedDate = date;
-    },
     submitForm: function () {
-      this.inputText = this.selectedDate;
       this.show = false;
-
       this.$emit("dateUpdated", this.selectedDate);
-    },
-    parseDate: function (year, month, day) {
-      const monthParse = month + 1 < 10 ? `0${month + 1}` : `${month + 1}`;
-      const dayParse = day < 10 ? `0${day}` : `${day}`;
-
-      return `${year}-${monthParse}-${dayParse}`;
-    },
-    setDate: function () {
-      this.selectedDate = this.parseDate(this.year, this.month, this.day);
     },
   },
   watch: {
     month: function () {
       this.loadMonth();
     },
-    show: function (val) {
-      if (val) {
-        this.setDate;
-      }
-    },
   },
   created: function () {
-    if (this.date) {
-      const newDate = new Date(this.date);
+    if (this.dateProp) {
+      const date = moment.utc(this.dateProp);
 
-      this.year = newDate.getFullYear();
-      this.month = newDate.getMonth();
-      this.day = newDate.getDate();
+      this.year = date.year();
 
-      this.setDate();
-      this.inputText = this.selectedDate;
+      // ? Month is index based; January is 0...
+      // ? so we add 1 to be able to work with iso time strings better
+      this.month = date.month() + 1;
+      this.day = date.date();
+
+      this.selectedDate = date.toISOString();
     } else {
-      const currentDate = new Date(Date.now());
+      const currentDate = moment();
 
-      this.year = currentDate.getFullYear();
-      this.month = currentDate.getMonth();
-      this.day = currentDate.getDate();
+      this.year = currentDate.year();
+      this.month = currentDate.month();
+      this.day = currentDate.date();
     }
+  },
+  computed: {
+    selectedDateString: function () {
+      return this.selectedDate
+        ? `${moment.utc(this.selectedDate).format("MMMM DD, YYYY")}`
+        : "Select a date...";
+    },
   },
 };
 
