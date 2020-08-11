@@ -9,7 +9,7 @@
         <p>{{computeEmail}}</p>
       </div>
     </header>
-    <hr class="divider" />
+    <div class="divider"></div>
     <form @submit.prevent="handleSubmit">
       <div class="inputGroup">
         <label for="email" class="inputGroup__label">
@@ -180,8 +180,8 @@ header {
 }
 
 .divider {
-  margin: 2.5em 0;
-  border-color: transparentize($color: white, $amount: 0.8);
+  margin: 2.5em -2em;
+  border-top: 3px solid var(--bodyBackground);
 }
 
 .inputGroup {
