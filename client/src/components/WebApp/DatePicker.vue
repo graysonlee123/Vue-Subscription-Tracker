@@ -17,7 +17,7 @@
       </div>
       <table>
         <!-- Table day names -->
-        <tr class="days-of-week">
+        <tr class="daysOfWeek">
           <td v-for="(day, index) in days" :key="index">{{day}}</td>
         </tr>
         <!-- Table main rows -->
@@ -26,13 +26,13 @@
           <td
             v-for="(col, index) in row"
             :key="index"
-            :style="[col.isToday ? {color: 'var(--mainAccent)'} : {'color': 'var(--textLight)'}]"
+            :style="[col.isToday ? {color: 'var(--mainAccent)'} : {'color': 'var(--textDark)'}]"
           >
             <div
               class="date-button"
-              :class="{'selected': selectedDate === col.date}"
-              @click="selectedDate = col.date"
-            >{{col.dayCount || '.'}}</div>
+              :class="{'selected': selectedDate === col.date, isOtherMonth: col.isOtherMonth !== 0}"
+              @click="selectDate(col)"
+            >{{col.dayCount}}</div>
           </td>
         </tr>
       </table>
@@ -82,6 +82,7 @@ export default {
       this.calendarList = [];
 
       const month = moment.utc(`${this.year}-${this.month}`, "YYYY-M", true);
+      const nextMonth = moment.utc(month).add(1, "months"); // Need to create this before modifying "month"
 
       // Get first day of the month's day of the week
       let offset = month.day();
@@ -96,7 +97,14 @@ export default {
 
         for (let cols = 0; cols < 7; cols++) {
           if (dayCount > daysInMonth) {
-            row.push({});
+            row.push({
+              dayCount: nextMonth.date(),
+              date: nextMonth.toISOString(),
+              isToday: false,
+              isOtherMonth: 1,
+            });
+
+            nextMonth.add(1, "days");
           } else if (offset == 0) {
             // We want to show today in local time
             const now = moment();
@@ -111,11 +119,24 @@ export default {
                 .utc(`${this.year}-${this.month}-${dayCount}`, "YYYY-M-D", true)
                 .toISOString(),
               isToday,
+              isOtherMonth: 0,
             });
 
             dayCount++;
           } else {
-            row.push({});
+            let previousMonth = moment.utc(month).subtract(1, "months");
+            previousMonth = previousMonth.date(
+              previousMonth.daysInMonth() - offset + 1
+            );
+
+            row.push({
+              dayCount: previousMonth.date(),
+              date: previousMonth.toISOString(),
+              isToday: false,
+              isOtherMonth: -1,
+            });
+
+            previousMonth.subtract(1, "days");
             offset--;
           }
         }
@@ -137,6 +158,13 @@ export default {
       } else {
         this.year = this.year + 1;
         this.month = 1;
+      }
+    },
+    selectDate: function (columnData) {
+      this.selectedDate = columnData.date;
+
+      if (columnData.isOtherMonth) {
+        this.month = moment.utc(columnData.date).month() + 1;
       }
     },
     submitForm: function () {
@@ -217,11 +245,11 @@ export default {
     display: flex;
     align-items: center;
     margin-bottom: 0;
+    color: var(--textDark);
 
     .title {
       flex-grow: 1;
       text-align: center;
-      color: var(--textLight);
       font-weight: bold;
       font-size: 0.9em;
     }
@@ -237,6 +265,10 @@ export default {
     text-align: center;
     color: var(--textDark);
     font-weight: bold;
+
+    .daysOfWeek {
+      color: var(--textLight);
+    }
 
     tr {
       td {
@@ -254,6 +286,10 @@ export default {
           &:hover,
           &.selected {
             background-color: rgba(0, 0, 0, 0.07);
+          }
+
+          &.isOtherMonth {
+            color: var(--textLight);
           }
         }
 
