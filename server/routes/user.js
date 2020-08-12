@@ -17,11 +17,11 @@ router.post(
   [
     check("email")
       .notEmpty()
-      .withMessage("Must provide an email")
+      .withMessage("cannot be empty")
       .bail()
       .normalizeEmail()
       .isEmail()
-      .withMessage("Must be a valid email format")
+      .withMessage("must be an email")
       .bail()
       .custom(value => {
         return User.findOne({ email: value }).then(user => {
@@ -32,23 +32,23 @@ router.post(
       }),
     check("first_name")
       .notEmpty()
-      .withMessage("Must provide a first name")
+      .withMessage("cannot be empty")
       .bail()
       .isString()
       .isAlpha()
-      .withMessage("Must be letters only")
+      .withMessage("can only contain letters")
       .trim(),
     check("last_name")
       .notEmpty()
-      .withMessage("Must provide a last name")
+      .withMessage("cannot be empty")
       .bail()
       .isString()
       .isAlpha()
-      .withMessage("Must be letters only")
+      .withMessage("can only contain letters")
       .trim(),
     check("password")
       .isLength({ min: 6, max: 32 })
-      .withMessage("Must be between 6 and 32 characters")
+      .withMessage("must be between 6 and 32 characters")
   ],
   async (req, res) => {
     const errors = validationResult(req);

@@ -2,20 +2,20 @@
   <div class="auth-wrapper">
     <div class="auth-left"></div>
     <div class="auth-right">
-      <div class="top">
-        <div class="top-left">
-          <language-select />
-        </div>
-        <div class="top-right">
-          Already have an account?
-          <router-link to="/login">Sign In</router-link>
-        </div>
-      </div>
       <form class="auth-form" @submit.prevent="handleSubmit">
-        <h4>Register to get in control of your subscriptions</h4>
-        <div class="inputs-2-col">
-          <div class="field-wrapper">
-            <label for="first_name">First Name</label>
+        <h4>Register to get in control of your subscriptions.</h4>
+        <div class="doubleInputGroup">
+          <div
+            class="inputGroup"
+            :class="{hasError: formErrors.find(({field}) => field === 'first_name')}"
+          >
+            <label for="first_name" class="inputGroup__label">
+              First Name
+              <span
+                class="fieldError"
+                v-if="formErrors.find(({field}) => field === 'first_name')"
+              >{{formErrors.find(({field}) => field ==='first_name').msg}}</span>
+            </label>
             <div class="input-wrapper">
               <input
                 id="first_name"
@@ -26,13 +26,18 @@
                 autofocus
               />
             </div>
-            <p
-              class="field-error"
-              v-if="formErrors.find(({field}) => field === 'first_name')"
-            >{{formErrors.find(({field}) => field ==='first_name').msg}}</p>
           </div>
-          <div class="field-wrapper">
-            <label for="last_name">Last Name</label>
+          <div
+            class="inputGroup"
+            :class="{hasError: formErrors.find(({field}) => field === 'last_name')}"
+          >
+            <label for="last_name" class="inputGroup__label">
+              Last Name
+              <span
+                class="fieldError"
+                v-if="formErrors.find(({field}) => field === 'last_name')"
+              >{{formErrors.find(({field}) => field ==='last_name').msg}}</span>
+            </label>
             <div class="input-wrapper">
               <input
                 id="last_name"
@@ -42,14 +47,19 @@
                 v-on:focusout="handleLostFocus"
               />
             </div>
-            <p
-              class="field-error"
-              v-if="formErrors.find(({field}) => field === 'last_name')"
-            >{{formErrors.find(({field}) => field ==='last_name').msg}}</p>
           </div>
         </div>
-        <div class="field-wrapper">
-          <label for="email">Email</label>
+        <div
+          class="inputGroup"
+          :class="{hasError: formErrors.find(({field}) => field === 'email')}"
+        >
+          <label for="email" class="inputGroup__label">
+            Email
+            <span
+              class="fieldError"
+              v-if="formErrors.find(({field}) => field === 'email')"
+            >{{formErrors.find(({field}) => field ==='email').msg}}</span>
+          </label>
           <div class="input-wrapper">
             <input
               id="email"
@@ -59,13 +69,18 @@
               v-on:focusout="handleLostFocus"
             />
           </div>
-          <p
-            class="field-error"
-            v-if="formErrors.find(({field}) => field === 'email')"
-          >{{formErrors.find(({field}) => field ==='email').msg}}</p>
         </div>
-        <div class="field-wrapper">
-          <label for="password">Password</label>
+        <div
+          class="inputGroup"
+          :class="{hasError: formErrors.find(({field}) => field === 'password')}"
+        >
+          <label for="password" class="inputGroup__label">
+            Password
+            <span
+              class="fieldError"
+              v-if="formErrors.find(({field}) => field === 'password')"
+            >{{formErrors.find(({field}) => field ==='password').msg}}</span>
+          </label>
           <div class="input-wrapper password">
             <input
               id="password"
@@ -78,14 +93,14 @@
               <i id="password-icon" class="fas fa-eye"></i>
             </span>
           </div>
-          <p
-            class="field-error"
-            v-if="formErrors.find(({field}) => field === 'password')"
-          >{{formErrors.find(({field}) => field ==='password').msg}}</p>
         </div>
-        <div class="input-wrapper">
-          <button type="submit">Register</button>
+        <div class="submit__wrapper">
+          <input type="submit" class="roundedButton" value="Register" />
         </div>
+        <p class="footerP">
+          Already have an account?
+          <router-link to="/login">Login</router-link>
+        </p>
       </form>
     </div>
   </div>
@@ -93,6 +108,7 @@
 
 <script>
 import LanguageSelect from "../Global/LanguageSelect.vue";
+import { v4 as uuidv4 } from "uuid";
 
 import { formErrors } from "../../mixins/formErrors";
 
@@ -129,7 +145,18 @@ export default {
         })
         .catch((err) => {
           console.error(err);
-          this.addFormError(err, "first_name");
+
+          if (err.response.status === 500) {
+            this.$store.dispatch("addModal", {
+              type: "danger",
+              message: "Server error, please try again later.",
+              uuid: uuidv4(),
+            });
+
+            this.password = "";
+          } else {
+            this.addFormError(err, "first_name");
+          }
         });
     },
     handleShowPassword: function () {
@@ -183,33 +210,62 @@ export default {
     align-items: center;
     justify-content: space-around;
     padding: 1rem;
-
-    .top {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      right: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
   }
 
   .auth-form {
+    background-color: var(--containerBackground);
     max-width: 460px;
+    padding: 4em 2em;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    border-radius: var(--borderRadius);
 
-    .inputs-2-col .field-wrapper {
-      float: left;
-      clear: unset;
-      width: 48%;
+    h4 {
+      font-size: 2em;
+      line-height: 140%;
+      margin-bottom: 2em;
+    }
 
-      &:nth-child(1) {
-        margin-right: 2%;
-      }
-      &:nth-child(2) {
-        margin-left: 2%;
+    .inputGroup {
+      margin-bottom: 1.5em;
+    }
+
+    .submit__wrapper {
+      text-align: center;
+      margin-bottom: 2em;
+    }
+
+    .footerP {
+      text-align: center;
+
+      a {
+        color: inherit;
+        text-decoration-color: var(--mainAccent);
+
+        &:hover {
+          color: var(--mainAccent);
+        }
       }
     }
+  }
+}
+
+.password {
+  position: relative;
+
+  .show-password-button {
+    cursor: pointer;
+    position: absolute;
+    bottom: 12px;
+    right: 14px;
+  }
+}
+
+.doubleInputGroup {
+  display: flex;
+  justify-content: space-between;
+
+  .inputGroup {
+    flex: 0 0 48%;
   }
 }
 </style>

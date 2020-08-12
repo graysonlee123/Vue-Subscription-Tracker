@@ -10,18 +10,19 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 [] Add avatar photo uploading!
 - Maybe link default avatars to via.placeholder.com/200?text=${firstInitial}${lastInitial}
-[] Login and Register form front-end feedback
+- Save link to user's avatar as a link in the database and load into store with initial user load
 
 ### General
 
 [] Handle removing error on lost focus for an error'd field's input
 [] Sanitize user information on signup
 [] Clicking off of menus
-[] Sort by clicking on column label (?)
 [] "Flash" subscription on update / creation in list
-[] "Add new" button in nav
 [] Landing page - just serve in node and link correspondingly
 [] Look into removing vue-moment dependency
+[] Empty subscriptions ? "add new subscription" list item
+[x] Login and Register form front-end feedback
+[x] "Add new" button in nav
 [x] Date picker needs to show previous month and next month days - make look and interact more like ticktick's
 [x] Fix nav menu highlights
 [x] Redirect logged in users away from login / register screen (? what's conventional ?)

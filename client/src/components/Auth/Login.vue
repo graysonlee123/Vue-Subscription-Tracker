@@ -2,19 +2,16 @@
   <div class="auth-wrapper">
     <div class="auth-left"></div>
     <div class="auth-right">
-      <div class="top">
-        <div>
-          <language-select />
-        </div>
-        <div>
-          Need to sign up? It's free!
-          <router-link to="/register">Register</router-link>
-        </div>
-      </div>
       <form class="auth-form" @submit.prevent="handleSubmit">
-        <h4>Login to your account to view, edit, and track your subscriptions</h4>
-        <div class="field-wrapper">
-          <label for="email">Email</label>
+        <h4>Login to your account to view, edit, and track your subscriptions.</h4>
+        <div class="inputGroup" :class="{hasError: formErrors.find(({field}) => field === 'email')}">
+          <label for="email" class="inputGroup__label">
+            Email
+            <span
+              class="fieldError"
+              v-if="formErrors.find(({field}) => field === 'email')"
+            >{{formErrors.find(({field}) => field ==='email').msg}}</span>
+          </label>
           <div class="input-wrapper">
             <input
               id="email"
@@ -25,13 +22,15 @@
               autofocus
             />
           </div>
-          <p
-            class="field-error"
-            v-if="formErrors.find(({field}) => field === 'email')"
-          >{{formErrors.find(({field}) => field ==='email').msg}}</p>
         </div>
-        <div class="field-wrapper">
-          <label for="password">Password</label>
+        <div class="inputGroup" :class="{hasError: formErrors.find(({field}) => field === 'password')}">
+          <label for="password" class="inputGroup__label">
+            Password
+            <span
+              v-if="formErrors.find(({field}) => field === 'password')"
+              class="fieldError"
+            >{{formErrors.find(({field}) => field ==='password').msg}}</span>
+          </label>
           <div class="input-wrapper password">
             <input
               id="password"
@@ -44,14 +43,14 @@
               <i id="password-icon" class="fas fa-eye"></i>
             </span>
           </div>
-          <p
-            class="field-error"
-            v-if="formErrors.find(({field}) => field === 'password')"
-          >{{formErrors.find(({field}) => field ==='password').msg}}</p>
         </div>
-        <div class="field-wrapper">
-          <button type="submit">Login</button>
+        <div class="submit__wrapper">
+          <input type="submit" class="roundedButton" value="Login" />
         </div>
+        <p class="footerP">
+          Don't have an account?
+          <router-link to="/register">Register</router-link>
+        </p>
       </form>
     </div>
   </div>
@@ -59,29 +58,30 @@
 
 <script>
 import LanguageSelect from "../Global/LanguageSelect";
+import { v4 as uuidv4 } from "uuid";
 
 import { formErrors } from "../../mixins/formErrors";
 
 export default {
-  data: function() {
+  data: function () {
     return {
       email: "",
       password: "",
       showPassword: false,
-      formErrors: []
+      formErrors: [],
     };
   },
   mixins: [formErrors],
   components: {
-    languageSelect: LanguageSelect
+    languageSelect: LanguageSelect,
   },
   methods: {
-    handleSubmit: function() {
+    handleSubmit: function () {
       this.clearErrors();
 
       const data = {
         email: this.email,
-        password: this.password
+        password: this.password,
       };
 
       this.$store
@@ -89,12 +89,31 @@ export default {
         .then(() => {
           this.$router.push("/dashboard");
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
-          this.addFormError(err, 'email');
+
+          if (err.response.status === 403) {
+            this.$store.dispatch("addModal", {
+              type: "danger",
+              message: err.response.data.msg,
+              uuid: uuidv4(),
+            });
+
+            this.password = "";
+          } else if (err.response.status === 500) {
+            this.$store.dispatch("addModal", {
+              type: "danger",
+              message: "Server error, please try again later.",
+              uuid: uuidv4(),
+            });
+
+            this.password = "";
+          } else {
+            this.addFormError(err, "email");
+          }
         });
     },
-    handleShowPassword: function() {
+    handleShowPassword: function () {
       const passEl = document.getElementById("password");
       const eyeEl = document.getElementById("password-icon");
 
@@ -112,12 +131,12 @@ export default {
         eyeEl.classList.add("fa-eye-slash");
       }
     },
-    handleLostFocus: function(e) {
+    handleLostFocus: function (e) {
       const elementId = e.target.id;
       if (this.formErrors.length) {
         this.removeFormError(elementId);
       }
-    }
+    },
   },
   beforeCreate() {
     if (this.$store.state.isAuthenticated) {
@@ -148,22 +167,55 @@ export default {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
     padding: 1rem;
-
-    .top {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      right: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
   }
 
   .auth-form {
+    background-color: var(--containerBackground);
     max-width: 460px;
+    padding: 4em 2em;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    border-radius: var(--borderRadius);
+
+    h4 {
+      font-size: 2em;
+      line-height: 140%;
+      margin-bottom: 2em;
+    }
+
+    .inputGroup {
+      margin-bottom: 1.5em;
+    }
+
+    .submit__wrapper {
+      text-align: center;
+      margin-bottom: 2em;
+    }
+
+    .footerP {
+      text-align: center;
+
+      a {
+        color: inherit;
+        text-decoration-color: var(--mainAccent);
+
+        &:hover {
+          color: var(--mainAccent);
+        }
+      }
+    }
+  }
+}
+
+.password {
+  position: relative;
+
+  .show-password-button {
+    cursor: pointer;
+    position: absolute;
+    bottom: 12px;
+    right: 14px;
   }
 }
 </style>
