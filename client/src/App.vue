@@ -235,7 +235,9 @@ input[type="number"] {
   }
 
   &.hasError {
-    input {
+    input,
+    .date-wrapper .date-text,
+    .colorPicker__wrapper .colorPicker {
       border-color: var(--danger);
     }
   }

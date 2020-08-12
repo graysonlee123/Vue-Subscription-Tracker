@@ -11,7 +11,7 @@
     </header>
     <div class="divider"></div>
     <form @submit.prevent="handleSubmit">
-      <div class="inputGroup">
+      <div class="inputGroup" :class="{hasError: formErrors.find(({field}) => field === 'email')}">
         <label for="email" class="inputGroup__label">
           Email
           <span
@@ -22,7 +22,7 @@
         <input type="text" v-model="email" />
       </div>
       <div class="col2">
-        <div class="inputGroup">
+        <div class="inputGroup" :class="{hasError: formErrors.find(({field}) => field === 'first_name')}">
           <label for="first_name" class="inputGroup__label">
             First name
             <span
@@ -32,7 +32,7 @@
           </label>
           <input type="text" v-model="first_name" />
         </div>
-        <div class="inputGroup">
+        <div class="inputGroup" :class="{hasError: formErrors.find(({field}) => field === 'last_name')}">
           <label for="last_name" class="inputGroup__label">
             Last name
             <span
@@ -66,6 +66,8 @@ export default {
   mixins: [formErrors],
   methods: {
     handleSubmit: async function (name) {
+      this.formErrors = [];
+
       // TODO: Make more DRY
       const data = {};
 
