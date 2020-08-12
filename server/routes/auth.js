@@ -30,30 +30,13 @@ router.post(
   [
     check("email")
       .notEmpty()
-      .withMessage("No email address provided")
+      .withMessage("cannot be empty")
       .bail()
       .normalizeEmail()
       .isEmail()
-      .withMessage("Must be a valid email address format")
+      .withMessage("must be a valid email format")
       .bail(),
-    check("password")
-      .notEmpty()
-      .withMessage("Must provide a password")
-      .bail(),
-    body('password').custom(async (value, {req}) => {
-      const { email, password } = req.body;      
-      const user = await User.findOne({ email });
-
-      if (!user) {
-        return Promise.reject('Invalid login')
-      }
-
-      const passwordIsValid = await bcrypt.compare(password, user.password);
-
-      if (!passwordIsValid) {
-        return Promise.reject('Invalid login')
-      }
-    })
+    check("password").notEmpty().withMessage("cannot be empty").bail()
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -63,12 +46,23 @@ router.post(
     }
 
     try {
-      const { email } = req.body;
+      const { email, password } = req.body;
       const user = await User.findOne({ email });
+
+      if (!user) {
+        return res.status(403).json({ msg: "Incorrect email or password!" });
+      }
+
+      const passwordIsValid = await bcrypt.compare(password, user.password);
+
+      if (!passwordIsValid) {
+        return res.status(403).json({ msg: "Incorrect email or password!" });
+      }
+
       let token = jwt.sign({ id: user.id }, process.env.SECRET, {
         expiresIn: 36000
       });
-
+      
       res.status(200).send({ token, user });
     } catch (err) {
       console.error(err);
