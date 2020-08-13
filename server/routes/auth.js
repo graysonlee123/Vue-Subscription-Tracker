@@ -12,7 +12,9 @@ const User = require("../models/User");
 // ! @access  Private
 router.get("/", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.userId).select("-password");
+    const user = await (
+      await User.findById(req.userId).select("-password")
+    ).execPopulate();
     const token = req.headers["x-auth-token"];
 
     res.json({ user, token });
@@ -62,7 +64,7 @@ router.post(
       let token = jwt.sign({ id: user.id }, process.env.SECRET, {
         expiresIn: 36000
       });
-      
+
       res.status(200).send({ token, user });
     } catch (err) {
       console.error(err);

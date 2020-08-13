@@ -2,7 +2,7 @@
   <div class="account__wrapper">
     <header>
       <div class="img-container">
-        <img src="http://via.placeholder.com/200" alt="Avatar" />
+        <img :src="$store.state.user.avatarUrl || 'http://via.placeholder.com/200'" alt="Avatar" />
       </div>
       <div class="header-text">
         <h2>{{computeFullName}}</h2>

@@ -9,6 +9,20 @@ const User = require("../models/User");
 const Subscriptions = require("../models/Subscriptions");
 const { Mongoose } = require("mongoose");
 
+// User.find({}).then(data => {
+//   console.log(data);
+
+//   data.forEach(function(x) {
+//     x.update({
+//       $set: {
+//         avatarUrl: `https://via.placeholder.com/200/8369fe/eeebff?text=${x.first_name[0].toUpperCase()}${x.last_name[0].toUpperCase()}`
+//       }
+//     }).then((data, err) => {
+//       console.log({ data, err });
+//     });
+//   });
+// });
+
 // * @route   POST api/user
 // ? @desc    Register user
 // ! @access  Public
