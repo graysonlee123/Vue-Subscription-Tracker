@@ -9,13 +9,15 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ### Priority
 
 [] Add avatar photo uploading!
-- Maybe link default avatars to via.placeholder.com/200?text=${firstInitial}${lastInitial}
-- Save link to user's avatar as a link in the database and load into store with initial user load
+- [x] Maybe link default avatars to https://via.placeholder.com/200/8369fe/eeebff?text=${firstInitial}${lastInitial}
+- [] Save link to user's avatar as a link in the database and load into store with initial user load
+- https://www.digitalocean.com/community/tutorials/vuejs-uploading-vue-picture-input
 
 ### General
 
 [] Handle removing error on lost focus for an error'd field's input
 [] Sanitize user information on signup
+- Capitalize first letter in names
 [] Clicking off of menus
 [] "Flash" subscription on update / creation in list
 [] Landing page - just serve in node and link correspondingly
