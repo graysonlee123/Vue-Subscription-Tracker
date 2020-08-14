@@ -2,7 +2,22 @@
   <div class="account__wrapper">
     <header>
       <div class="img-container">
-        <img :src="$store.state.user.avatarUrl || 'http://via.placeholder.com/200'" alt="Avatar" />
+        <picture-input
+          ref="pictureInput"
+          @change="attemptUpload"
+          :width="96"
+          :height="96"
+          :removable="false"
+          accept="image/jpeg, image/png, image/gif"
+          buttonClass="roundedButton"
+          removeButtonClass="roundedButton"
+          :hideChangeButton="true"
+          radius="48"
+          :prefill="avatarUrl"
+          :customStrings="{
+            drag: 'Drag or Click'
+          }"
+        ></picture-input>
       </div>
       <div class="header-text">
         <h2>{{computeFullName}}</h2>
@@ -22,7 +37,10 @@
         <input type="text" v-model="email" />
       </div>
       <div class="col2">
-        <div class="inputGroup" :class="{hasError: formErrors.find(({field}) => field === 'first_name')}">
+        <div
+          class="inputGroup"
+          :class="{hasError: formErrors.find(({field}) => field === 'first_name')}"
+        >
           <label for="first_name" class="inputGroup__label">
             First name
             <span
@@ -32,7 +50,10 @@
           </label>
           <input type="text" v-model="first_name" />
         </div>
-        <div class="inputGroup" :class="{hasError: formErrors.find(({field}) => field === 'last_name')}">
+        <div
+          class="inputGroup"
+          :class="{hasError: formErrors.find(({field}) => field === 'last_name')}"
+        >
           <label for="last_name" class="inputGroup__label">
             Last name
             <span
@@ -53,6 +74,7 @@
 <script>
 import { formErrors } from "../../../mixins/formErrors";
 import { v4 as uuidv4 } from "uuid";
+import PictureInput from "vue-picture-input";
 
 export default {
   data: function () {
@@ -62,6 +84,9 @@ export default {
       first_name: "",
       email: "",
     };
+  },
+  components: {
+    PictureInput,
   },
   mixins: [formErrors],
   methods: {
@@ -99,7 +124,8 @@ export default {
             .catch((err) => {
               this.$store.dispatch("addModal", {
                 type: "danger",
-                message: "There was a problem with that request. Please try again later.",
+                message:
+                  "There was a problem with that request. Please try again later.",
                 uuid: uuidv4(),
               });
             });
@@ -107,6 +133,51 @@ export default {
           this.addFormError(err);
           console.log(err);
         }
+      }
+    },
+    attemptUpload: async function () {
+      if (this.$refs.pictureInput.file) {
+        this.image = this.$refs.pictureInput.file;
+
+        if (this.image) {
+          const formData = new FormData();
+
+          formData.append("avatar", this.image);
+          const config = {
+            headers: {
+              "content-type": "multipart/form-data",
+            },
+          };
+
+          try {
+            const response = await this.$http.post(
+              "/api/user/avatar",
+              formData,
+              config
+            );
+
+            if (response.data) {
+              this.image = "";
+              this.$store.dispatch("refreshUser");
+              this.$store.dispatch("addModal", {
+                type: "success",
+                message: "Your avatar was succesfully updated.",
+                uuid: uuidv4(),
+              });
+            }
+          } catch (err) {
+            console.error(err);
+
+            this.$store.dispatch("addModal", {
+              type: "danger",
+              message:
+                "There was an error uploading that image. Please try a different image.",
+              uuid: uuidv4(),
+            });
+          }
+        }
+      } else {
+        console.error("Older browser. No support for Filereader API");
       }
     },
   },
@@ -122,6 +193,9 @@ export default {
     },
     computeEmail: function () {
       return this.$store.state.user.email;
+    },
+    avatarUrl: function () {
+      return this.$store.getters.avatarUrl;
     },
   },
   created: function () {
@@ -162,9 +236,8 @@ header {
     flex-shrink: 0;
     margin-bottom: 2em;
 
-    img {
-      width: 100%;
-      height: 100%;
+    &:hover {
+      cursor: pointer;
     }
   }
 

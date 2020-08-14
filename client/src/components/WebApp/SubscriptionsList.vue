@@ -69,13 +69,17 @@
         <div class="nextPayment">Next Payment</div>
         <div class="options"></div>
       </div>
-      <ul>
+      <ul v-if="subscriptions.length > 0">
         <subscription-list-item
           v-for="(subscription, index) in organizedSubscriptions"
           :key="index"
           :subscription="subscription"
         />
       </ul>
+      <div class="empty" v-else>
+        Nothing to see here... try adding a
+        <router-link to="/dashboard/subscription">new subscription</router-link>.
+      </div>
     </div>
   </div>
 </template>
@@ -227,7 +231,9 @@ export default {
         }
         case "week": {
           organizedSubs = organizedSubs.filter((sub) => {
-            const nextPaymentDate = moment.utc(sub.upcomingPayments[0].isoString);
+            const nextPaymentDate = moment.utc(
+              sub.upcomingPayments[0].isoString
+            );
             const weekFromNow = moment.utc().add(1, "weeks");
 
             if (nextPaymentDate.isBefore(weekFromNow)) {
@@ -238,7 +244,9 @@ export default {
         }
         case "month": {
           organizedSubs = organizedSubs.filter((sub) => {
-            const nextPaymentDate = moment.utc(sub.upcomingPayments[0].isoString);
+            const nextPaymentDate = moment.utc(
+              sub.upcomingPayments[0].isoString
+            );
             const monthFromNow = moment.utc().add(1, "months");
 
             if (nextPaymentDate.isBefore(monthFromNow)) {
@@ -249,7 +257,9 @@ export default {
         }
         case "year": {
           organizedSubs = organizedSubs.filter((sub) => {
-            const nextPaymentDate = moment.utc(sub.upcomingPayments[0].isoString);
+            const nextPaymentDate = moment.utc(
+              sub.upcomingPayments[0].isoString
+            );
             const yearFromNow = moment.utc().add(1, "years");
 
             if (nextPaymentDate.isBefore(yearFromNow)) {
@@ -484,6 +494,16 @@ export default {
   }
 
   .subscriptionsList__items {
+    .empty {
+      padding: 2em;
+
+      a {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-color: var(--mainAccent);
+      }
+    }
+
     .subscriptionsList__labels {
       $height: 62px;
 

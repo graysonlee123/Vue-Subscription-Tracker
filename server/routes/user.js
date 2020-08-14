@@ -4,10 +4,12 @@ const auth = require("../utils/auth");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { check, validationResult } = require("express-validator");
+const multer = require("multer");
+const crypto = require("crypto");
+const path = require("path");
 
 const User = require("../models/User");
 const Subscriptions = require("../models/Subscriptions");
-const { Mongoose } = require("mongoose");
 
 // User.find({}).then(data => {
 //   console.log(data);
@@ -22,6 +24,23 @@ const { Mongoose } = require("mongoose");
 //     });
 //   });
 // });
+
+const storage = multer.diskStorage({
+  filename: function (req, file, callback) {
+    crypto.pseudoRandomBytes(16, function (err, raw) {
+      if (err) return callback(err);
+
+      callback(
+        null,
+        `${raw.toString("hex")}${path.extname(file.originalname)}`
+      );
+    });
+  },
+  destination: path.join(__dirname, "../public/avatars")
+});
+
+// Save the new configured middleware
+const upload = multer({ storage });
 
 // * @route   POST api/user
 // ? @desc    Register user
@@ -258,6 +277,36 @@ router.get("/", auth, async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
+  }
+});
+
+// * @route   POST api/user/avatar
+// ? @desc    Post an avatar
+// ! @access  Private
+router.post("/avatar", [auth, upload.single("avatar")], async (req, res) => {
+  if (!req.file) {
+    return res.send({
+      success: false
+    });
+  } else {
+    const filename = req.file.filename;
+
+    const user = await User.findByIdAndUpdate(
+      req.userId,
+      {
+        avatarFileName: filename
+      },
+      { new: true }
+    );
+
+    const host = req.hostname;
+    const filePath = `${req.protocol}://${host}/${req.file.path}`
+
+    return res.send({
+      success: true,
+      filename: req.file.filename,
+      user
+    });
   }
 });
 

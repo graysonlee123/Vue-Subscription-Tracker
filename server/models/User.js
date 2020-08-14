@@ -22,11 +22,12 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  avatarUrl: {
+  avatarFileName: {
     type: String,
-    default: function() {
-      return `https://via.placeholder.com/200/8369fe/eeebff?text=${this.first_name[0]}${this.last_name[0]}`
-    }
+    default: function () {
+      return `https://via.placeholder.com/200/8369fe/eeebff?text=${this.first_name[0]}${this.last_name[0]}`;
+    },
+    required: true
   }
 });
 
