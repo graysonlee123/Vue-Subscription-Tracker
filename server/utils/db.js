@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
 const result = require("dotenv").config();
 
-if (result.error) {
-  throw result.error;
-  process.exit();
-}
-
 const connectDB = async () => {
+  const dbstring =
+    process.env.NODE_ENV === "production"
+      ? process.env.PRODUCTION_DB
+      : process.env.DEVELOPMENT_DB;
+
   try {
-    await mongoose.connect(process.env.DEVELOPMENT_DB, {
+    await mongoose.connect(dbstring, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
