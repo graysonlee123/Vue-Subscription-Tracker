@@ -41,9 +41,9 @@
 </template>
 
 <script>
-import moment from 'moment';
-import { EventBus } from '../../EventBus';
-import { v4 as uuidv4 } from 'uuid';
+import moment from "moment";
+import { EventBus } from "../../EventBus";
+import { v4 as uuidv4 } from "uuid";
 
 export default {
   props: {
@@ -61,21 +61,22 @@ export default {
     async handleRemoveSubscription() {
       try {
         const req = await this.$http.delete(
-          `/api/subscription/${this.subscription._id}`,
+          `/api/subscription/${this.subscription._id}`
         );
 
-        EventBus.$emit('refreshSubscriptions');
+        EventBus.$emit("refreshSubscriptions");
 
-        this.$router.push('/dashboard');
-        this.$store.dispatch('addModal', {
-          type: 'success',
-          message: 'Subscription was removed.',
+        this.$router.push("/dashboard");
+        this.$store.dispatch("addModal", {
+          type: "success",
+          message: "Subscription was removed.",
           uuid: uuidv4(),
         });
       } catch (err) {
-        this.$store.dispatch('addModal', {
-          type: 'danger',
-          message: 'There was an error removing that subscription. Please try again later.',
+        this.$store.dispatch("addModal", {
+          type: "danger",
+          message:
+            "There was an error removing that subscription. Please try again later.",
           uuid: uuidv4(),
         });
         console.log(err);
@@ -96,33 +97,34 @@ export default {
         };
 
         const req = await this.$http.post(
-          '/api/subscription/',
-          subscriptionReq,
+          "/api/subscription/",
+          subscriptionReq
         );
 
-        EventBus.$emit('refreshSubscriptions');
+        EventBus.$emit("refreshSubscriptions");
 
         this.$router.push(
-          `/dashboard/subscription/${req.data.subscription._id}`,
+          `/dashboard/subscription/${req.data.subscription._id}`
         );
 
-        this.$store.dispatch('addModal', {
-          type: 'success',
-          message: 'Subscription was duplicated. You are now editing the duplicated subscription.',
+        this.$store.dispatch("addModal", {
+          type: "success",
+          message:
+            "Subscription was duplicated. You are now editing the duplicated subscription.",
           uuid: uuidv4(),
         });
       } catch (err) {
         console.log(err);
-        this.$store.dispatch('addModal', {
-          type: 'danger',
+        this.$store.dispatch("addModal", {
+          type: "danger",
           message:
-            'There was an error duplicating that subscription. Please try again later.',
+            "There was an error duplicating that subscription. Please try again later.",
           uuid: uuidv4(),
         });
       }
     },
     handleOptionsMenu(bool) {
-      if (typeof bool === 'boolean') {
+      if (typeof bool === "boolean") {
         // Menu logic if a specific option is passed
       } else {
         // Just toggle the menu
@@ -136,20 +138,20 @@ export default {
     firstPaymentDateString() {
       return moment
         .utc(this.subscription.firstPaymentDate)
-        .format('MMMM DD, YYYY');
+        .format("MMMM DD, YYYY");
     },
     upcomingPaymentString() {
       return `
         ${moment
-    .utc(this.subscription.upcomingPayments[0].isoString)
-    .calendar(null, {
-      sameDay: '[Today]',
-      nextDay: '[Tomorrow]',
-      nextWeek: 'dddd (MMMM DD, YYYY)',
-      lastDay: '[Yesterday] (MMMM DD, YYYY)',
-      lastWeek: '[Last] dddd (MMMM DD, YYYY)',
-      sameElse: 'MMMM DD, YYYY',
-    })}
+          .utc(this.subscription.upcomingPayments[0].isoString)
+          .calendar(null, {
+            sameDay: "[Today]",
+            nextDay: "[Tomorrow]",
+            nextWeek: "dddd (MMMM DD, YYYY)",
+            lastDay: "[Yesterday] (MMMM DD, YYYY)",
+            lastWeek: "[Last] dddd (MMMM DD, YYYY)",
+            sameElse: "MMMM DD, YYYY",
+          })}
       `;
     },
     billingPeriod() {
@@ -157,16 +159,16 @@ export default {
         return `Every ${this.subscription.interval} ${this.subscription.duration}s`;
       }
       switch (this.subscription.duration) {
-        case 'day': {
-          return 'Daily';
+        case "day": {
+          return "Daily";
           break;
         }
-        case 'year': {
-          return 'Yearly';
+        case "year": {
+          return "Yearly";
           break;
         }
-        case 'month': {
-          return 'Monthly';
+        case "month": {
+          return "Monthly";
           break;
         }
       }
