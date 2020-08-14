@@ -4,6 +4,7 @@ const auth = require("../utils/auth");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { check, validationResult, body } = require("express-validator");
+const he = require("he");
 
 const User = require("../models/User");
 const Subscription = require("../models/Subscriptions");
@@ -22,8 +23,12 @@ router.get("/", auth, async (req, res) => {
     subscriptions.forEach((sub, index) => {
       // Decode anything that was escaped in the sanitizer
       subscriptions[index].name = he.decode(subscriptions[index].name);
-      subscriptions[index].description = he.decode(subscriptions[index].description);
-      subscriptions[index].paymentMethod = he.decode(subscriptions[index].paymentMethod);
+      subscriptions[index].description = he.decode(
+        subscriptions[index].description
+      );
+      subscriptions[index].paymentMethod = he.decode(
+        subscriptions[index].paymentMethod
+      );
       subscriptions[index].note = he.decode(subscriptions[index].note);
     });
 
