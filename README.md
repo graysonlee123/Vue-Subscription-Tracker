@@ -10,7 +10,6 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 [] Clicking off of menus
 [] Handle removing error on lost focus for an error'd field's input
-[] Vertical align arrow on modals
 [] favicon / logo
 [] style 404 page
 
@@ -18,6 +17,8 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 [] "Flash" subscription on update / creation in list
 [] Landing page - just serve in node and link correspondingly?
+[] General refactoring and making thins more DRY
+[x] Vertical align arrow on modals
 [x] Look into removing vue-moment dependency
 [x] Sanitize user information on signup
 - Capitalize first letter in names
