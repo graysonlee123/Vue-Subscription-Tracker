@@ -193,7 +193,7 @@ export default {
       const currentDate = moment();
 
       this.year = currentDate.year();
-      this.month = currentDate.month();
+      this.month = currentDate.month() + 1;
       this.day = currentDate.date();
     }
   },

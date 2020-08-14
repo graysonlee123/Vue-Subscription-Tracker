@@ -8,16 +8,16 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
+[] Clicking off of menus
+[] Handle removing error on lost focus for an error'd field's input
 
 ### General
 
-[] Handle removing error on lost focus for an error'd field's input
-[] Sanitize user information on signup
-- Capitalize first letter in names
-[] Clicking off of menus
 [] "Flash" subscription on update / creation in list
 [] Landing page - just serve in node and link correspondingly
-[] Look into removing vue-moment dependency
+[x] Look into removing vue-moment dependency
+[x] Sanitize user information on signup
+- Capitalize first letter in names
 [x] Empty subscriptions ? "add new subscription" list item
 [x] Add avatar photo uploading!
 - [x] Maybe link default avatars to https://via.placeholder.com/200/8369fe/eeebff?text=${firstInitial}${lastInitial}

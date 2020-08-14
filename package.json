@@ -1,0 +1,20 @@
+{
+  "name": "vue-subscription-tracker",
+  "version": "1.0.0",
+  "description": "> A small web application to help track your subscriptions and monthly expenses",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"cd client && npm run build\" \"node server\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/graysonlee123/vue-subscription-tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/graysonlee123/vue-subscription-tracker/issues"
+  },
+  "homepage": "https://github.com/graysonlee123/vue-subscription-tracker#readme"
+}
