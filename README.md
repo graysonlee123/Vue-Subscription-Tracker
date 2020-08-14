@@ -10,11 +10,14 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 [] Clicking off of menus
 [] Handle removing error on lost focus for an error'd field's input
+[] Vertical align arrow on modals
+[] favicon / logo
+[] style 404 page
 
 ### General
 
 [] "Flash" subscription on update / creation in list
-[] Landing page - just serve in node and link correspondingly
+[] Landing page - just serve in node and link correspondingly?
 [x] Look into removing vue-moment dependency
 [x] Sanitize user information on signup
 - Capitalize first letter in names
@@ -77,6 +80,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Add "zoom out" month picker for date picker component
 
 ## Quick Links
+- Deployment https://medium.com/netscape/deploying-a-vue-js-2-x-app-to-heroku-in-5-steps-tutorial-a69845ace489
 - https://stackoverflow.com/questions/46389267/using-async-await-with-webpack-simple-configuration-throwing-error-regeneratorr
 - https://vuejs.org/v2/cookbook/debugging-in-vscode.html
 - https://t.co/d4GPfuwRBd?amp=1
