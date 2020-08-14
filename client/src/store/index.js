@@ -178,6 +178,8 @@ export default new Vuex.Store({
   getters: {
     isAuthenticated: state => state.isAuthenticated,
     isLoading: state => state.isLoading,
-    alert: state => state.alerts[0] || null
+    alert: state => state.alerts[0] || null,
+    avatarUrl: state =>
+      `http://localhost:3000/avatars/${state.user.avatarFileName}`
   }
 });

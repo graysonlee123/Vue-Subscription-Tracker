@@ -8,10 +8,6 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
-[] Add avatar photo uploading!
-- [x] Maybe link default avatars to https://via.placeholder.com/200/8369fe/eeebff?text=${firstInitial}${lastInitial}
-- [] Save link to user's avatar as a link in the database and load into store with initial user load
-- https://www.digitalocean.com/community/tutorials/vuejs-uploading-vue-picture-input
 
 ### General
 
@@ -23,6 +19,10 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Landing page - just serve in node and link correspondingly
 [] Look into removing vue-moment dependency
 [] Empty subscriptions ? "add new subscription" list item
+[x] Add avatar photo uploading!
+- [x] Maybe link default avatars to https://via.placeholder.com/200/8369fe/eeebff?text=${firstInitial}${lastInitial}
+- [x] Save link to user's avatar as a link in the database and load into store with initial user load
+- See https://www.digitalocean.com/community/tutorials/vuejs-uploading-vue-picture-input
 [x] Login and Register form front-end feedback
 [x] "Add new" button in nav
 [x] Date picker needs to show previous month and next month days - make look and interact more like ticktick's

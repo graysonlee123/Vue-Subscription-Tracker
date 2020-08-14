@@ -3,7 +3,7 @@
     <span class="logout" @click="handleLogout()">Logout</span>
     <div class="options__wrapper" :class="{isOpen: showOptions}">
       <div class="options__clickZone" @click="toggleMenu()">
-        <img class="avatar" :src="$store.state.user.avatarUrl || 'http://via.placeholder.com/200'" alt="Avatar" />
+        <img class="avatar" :src="avatarUrl" alt="Avatar" />
         <img class="icon" src="/assets/sort-arrow.svg" alt="Avatar" />
       </div>
       <ul class="options__menu" v-if="showOptions">
@@ -37,6 +37,16 @@ export default {
           ? (this.showOptions = false)
           : (this.showOptions = true);
       }
+    },
+  },
+  computed: {
+    avatarUrl: function () {
+      return this.$store.getters.avatarUrl;
+    },
+  },
+  watch: {
+    $route: function () {
+      this.showOptions = false;
     },
   },
 };
