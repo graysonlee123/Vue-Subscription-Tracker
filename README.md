@@ -18,7 +18,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] "Flash" subscription on update / creation in list
 [] Landing page - just serve in node and link correspondingly
 [] Look into removing vue-moment dependency
-[] Empty subscriptions ? "add new subscription" list item
+[x] Empty subscriptions ? "add new subscription" list item
 [x] Add avatar photo uploading!
 - [x] Maybe link default avatars to https://via.placeholder.com/200/8369fe/eeebff?text=${firstInitial}${lastInitial}
 - [x] Save link to user's avatar as a link in the database and load into store with initial user load
