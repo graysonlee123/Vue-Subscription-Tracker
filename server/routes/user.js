@@ -294,7 +294,7 @@ router.post("/avatar", [auth, upload.single("avatar")], async (req, res) => {
     const user = await User.findByIdAndUpdate(
       req.userId,
       {
-        avatarFileName: filename
+        avatar: filename
       },
       { new: true }
     );
