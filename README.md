@@ -9,6 +9,8 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ### Priority
 
 [] Handle new user avatars
+- CORS Policy blocking new user avatar for picture input
+- Heroku is ephemeral (deletes everything and starts fresh each dyno); need to look into Firebase
 [] Remove placeholder tags
 [] Hide view button and far right options button
 [] Clicking off of menus

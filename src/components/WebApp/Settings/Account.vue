@@ -2,26 +2,12 @@
   <div class="account__wrapper">
     <header>
       <div class="img-container">
-        <!-- There are issues rendering on development... we'll see on production -->
-        <picture-input
-          ref="pictureInput"
-          @change="attemptUpload"
-          @error="handlePictureError"
-          :width="96"
-          :height="96"
-          :removable="false"
-          accept="image/jpeg, image/png, image/gif"
-          buttonClass="roundedButton"
-          removeButtonClass="roundedButton"
-          :hideChangeButton="true"
-          radius="48"
-          :prefill="avatarUrl"
-          size="3"
-          :alertOnError="false"
-          :customStrings="{
-            drag: 'Drag or Click'
-          }"
-        ></picture-input>
+        <img
+          :src="avatarUrl"
+          alt="Avatar"
+          class="avatar"
+          @click="showAvatarInput ? showAvatarInput = fasle : showAvatarInput = true"
+        />
       </div>
       <div class="header-text">
         <h2>{{computeFullName}}</h2>
@@ -68,6 +54,20 @@
           <input type="text" v-model="last_name" />
         </div>
       </div>
+      <div
+        class="inputGroup"
+        :class="{hasError: formErrors.find(({field}) => field === 'last_name')}"
+        v-if="showAvatarInput"
+      >
+        <label for="avatar" class="inputGroup__label">
+          Upload Avatar
+          <span
+            class="fieldError"
+            v-if="formErrors.find(({field}) => field === 'avatar')"
+          >{{formErrors.find(({field}) => field ==='avatar').msg}}</span>
+        </label>
+        <input id="avatar" type="file" name="avatar" @change="handleFileChange" />
+      </div>
       <div class="submitWrapper">
         <input type="submit" class="roundedButton" value="Submit" />
       </div>
@@ -79,6 +79,7 @@
 import { formErrors } from "../../../mixins/formErrors";
 import { v4 as uuidv4 } from "uuid";
 import PictureInput from "vue-picture-input";
+import { storage } from "../../../firebase";
 
 export default {
   data() {
@@ -87,6 +88,8 @@ export default {
       last_name: "",
       first_name: "",
       email: "",
+      showAvatarInput: false,
+      avatarFile: null,
     };
   },
   components: {
@@ -94,8 +97,15 @@ export default {
   },
   mixins: [formErrors],
   methods: {
-    async handleSubmit(name) {
+    async handleFileChange(e) {
+      const file = e.target.files[0];
+
+      this.avatarFile = e.target.files[0];
+    },
+    async handleSubmit() {
       this.formErrors = [];
+
+      if (this.avatarFile) this.attemptAvatarUpload(this.avatarFile);
 
       // TODO: Make more DRY
       const data = {};
@@ -139,58 +149,58 @@ export default {
         }
       }
     },
-    async attemptUpload() {
-      if (this.$refs.pictureInput.file) {
-        this.image = this.$refs.pictureInput.file;
+    async attemptAvatarUpload(file) {
+      console.log("Attempting upload");
 
-        if (this.image) {
-          const formData = new FormData();
+      console.log(file);
 
-          formData.append("avatar", this.image);
-          const config = {
-            headers: {
-              "content-type": "multipart/form-data",
-            },
-          };
+      // TODO: Restrict to certain file types
+      const uploadTask = storage.ref(`/avatars/${file.name}`).put(file);
 
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // console.log(snapshot);
+          // TODO: Show loading bar feedback
+        },
+        (err) => {
+          console.log(err);
+          this.$store.dispatch("addModal", {
+            type: "danger",
+            message:
+              "There was an error uploading that avatar. Try a different file or try again later.",
+            uuid: uuidv4(),
+          });
+        },
+        async () => {
           try {
-            const response = await this.$http.post(
-              "/api/user/avatar",
-              formData,
-              config
-            );
+            const downloadUrl = await storage
+              .ref("avatars")
+              .child(file.name)
+              .getDownloadURL();
 
-            if (response.data) {
-              this.image = "";
-              this.$store.dispatch("refreshUser");
-              this.$store.dispatch("addModal", {
-                type: "success",
-                message: "Your avatar was succesfully updated.",
-                uuid: uuidv4(),
-              });
-            }
-          } catch (err) {
-            console.error(err);
+            const payload = {
+              avatar: downloadUrl,
+            };
 
+            await this.$http.patch("/api/user", payload);
+
+            this.$store.dispatch("refreshUser");
+            this.$store.dispatch("addModal", {
+              type: "success",
+              message: "Your avatar was succesfully updated.",
+              uuid: uuidv4(),
+            });
+          } catch (error) {
             this.$store.dispatch("addModal", {
               type: "danger",
               message:
-                "There was an error uploading that image. Please try a different image.",
+                "There was an error uploading that avatar. Try a different file or try again later.",
               uuid: uuidv4(),
             });
           }
         }
-      } else {
-        console.error("Older browser. No support for Filereader API");
-      }
-    },
-    async handlePictureError(err) {
-      this.$store.dispatch("addModal", {
-        type: "danger",
-        message: err.message,
-        uuid: uuidv4(),
-        duration: 5000,
-      });
+      );
     },
   },
   computed: {
@@ -207,7 +217,7 @@ export default {
       return this.$store.state.user.email;
     },
     avatarUrl() {
-      return this.$store.getters.avatarUrl;
+      return this.$store.state.user.avatar;
     },
   },
   created() {
@@ -248,8 +258,15 @@ header {
     flex-shrink: 0;
     margin-bottom: 2em;
 
-    &:hover {
-      cursor: pointer;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+
+      &:hover {
+        opacity: 0.8;
+        cursor: pointer;
+      }
     }
   }
 

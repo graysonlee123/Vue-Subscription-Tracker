@@ -4,43 +4,10 @@ const auth = require("../utils/auth");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { check, validationResult } = require("express-validator");
-const multer = require("multer");
-const crypto = require("crypto");
 const path = require("path");
 
 const User = require("../models/User");
 const Subscriptions = require("../models/Subscriptions");
-
-// User.find({}).then(data => {
-//   console.log(data);
-
-//   data.forEach(function(x) {
-//     x.update({
-//       $set: {
-//         avatarUrl: `https://via.placeholder.com/200/8369fe/eeebff?text=${x.first_name[0].toUpperCase()}${x.last_name[0].toUpperCase()}`
-//       }
-//     }).then((data, err) => {
-//       console.log({ data, err });
-//     });
-//   });
-// });
-
-const storage = multer.diskStorage({
-  filename: function (req, file, callback) {
-    crypto.pseudoRandomBytes(16, function (err, raw) {
-      if (err) return callback(err);
-
-      callback(
-        null,
-        `${raw.toString("hex")}${path.extname(file.originalname)}`
-      );
-    });
-  },
-  destination: path.join(__dirname, "../public/avatars")
-});
-
-// Save the new configured middleware
-const upload = multer({ storage });
 
 // * @route   POST api/user
 // ? @desc    Register user
@@ -91,13 +58,15 @@ router.post(
     }
 
     const { email, first_name, last_name, password } = req.body;
+    const avatar = `https://via.placeholder.com/200/8369fe/eeebff?text=${first_name[0].toUpperCase()}${last_name[0].toUpperCase()}`
 
     try {
       let user = new User({
         email,
         first_name,
         last_name,
-        password
+        password,
+        avatar
       });
 
       const salt = await bcrypt.genSalt(10);
@@ -132,7 +101,9 @@ router.post(
   "/password",
   [
     auth,
-    check("currentPassword").notEmpty().withMessage("cannot be empty"),
+    check("currentPassword")
+      .notEmpty()
+      .withMessage("cannot be empty"),
     check("newPassword")
       .isLength({ min: 6, max: 32 })
       .withMessage("Must be between 6 and 32 characters")
@@ -233,6 +204,10 @@ router.patch(
         data.email = req.body.email;
       }
 
+      if (req.body.avatar) {
+        data.avatar = req.body.avatar;
+      }
+
       const dbUser = await User.findByIdAndUpdate(req.userId, data, {
         new: true
       });
@@ -277,36 +252,6 @@ router.get("/", auth, async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
-  }
-});
-
-// * @route   POST api/user/avatar
-// ? @desc    Post an avatar
-// ! @access  Private
-router.post("/avatar", [auth, upload.single("avatar")], async (req, res) => {
-  if (!req.file) {
-    return res.send({
-      success: false
-    });
-  } else {
-    const filename = req.file.filename;
-
-    const user = await User.findByIdAndUpdate(
-      req.userId,
-      {
-        avatar: filename
-      },
-      { new: true }
-    );
-
-    const host = req.hostname;
-    const filePath = `${req.protocol}://${host}/${req.file.path}`
-
-    return res.send({
-      success: true,
-      filename: req.file.filename,
-      user
-    });
   }
 });
 

@@ -41,7 +41,7 @@ export default {
   },
   computed: {
     avatarUrl() {
-      return this.$store.getters.avatarUrl;
+      return this.$store.state.user.avatar;
     },
   },
   watch: {
