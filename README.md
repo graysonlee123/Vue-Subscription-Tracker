@@ -8,9 +8,6 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
-[] Handle new user avatars
-- CORS Policy blocking new user avatar for picture input
-- Heroku is ephemeral (deletes everything and starts fresh each dyno); need to look into Firebase
 [] Remove placeholder tags
 [] Hide view button and far right options button
 [] Clicking off of menus
@@ -28,6 +25,11 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Tab onto date picker
 [] filter by tag, payment method
 
+[x] Avatar uploading bar and general better ui
+[x] Restrict avatars to jpg and png
+[x] Handle new user avatars
+- CORS Policy blocking new user avatar for picture input
+- Heroku is ephemeral (deletes everything and starts fresh each dyno); need to look into Firebase
 [x] Vertical align arrow on modals
 [x] Look into removing vue-moment dependency
 [x] Sanitize user information on signup
