@@ -31,10 +31,6 @@
         </div>
       </div>
       <div class="subscriptionsList__headerRight">
-        <div class="button">
-          View
-          <i class="fa fa-list"></i>
-        </div>
         <div class="button filter" @click="handleDisplayFilterMenu()">
           <span>
             Filter
@@ -51,9 +47,10 @@
           Add Subscription
           <i class="fa fa-plus"></i>
         </router-link>
+        <!-- Add back in later when things can go here
         <div class="button button__ellipsis">
           <i class="fas fa-ellipsis-h"></i>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="subscriptionsList__items">
@@ -361,6 +358,7 @@ export default {
 <style lang="scss">
 .subscriptionsList {
   padding: 2em;
+  overflow: hidden;
 
   .subscriptionsList__header {
     display: flex;
@@ -488,6 +486,9 @@ export default {
   }
 
   .subscriptionsList__items {
+    overflow: auto;
+    max-height: calc(100% - 80px);
+    
     .empty {
       padding: 1em;
 

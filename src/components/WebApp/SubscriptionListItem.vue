@@ -11,9 +11,7 @@
       class="flexChild textContainer paymentMethod"
     >{{subscription.paymentMethod || 'None provided'}}</div>
     <div class="flexChild tags">
-      <span class="tag">productibity</span>
-      <span class="tag">media</span>
-      <span class="tag">essential</span>
+      <span class="tag">tags coming soon</span>
     </div>
     <div class="flexChild textContainer firstPayment">{{firstPaymentDateString}}</div>
     <div class="flexChild textContainer nextPayment">{{upcomingPaymentString}}</div>
