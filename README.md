@@ -8,11 +8,8 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
-[] Remove placeholder tags
-[] Hide view button and far right options button
 [] Clicking off of menus
 [] Handle removing error on lost focus for an error'd field's input
-[] favicon / logo
 [] style 404 page
 
 ### General
@@ -20,11 +17,15 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] "Flash" subscription on update / creation in list
 [] Landing page - just serve in node and link correspondingly?
 [] General refactoring and making thins more DRY
-[] Restrict IP's from Mongo Database
-[] Make subscriptions scroll independently of page
 [] Tab onto date picker
 [] filter by tag, payment method
+[] add random string before avatar file names
+[] Restrict IP's from Mongo Database
 
+[x] Make subscriptions scroll independently of page
+[x] favicon / logo
+[x] Remove placeholder tags
+[x] Hide view button and far right options button
 [x] Avatar uploading bar and general better ui
 [x] Restrict avatars to jpg and png
 [x] Handle new user avatars
@@ -91,6 +92,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Integrate Tags
 [] Incorporate theme picker
 [] Add "zoom out" month picker for date picker component
+[] Email reminders
 
 ## Quick Links
 - Deployment https://medium.com/netscape/deploying-a-vue-js-2-x-app-to-heroku-in-5-steps-tutorial-a69845ace489
