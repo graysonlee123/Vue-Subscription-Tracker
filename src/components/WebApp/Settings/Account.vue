@@ -2,6 +2,7 @@
   <div class="account__wrapper">
     <header>
       <div class="img-container">
+        <!-- There are issues rendering on development... we'll see on production -->
         <picture-input
           ref="pictureInput"
           @change="attemptUpload"

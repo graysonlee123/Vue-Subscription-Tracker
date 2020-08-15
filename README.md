@@ -8,6 +8,9 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
+[] Handle new user avatars
+[] Remove placeholder tags
+[] Hide view button and far right options button
 [] Clicking off of menus
 [] Handle removing error on lost focus for an error'd field's input
 [] favicon / logo
@@ -19,6 +22,10 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Landing page - just serve in node and link correspondingly?
 [] General refactoring and making thins more DRY
 [] Restrict IP's from Mongo Database
+[] Make subscriptions scroll independently of page
+[] Tab onto date picker
+[] filter by tag, payment method
+
 [x] Vertical align arrow on modals
 [x] Look into removing vue-moment dependency
 [x] Sanitize user information on signup
