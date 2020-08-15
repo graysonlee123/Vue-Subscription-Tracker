@@ -16,7 +16,6 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 [] "Flash" subscription on update / creation in list
 [] Landing page - just serve in node and link correspondingly?
-[] General refactoring and making thins more DRY
 [] Tab onto date picker
 [] filter by tag, payment method
 [] add random string before avatar file names
