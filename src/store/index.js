@@ -178,15 +178,6 @@ export default new Vuex.Store({
   getters: {
     isAuthenticated: state => state.isAuthenticated,
     isLoading: state => state.isLoading,
-    alert: state => state.alerts[0] || null,
-    avatarUrl: state => {
-      if (!state.user.avatar && state.user.first_name) {
-        return `https://via.placeholder.com/100/8369fe/eeebff?text=${state.user.first_name[0].toUpperCase()}${state.user.last_name[0].toUpperCase()}`;
-      } else {
-        return process.env.NODE_ENV === "production"
-          ? `/avatars/${state.user.avatar}`
-          : `http://localhost:5000/avatars/${state.user.avatar}`;
-      }
-    }
+    alert: state => state.alerts[0] || null
   }
 });
