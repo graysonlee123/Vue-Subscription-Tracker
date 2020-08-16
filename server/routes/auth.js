@@ -14,7 +14,11 @@ router.get("/", auth, async (req, res) => {
   try {
     const user = await (
       await User.findById(req.userId).select("-password")
-    ).execPopulate();
+    )
+    
+    if(!user) return;
+    
+    user.execPopulate();
     const token = req.headers["x-auth-token"];
 
     res.json({ user, token });
