@@ -32,7 +32,7 @@
             v-if="formErrors.find(({field}) => field === 'email')"
           >{{formErrors.find(({field}) => field ==='email').msg}}</span>
         </label>
-        <input type="text" v-model="email" />
+        <input type="text" v-model="email" v-on:blur="removeFormError('email')" />
       </div>
       <div class="col2">
         <div
@@ -46,7 +46,7 @@
               v-if="formErrors.find(({field}) => field === 'first_name')"
             >{{formErrors.find(({field}) => field ==='first_name').msg}}</span>
           </label>
-          <input type="text" v-model="first_name" />
+          <input type="text" v-model="first_name" v-on:blur="removeFormError('first_name')" />
         </div>
         <div
           class="inputGroup"
@@ -59,7 +59,7 @@
               v-if="formErrors.find(({field}) => field === 'last_name')"
             >{{formErrors.find(({field}) => field ==='last_name').msg}}</span>
           </label>
-          <input type="text" v-model="last_name" />
+          <input type="text" v-model="last_name" v-on:blur="removeFormError('last_name')"/>
         </div>
       </div>
       <div class="submitWrapper">
