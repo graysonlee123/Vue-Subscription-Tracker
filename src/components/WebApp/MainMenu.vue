@@ -1,7 +1,7 @@
 <template>
   <div id="main-menu">
     <span class="logout" @click="handleLogout()">Logout</span>
-    <div class="options__wrapper" :class="{isOpen: showOptions}">
+    <div class="options__wrapper" :class="{isOpen: showOptions}" ref="optionsMenu" data-name="showOptions">
       <div class="options__clickZone" @click="toggleMenu()">
         <img class="avatar" :src="avatarUrl" alt="Avatar" />
         <img class="icon" src="@/assets/sort-arrow.svg" alt="Avatar" />
@@ -16,7 +16,10 @@
 </template>
 
 <script>
+import { clickAway } from "../../mixins/clickAway";
+
 export default {
+  mixins: [clickAway],
   data() {
     return {
       showOptions: false,
@@ -24,12 +27,12 @@ export default {
   },
   methods: {
     handleLogout() {
-      this.$store.dispatch('logout').finally(() => {
-        this.$router.push('/login');
+      this.$store.dispatch("logout").finally(() => {
+        this.$router.push("/login");
       });
     },
     toggleMenu(bool) {
-      if (typeof bool === 'boolean') {
+      if (typeof bool === "boolean") {
         // Menu logic if a specific option is passed
       } else {
         // Just toggle the menu

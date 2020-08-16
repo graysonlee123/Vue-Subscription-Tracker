@@ -243,49 +243,34 @@ export default {
       this.formErrors = [];
       this.loading = true;
 
-      // TODO: Make this more DRY
       try {
-        if (this.postAsNew) {
-          const data = {
-            ...this.subscription,
-          };
+        const data = {
+          ...this.subscription,
+        };
 
-          const res = await this.$http.post("/api/subscription", data);
+        const res = await this.$http.post(
+          this.postAsNew
+            ? `/api/subscription`
+            : `/api/subscription/${this.subscriptionId}`,
+          data
+        );
 
-          this.loading = false;
-          EventBus.$emit("refreshSubscriptions");
-          this.$router.push("/dashboard");
+        this.loading = false;
+        EventBus.$emit("refreshSubscriptions");
+        this.$router.push("/dashboard");
 
-          this.$store.dispatch("addModal", {
-            type: "success",
-            message: "Your subscription was succesfully added.",
-            uuid: uuidv4(),
-          });
-        } else {
-          const data = {
-            ...this.subscription,
-          };
-
-          const res = await this.$http.post(
-            `/api/subscription/${this.subscriptionId}`,
-            data
-          );
-
-          this.loading = false;
-          EventBus.$emit("refreshSubscriptions");
-          this.$router.push("/dashboard");
-
-          this.$store.dispatch("addModal", {
-            type: "success",
-            message: "Your subscription was succesfully updated.",
-            uuid: uuidv4(),
-          });
-        }
+        this.$store.dispatch("addModal", {
+          type: "success",
+          message: `Your subscription was succesfully ${
+            this.postAsNew ? "added" : "updated"
+          }.`,
+          uuid: uuidv4(),
+        });
       } catch (err) {
         this.loading = false;
         this.addFormError(err);
 
-        console.log(err);
+        console.error(err);
       }
     },
     decodeHtml(html) {
@@ -304,13 +289,6 @@ export default {
     handleColorPick(color) {
       this.subscription.color = color;
       this.removeFormError("color");
-    },
-    async handleGoBack() {
-      try {
-        this.$router.push("/app/dashboard");
-      } catch (error) {
-        console.log(err);
-      }
     },
   },
   created() {

@@ -8,18 +8,21 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
-[] Clicking off of menus
+[] Mobile responsiveness
 
 ### General
 
-[] "Flash" subscription on update / creation in list
 [] Landing page - just serve in node and link correspondingly?
-[] Tab onto date picker
 [] filter by tag, payment method
 [] Restrict IP's from Mongo Database
 
+### Low Priority
+[] Tab onto date picker
+[] "Flash" subscription on update / creation in list
+
 ### Done
 
+[x] Clicking off of menus
 [x] Handle removing error on blur for an error'd field's input
 [x] add random string before avatar file names
 [x] style 404 page
@@ -94,7 +97,6 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Incorporate theme picker
 [] Add "zoom out" month picker for date picker component
 [] Email reminders
-[] Mobile responsiveness
 
 ## Quick Links
 - Deployment https://medium.com/netscape/deploying-a-vue-js-2-x-app-to-heroku-in-5-steps-tutorial-a69845ace489
