@@ -10,7 +10,6 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 [] Clicking off of menus
 [] Handle removing error on lost focus for an error'd field's input
-[] style 404 page
 
 ### General
 
@@ -21,6 +20,9 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] add random string before avatar file names
 [] Restrict IP's from Mongo Database
 
+### Done
+
+[x] style 404 page
 [x] Make subscriptions scroll independently of page
 [x] favicon / logo
 [x] Remove placeholder tags
@@ -92,6 +94,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Incorporate theme picker
 [] Add "zoom out" month picker for date picker component
 [] Email reminders
+[] Mobile responsiveness
 
 ## Quick Links
 - Deployment https://medium.com/netscape/deploying-a-vue-js-2-x-app-to-heroku-in-5-steps-tutorial-a69845ace489
