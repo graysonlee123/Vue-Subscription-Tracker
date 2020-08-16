@@ -116,7 +116,7 @@ router.post(
       .trim()
       .isIn(["day", "week", "month", "year"])
       .withMessage("must be one of 'day', 'month', 'week', 'year'"),
-    check("color", "Must be a hex color value")
+    check("color", "cannot be blank")
       .optional()
       .isHexColor(),
     check("paymentMethod")
@@ -223,7 +223,7 @@ router.post(
       .trim()
       .isIn(["day", "week", "month", "year"])
       .withMessage("must be one of 'day', 'month', 'week', 'year'"),
-    check("color", "Must be a hex color value")
+    check("color", "cannot be blank")
       .optional()
       .isHexColor(),
     check("paymentMethod")

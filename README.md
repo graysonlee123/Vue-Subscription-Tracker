@@ -9,7 +9,6 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ### Priority
 
 [] Clicking off of menus
-[] Handle removing error on lost focus for an error'd field's input
 
 ### General
 
@@ -17,11 +16,12 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Landing page - just serve in node and link correspondingly?
 [] Tab onto date picker
 [] filter by tag, payment method
-[] add random string before avatar file names
 [] Restrict IP's from Mongo Database
 
 ### Done
 
+[x] Handle removing error on blur for an error'd field's input
+[x] add random string before avatar file names
 [x] style 404 page
 [x] Make subscriptions scroll independently of page
 [x] favicon / logo

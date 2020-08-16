@@ -12,7 +12,7 @@
             v-if="formErrors.find(({field}) => field === 'currentPassword')"
           >{{formErrors.find(({field}) => field ==='currentPassword').msg}}</span>
         </label>
-        <input type="password" name="password" id="currentPassword" v-model="currentPassword" />
+        <input type="password" name="password" id="currentPassword" v-model="currentPassword" v-on:blur="removeFormError('currentPassword')" />
       </div>
       <div
         class="inputGroup"
@@ -25,7 +25,7 @@
             v-if="formErrors.find(({field}) => field === 'newPassword')"
           >{{formErrors.find(({field}) => field ==='newPassword').msg}}</span>
         </label>
-        <input type="password" name="newPassword" id="newPassword" v-model="newPassword" />
+        <input type="password" name="newPassword" id="newPassword" v-model="newPassword" v-on:blur="removeFormError('newPassword')" />
       </div>
       <div class="inputGroup">
         <label for="confirmPassword" class="inputGroup__label">Confirm password</label>

@@ -54,7 +54,13 @@
             >{{formErrors.find(({field}) => field ==='name').msg}}</span>
           </label>
           <div class="input-wrapper">
-            <input id="name" type="text" placeholder="e.g. Spotify" v-model="subscription.name" />
+            <input
+              id="name"
+              type="text"
+              placeholder="e.g. Spotify"
+              v-model="subscription.name"
+              v-on:blur="removeFormError('name')"
+            />
           </div>
         </div>
         <!-- Description -->
@@ -66,6 +72,7 @@
               type="text"
               placeholder="e.g. Student plan"
               v-model="subscription.description"
+              v-on:blur="removeFormError('description')"
             />
           </div>
           <p
@@ -92,7 +99,7 @@
             <date-picker
               :dateProp="subscription.firstPaymentDate"
               :color="subscription.color"
-              @dateUpdated="(data) => subscription.firstPaymentDate = data"
+              @dateUpdated="handleDateUpdate"
             ></date-picker>
           </div>
         </div>
@@ -171,14 +178,14 @@
 </template>
 
 <script>
-import moment from 'moment';
-import { formErrors } from '../../mixins/formErrors';
-import { v4 as uuidv4 } from 'uuid';
+import moment from "moment";
+import { formErrors } from "../../mixins/formErrors";
+import { v4 as uuidv4 } from "uuid";
 
-import { EventBus } from '../../EventBus';
+import { EventBus } from "../../EventBus";
 
-import DatePicker from './DatePicker.vue';
-import ColorPicker from './ColorPicker';
+import DatePicker from "./DatePicker.vue";
+import ColorPicker from "./ColorPicker";
 
 export default {
   props: {
@@ -191,14 +198,14 @@ export default {
       loading: true,
       error: false,
       subscription: {
-        name: '',
-        description: '',
-        interval: '1',
-        duration: 'month',
-        paymentMethod: '',
-        note: '',
-        color: '',
-        firstPaymentDate: '',
+        name: "",
+        description: "",
+        interval: "1",
+        duration: "month",
+        paymentMethod: "",
+        note: "",
+        color: "",
+        firstPaymentDate: "",
       },
       formErrors: [],
       showColorModal: false,
@@ -213,7 +220,7 @@ export default {
 
       try {
         const req = await this.$http.get(
-          `/api/subscription/${this.subscriptionId}`,
+          `/api/subscription/${this.subscriptionId}`
         );
 
         this.subscription = req.data.subscription;
@@ -222,10 +229,10 @@ export default {
         this.error = true;
         this.loading = false;
 
-        this.$store.dispatch('addModal', {
-          type: 'danger',
+        this.$store.dispatch("addModal", {
+          type: "danger",
           message:
-            'There was an error loading that subscription. Please try again later.',
+            "There was an error loading that subscription. Please try again later.",
           uuid: uuidv4(),
         });
 
@@ -243,15 +250,15 @@ export default {
             ...this.subscription,
           };
 
-          const res = await this.$http.post('/api/subscription', data);
+          const res = await this.$http.post("/api/subscription", data);
 
           this.loading = false;
-          EventBus.$emit('refreshSubscriptions');
-          this.$router.push('/dashboard');
+          EventBus.$emit("refreshSubscriptions");
+          this.$router.push("/dashboard");
 
-          this.$store.dispatch('addModal', {
-            type: 'success',
-            message: 'Your subscription was succesfully added.',
+          this.$store.dispatch("addModal", {
+            type: "success",
+            message: "Your subscription was succesfully added.",
             uuid: uuidv4(),
           });
         } else {
@@ -261,16 +268,16 @@ export default {
 
           const res = await this.$http.post(
             `/api/subscription/${this.subscriptionId}`,
-            data,
+            data
           );
 
           this.loading = false;
-          EventBus.$emit('refreshSubscriptions');
-          this.$router.push('/dashboard');
+          EventBus.$emit("refreshSubscriptions");
+          this.$router.push("/dashboard");
 
-          this.$store.dispatch('addModal', {
-            type: 'success',
-            message: 'Your subscription was succesfully updated.',
+          this.$store.dispatch("addModal", {
+            type: "success",
+            message: "Your subscription was succesfully updated.",
             uuid: uuidv4(),
           });
         }
@@ -282,19 +289,25 @@ export default {
       }
     },
     decodeHtml(html) {
-      const txt = document.createElement('textarea');
+      const txt = document.createElement("textarea");
       txt.innerHTML = html;
       return txt.value;
     },
     handlePriceBlur() {
       this.subscription.price = parseFloat(this.subscription.price).toFixed(2);
+      this.removeFormError("price");
+    },
+    handleDateUpdate(data) {
+      this.subscription.firstPaymentDate = data;
+      this.removeFormError("firstPaymentDate");
     },
     handleColorPick(color) {
       this.subscription.color = color;
+      this.removeFormError("color");
     },
     async handleGoBack() {
       try {
-        this.$router.push('/app/dashboard');
+        this.$router.push("/app/dashboard");
       } catch (error) {
         console.log(err);
       }

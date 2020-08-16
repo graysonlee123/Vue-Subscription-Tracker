@@ -22,7 +22,7 @@
                 type="text"
                 placeholder="Johnny"
                 v-model="first_name"
-                v-on:focusout="handleLostFocus"
+                v-on:blur="removeFormError('first_name')"
                 autofocus
               />
             </div>
@@ -44,7 +44,7 @@
                 type="text"
                 placeholder="Appleseed"
                 v-model="last_name"
-                v-on:focusout="handleLostFocus"
+                v-on:blur="removeFormError('last_name')"
               />
             </div>
           </div>
@@ -66,7 +66,7 @@
               type="text"
               placeholder="johnnyappleseed@gmail.com"
               v-model="email"
-              v-on:focusout="handleLostFocus"
+              v-on:blur="removeFormError('email')"
             />
           </div>
         </div>
@@ -87,7 +87,7 @@
               type="password"
               placeholder="Must be at least 8 characters"
               v-model="password"
-              v-on:focusout="handleLostFocus"
+              v-on:blur="removeFormError('password')"
             />
             <span class="show-password-button" @click="handleShowPassword">
               <i id="password-icon" class="fas fa-eye"></i>
