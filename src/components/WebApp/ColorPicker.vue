@@ -1,5 +1,5 @@
 <template>
-  <div class="colorPicker__wrapper">
+  <div class="colorPicker__wrapper" ref="colorMenu" data-name="showColorModal">
     <div class="colorPicker" @click="toggleColorModal()">
       Pick a Color
       <div
@@ -25,7 +25,10 @@
 </template>
 
 <script>
+import { clickAway } from "../../mixins/clickAway";
+
 export default {
+  mixins: [clickAway],
   props: {
     colorProp: {
       type: String,
@@ -35,21 +38,21 @@ export default {
     return {
       showColorModal: false,
       colors: [
-        '#00aa55',
-        '#008040',
-        '#1e90ff',
-        '#0f4880',
-        '#00a4a6',
-        '#e26a6a',
-        '#bf6ee0',
-        '#77448b',
-        '#b8860b',
-        '#e65722',
-        '#e63022',
-        '#e76e3c',
-        '#f64747',
-        '#939393',
-        '#2e343b',
+        "#00aa55",
+        "#008040",
+        "#1e90ff",
+        "#0f4880",
+        "#00a4a6",
+        "#e26a6a",
+        "#bf6ee0",
+        "#77448b",
+        "#b8860b",
+        "#e65722",
+        "#e63022",
+        "#e76e3c",
+        "#f64747",
+        "#939393",
+        "#2e343b",
       ],
       selectedColor: null,
     };
@@ -75,7 +78,7 @@ export default {
     },
     pickColor(color) {
       this.selectedColor = color;
-      this.$emit('pickedAColor', color);
+      this.$emit("pickedAColor", color);
     },
   },
   created() {

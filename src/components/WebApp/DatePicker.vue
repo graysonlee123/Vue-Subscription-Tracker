@@ -1,11 +1,11 @@
 <template>
-  <div class="date-wrapper">
+  <div class="date-wrapper" ref="dateMenu" data-name="showDatePicker">
     <div
       class="date-text"
       :class="{'date-selected': selectedDate}"
-      @click="show = true"
+      @click="showDatePicker = true"
     >{{selectedDateString}}</div>
-    <div v-if="show" class="date-picker">
+    <div v-if="showDatePicker" class="date-picker">
       <div class="header">
         <div class="left buttons" @click="decreaseMonth">
           <i class="fa fa-chevron-left"></i>
@@ -37,7 +37,6 @@
         </tr>
       </table>
       <div class="footer">
-        <input type="button" value="Close" @click="show = false" />
         <input type="button" value="Submit" @click="submitForm" />
       </div>
     </div>
@@ -45,44 +44,46 @@
 </template>
 
 <script>
-import moment from 'moment';
+import moment from "moment";
+import { clickAway } from "../../mixins/clickAway";
 
 export default {
+  mixins: [clickAway],
   props: {
     dateProp: String,
     color: String,
   },
   data() {
     return {
-      selectedDate: '',
-      day: '',
-      month: '',
-      year: '',
+      selectedDate: "",
+      day: "",
+      month: "",
+      year: "",
       months: [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'Novemeber',
-        'Decemeber',
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "Novemeber",
+        "Decemeber",
       ],
-      days: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+      days: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
       calendarList: [],
-      show: false,
+      showDatePicker: false,
     };
   },
   methods: {
     loadMonth() {
       this.calendarList = [];
 
-      const month = moment.utc(`${this.year}-${this.month}`, 'YYYY-M', true);
-      const nextMonth = moment.utc(month).add(1, 'months'); // Need to create this before modifying "month"
+      const month = moment.utc(`${this.year}-${this.month}`, "YYYY-M", true);
+      const nextMonth = moment.utc(month).add(1, "months"); // Need to create this before modifying "month"
 
       // Get first day of the month's day of the week
       let offset = month.day();
@@ -104,7 +105,7 @@ export default {
               isOtherMonth: 1,
             });
 
-            nextMonth.add(1, 'days');
+            nextMonth.add(1, "days");
           } else if (offset == 0) {
             // We want to show today in local time
             const now = moment();
@@ -116,7 +117,7 @@ export default {
             row.push({
               dayCount,
               date: moment
-                .utc(`${this.year}-${this.month}-${dayCount}`, 'YYYY-M-D', true)
+                .utc(`${this.year}-${this.month}-${dayCount}`, "YYYY-M-D", true)
                 .toISOString(),
               isToday,
               isOtherMonth: 0,
@@ -124,9 +125,9 @@ export default {
 
             dayCount++;
           } else {
-            let previousMonth = moment.utc(month).subtract(1, 'months');
+            let previousMonth = moment.utc(month).subtract(1, "months");
             previousMonth = previousMonth.date(
-              previousMonth.daysInMonth() - offset + 1,
+              previousMonth.daysInMonth() - offset + 1
             );
 
             row.push({
@@ -136,7 +137,7 @@ export default {
               isOtherMonth: -1,
             });
 
-            previousMonth.subtract(1, 'days');
+            previousMonth.subtract(1, "days");
             offset--;
           }
         }
@@ -168,8 +169,8 @@ export default {
       }
     },
     submitForm() {
-      this.show = false;
-      this.$emit('dateUpdated', this.selectedDate);
+      this.showDatePicker = false;
+      this.$emit("dateUpdated", this.selectedDate);
     },
   },
   watch: {
@@ -200,8 +201,8 @@ export default {
   computed: {
     selectedDateString() {
       return this.selectedDate
-        ? `${moment.utc(this.selectedDate).format('MMMM DD, YYYY')}`
-        : 'Select a date...';
+        ? `${moment.utc(this.selectedDate).format("MMMM DD, YYYY")}`
+        : "Select a date...";
     },
   },
 };

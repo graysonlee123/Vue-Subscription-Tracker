@@ -20,6 +20,8 @@
         class="options__clickZone"
         :class="{options__clickZone_active: showOptions}"
         @click="handleOptionsMenu()"
+        ref="subscriptionOptionsMenu"
+        data-name="showOptions"
       >
         <i class="fas fa-ellipsis-h"></i>
       </div>
@@ -42,8 +44,10 @@
 import moment from "moment";
 import { EventBus } from "../../EventBus";
 import { v4 as uuidv4 } from "uuid";
+import { clickAway } from "../../mixins/clickAway";
 
 export default {
+  mixins: [clickAway],
   props: {
     subscription: {
       type: Object,

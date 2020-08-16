@@ -11,7 +11,7 @@
         </p>
         <div class="sortMethod__wrapper">
           <p>Sort by:</p>
-          <div class="sortMethod">
+          <div class="sortMethod" ref="sortMenu" data-name="showSortMenu">
             <p @click="handleDisplaySortMenu()">{{sortMethodDisplayName}}</p>
             <ul class="sortMethod__options" v-if="showSortMenu">
               <li @click="sortMethod = 'name'">Name</li>
@@ -31,7 +31,12 @@
         </div>
       </div>
       <div class="subscriptionsList__headerRight">
-        <div class="button filter" @click="handleDisplayFilterMenu()">
+        <div
+          class="button filter"
+          @click="handleDisplayFilterMenu()"
+          ref="filterMenu"
+          data-name="showFilterMenu"
+        >
           <span>
             Filter
             <i class="fa fa-filter"></i>
@@ -50,7 +55,7 @@
         <!-- Add back in later when things can go here
         <div class="button button__ellipsis">
           <i class="fas fa-ellipsis-h"></i>
-        </div> -->
+        </div>-->
       </div>
     </div>
     <div class="subscriptionsList__items">
@@ -82,9 +87,10 @@
 </template>
 
 <script>
-import SubscriptionListItem from './SubscriptionListItem';
-import { EventBus } from '../../EventBus';
-import moment from 'moment';
+import SubscriptionListItem from "./SubscriptionListItem";
+import { EventBus } from "../../EventBus";
+import moment from "moment";
+import { clickAway } from "../../mixins/clickAway";
 
 export default {
   components: {
@@ -96,10 +102,11 @@ export default {
       error: false,
       subscriptions: [],
       sortDirection: -1,
-      sortMethod: 'nextPayment',
+      sortMethod: "nextPayment",
       showSortMenu: false,
-      filter: 'all',
+      filter: "all",
       showFilterMenu: false,
+      flashSubscriptionId: "",
     };
   },
   watch: {
@@ -110,13 +117,14 @@ export default {
       this.showFilterMenu = false;
     },
   },
+  mixins: [clickAway],
   methods: {
     async fetchSubscriptions() {
       try {
         this.loading = true;
         this.subscriptions = [];
 
-        const res = await this.$http.get('/api/subscription');
+        const res = await this.$http.get("/api/subscription");
         const subscriptions = res.data.subscriptions;
 
         if (!subscriptions) {
@@ -156,10 +164,10 @@ export default {
       // Remove time of day from the equation
       const now = moment
         .utc()
-        .set('hour', 0)
-        .set('minute', 0)
-        .set('second', 0)
-        .set('millisecond', 0);
+        .set("hour", 0)
+        .set("minute", 0)
+        .set("second", 0)
+        .set("millisecond", 0);
 
       // If we're past the first payment date, find the next payment date
       if (moment.utc().isAfter(date)) {
@@ -188,7 +196,7 @@ export default {
         : (this.sortDirection = -1);
     },
     handleDisplaySortMenu(bool) {
-      if (typeof bool === 'boolean') {
+      if (typeof bool === "boolean") {
         this.showSortMenu = bool;
       } else {
         this.showSortMenu
@@ -197,7 +205,7 @@ export default {
       }
     },
     handleDisplayFilterMenu(bool) {
-      if (typeof bool === 'boolean') {
+      if (typeof bool === "boolean") {
         this.showFilterMenu = bool;
       } else {
         this.showFilterMenu
@@ -216,16 +224,16 @@ export default {
       // TODO: Make this more DRY
       switch (this.filter) {
         default:
-        case 'all': {
-          organizedSubs = organizedSubs.filter(sub => sub);
+        case "all": {
+          organizedSubs = organizedSubs.filter((sub) => sub);
           break;
         }
-        case 'week': {
+        case "week": {
           organizedSubs = organizedSubs.filter((sub) => {
             const nextPaymentDate = moment.utc(
-              sub.upcomingPayments[0].isoString,
+              sub.upcomingPayments[0].isoString
             );
-            const weekFromNow = moment.utc().add(1, 'weeks');
+            const weekFromNow = moment.utc().add(1, "weeks");
 
             if (nextPaymentDate.isBefore(weekFromNow)) {
               return true;
@@ -233,12 +241,12 @@ export default {
           });
           break;
         }
-        case 'month': {
+        case "month": {
           organizedSubs = organizedSubs.filter((sub) => {
             const nextPaymentDate = moment.utc(
-              sub.upcomingPayments[0].isoString,
+              sub.upcomingPayments[0].isoString
             );
-            const monthFromNow = moment.utc().add(1, 'months');
+            const monthFromNow = moment.utc().add(1, "months");
 
             if (nextPaymentDate.isBefore(monthFromNow)) {
               return true;
@@ -246,12 +254,12 @@ export default {
           });
           break;
         }
-        case 'year': {
+        case "year": {
           organizedSubs = organizedSubs.filter((sub) => {
             const nextPaymentDate = moment.utc(
-              sub.upcomingPayments[0].isoString,
+              sub.upcomingPayments[0].isoString
             );
-            const yearFromNow = moment.utc().add(1, 'years');
+            const yearFromNow = moment.utc().add(1, "years");
 
             if (nextPaymentDate.isBefore(yearFromNow)) {
               return true;
@@ -263,9 +271,9 @@ export default {
 
       // Then sort them
       switch (this.sortMethod) {
-        case 'name':
-        case 'duration':
-        case 'paymentMethod': {
+        case "name":
+        case "duration":
+        case "paymentMethod": {
           organizedSubs.sort((a, b) => {
             const x = a[this.sortMethod].toLowerCase();
             const y = b[this.sortMethod].toLowerCase();
@@ -276,12 +284,12 @@ export default {
           });
           break;
         }
-        case 'price':
-        case 'paidToDate': {
+        case "price":
+        case "paidToDate": {
           organizedSubs.sort((a, b) => a[this.sortMethod] - b[this.sortMethod]);
           break;
         }
-        case 'firstPayment': {
+        case "firstPayment": {
           organizedSubs.sort((a, b) => {
             const x = moment.utc(a.firstPaymentDate).valueOf();
             const y = moment.utc(b.firstPaymentDate).valueOf();
@@ -293,7 +301,7 @@ export default {
           break;
         }
         default:
-        case 'nextPayment': {
+        case "nextPayment": {
           organizedSubs.sort((a, b) => {
             const x = moment.utc(a.upcomingPayments[0].isoString).valueOf();
             const y = moment.utc(b.upcomingPayments[0].isoString).valueOf();
@@ -314,32 +322,32 @@ export default {
     },
     sortMethodDisplayName() {
       switch (this.sortMethod) {
-        case 'name': {
-          return 'Name';
+        case "name": {
+          return "Name";
           break;
         }
-        case 'duration': {
-          return 'Billing Period';
+        case "duration": {
+          return "Billing Period";
           break;
         }
-        case 'paymentMethod': {
-          return 'Payment Method';
+        case "paymentMethod": {
+          return "Payment Method";
           break;
         }
-        case 'price': {
-          return 'Price';
+        case "price": {
+          return "Price";
           break;
         }
-        case 'paidToDate': {
-          return 'Paid To Date';
+        case "paidToDate": {
+          return "Paid To Date";
           break;
         }
-        case 'firstPayment': {
-          return 'First Payment';
+        case "firstPayment": {
+          return "First Payment";
           break;
         }
-        case 'nextPayment': {
-          return 'Next Payment';
+        case "nextPayment": {
+          return "Next Payment";
           break;
         }
       }
@@ -348,7 +356,7 @@ export default {
   created() {
     this.fetchSubscriptions();
 
-    EventBus.$on('refreshSubscriptions', () => {
+    EventBus.$on("refreshSubscriptions", () => {
       this.fetchSubscriptions();
     });
   },
@@ -488,7 +496,7 @@ export default {
   .subscriptionsList__items {
     overflow: auto;
     max-height: calc(100% - 80px);
-    
+
     .empty {
       padding: 1em;
 
@@ -554,6 +562,16 @@ export default {
         text-align: center;
       }
     }
+  }
+}
+
+.flash {
+  animation: flash 0.4s ease-in-out 2;
+}
+
+@keyframes flash {
+  50% {
+    opacity: 0;
   }
 }
 </style>
