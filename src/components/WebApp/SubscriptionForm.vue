@@ -167,12 +167,12 @@
             />
           </div>
         </div>
+        <div class="input-wrapper submitWrapper">
+          <button @click="handleSubmit()">
+            <i class="fa fa-save"></i> Save Subscription
+          </button>
+        </div>
       </form>
-    </div>
-    <div class="submitWrapper">
-      <button @click="handleSubmit()">
-        <i class="fa fa-save"></i> Save Subscription
-      </button>
     </div>
   </div>
 </template>
@@ -324,21 +324,23 @@ export default {
     padding: 2em;
     flex-grow: 1;
     margin-bottom: 2em;
-  }
 
-  .submitWrapper {
-    text-align: center;
+    .submitWrapper {
+      text-align: center;
+      grid-column: 1 / span 2;
+      margin-top: 1em;
 
-    button {
-      background: none;
-      background-color: var(--success);
-      border: none;
-      border-radius: 50px;
-      padding: 12px 28px;
-      color: #eef6ed;
-      cursor: pointer;
-      text-transform: uppercase;
-      font-weight: bold;
+      button {
+        background: none;
+        background-color: var(--success);
+        border: none;
+        border-radius: 50px;
+        padding: 12px 28px;
+        color: #eef6ed;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-weight: bold;
+      }
     }
   }
 }
@@ -395,24 +397,26 @@ form {
   &.desc-wrapper {
     grid-column: 1 / 3;
   }
+}
 
-  &.submit-wrapper {
-    text-align: center;
+@media screen and (max-width: 767px) {
+  .formContainer {
+    max-width: 100%;
+    margin: 0;
+    overflow: hidden;
 
-    #submit-btn {
-      font-size: 0.8rem;
-      padding: 1.3em 2em;
-      border-radius: 4em;
-      border: none;
-      box-shadow: 4px 4px 14px rgba(0, 0, 0, 0.3);
-      background: none;
-      background-color: #444;
-      color: #fff;
-      cursor: pointer;
+    .formWrapper {
+      border-radius: 0;
+      margin: 0;
+      overflow: auto;
 
-      i {
-        margin-right: 0.4em;
-        font-size: 1.2em;
+      form {
+        grid-template-columns: 1fr;
+        margin-bottom: 2em;
+
+        > div {
+          grid-column: 1 / 2;
+        }
       }
     }
   }

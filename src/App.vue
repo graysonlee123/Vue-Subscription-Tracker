@@ -221,10 +221,6 @@ input[type="number"] {
   }
 
   -moz-appearance: textfield;
-
-  &::-webkit-input-placeholder {
-    // color: transparentize($color: #eee, $amount: 0.5);
-  }
 }
 
 .inputGroup {
@@ -267,5 +263,13 @@ input[type="number"] {
 .modal-leave-to {
   opacity: 0;
   transform: translateY(-20px);
+}
+
+@media screen and (max-width: 767px) {
+  #modal {
+    width: 280px;
+    margin-left: -140px;
+    top: 72px;
+  }
 }
 </style>

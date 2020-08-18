@@ -8,6 +8,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
+[] Mobile responsiveness for subscriptions list
 [] Mobile responsiveness
 
 ### General
