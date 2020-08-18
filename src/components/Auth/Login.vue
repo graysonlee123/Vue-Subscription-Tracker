@@ -218,4 +218,10 @@ export default {
     right: 14px;
   }
 }
+
+@media screen and (max-width: 767px) {
+  .auth-wrapper {
+    flex-direction: column;
+  }
+}
 </style>
