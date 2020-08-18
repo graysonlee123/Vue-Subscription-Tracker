@@ -3,18 +3,19 @@
     <div class="flexChild color">
       <div class="color__swatch" :style="{borderColor: subscription.color}"></div>
     </div>
-    <div class="flexChild textContainer name">{{subscription.name}}</div>
-    <div class="flexChild textContainer price">${{subscription.price}}</div>
-    <div class="flexChild textContainer paidToDate">${{subscription.paidToDate}}</div>
-    <div class="flexChild textContainer billingPeriod">{{billingPeriod}}</div>
+    <div class="flexChild textContainer name" data-label="Name">{{subscription.name}}</div>
+    <div class="flexChild textContainer price" data-label="Price">${{subscription.price}}</div>
+    <div class="flexChild textContainer paidToDate" data-label="Paid to date">${{subscription.paidToDate}}</div>
+    <div class="flexChild textContainer billingPeriod" data-label="Billing period">{{billingPeriod}}</div>
     <div
       class="flexChild textContainer paymentMethod"
+      data-label="Payment method"
     >{{subscription.paymentMethod || 'None provided'}}</div>
-    <div class="flexChild tags">
+    <div class="flexChild tags" data-label="Tags">
       <span class="tag">tags coming soon</span>
     </div>
-    <div class="flexChild textContainer firstPayment">{{firstPaymentDateString}}</div>
-    <div class="flexChild textContainer nextPayment">{{upcomingPaymentString}}</div>
+    <div class="flexChild textContainer firstPayment" data-label="First payment">{{firstPaymentDateString}}</div>
+    <div class="flexChild textContainer nextPayment" data-label="Next payment">{{upcomingPaymentString}}</div>
     <div class="flexChild options">
       <div
         class="options__clickZone"
@@ -307,6 +308,19 @@ $height: 62px;
           padding-right: 0.8em;
         }
       }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .subscriptionListItem {
+    flex-direction: column;
+    height: auto;
+    padding: 1em;
+
+    > div {
+      flex-basis: auto !important;
+      line-height: 1.3;
     }
   }
 }

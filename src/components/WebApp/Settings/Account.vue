@@ -59,7 +59,7 @@
               v-if="formErrors.find(({field}) => field === 'last_name')"
             >{{formErrors.find(({field}) => field ==='last_name').msg}}</span>
           </label>
-          <input type="text" v-model="last_name" v-on:blur="removeFormError('last_name')"/>
+          <input type="text" v-model="last_name" v-on:blur="removeFormError('last_name')" />
         </div>
       </div>
       <div class="submitWrapper">
@@ -332,7 +332,18 @@ header {
   margin-bottom: 2em;
 }
 
-@media screen and (min-width: $navBreak) {
+@media screen and (max-width: 767px) {
+  .account__wrapper {
+    overflow: auto;
+  }
+
+  .divider {
+    margin: 2.5em 0em;
+    border-top: 3px solid var(--bodyBackground);
+  }
+}
+
+@media screen and (min-width: 767px) {
   header {
     flex-flow: row nowrap;
 

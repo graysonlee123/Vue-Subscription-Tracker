@@ -1,7 +1,15 @@
 <template>
   <div id="main-menu">
+    <div class="mobileNavigation" @click="$emit('toggle-mobile-menu')">
+      <i class="fa fa-bars"></i>
+    </div>
     <span class="logout" @click="handleLogout()">Logout</span>
-    <div class="options__wrapper" :class="{isOpen: showOptions}" ref="optionsMenu" data-name="showOptions">
+    <div
+      class="options__wrapper"
+      :class="{isOpen: showOptions}"
+      ref="optionsMenu"
+      data-name="showOptions"
+    >
       <div class="options__clickZone" @click="toggleMenu()">
         <img class="avatar" :src="avatarUrl" alt="Avatar" />
         <img class="icon" src="@/assets/sort-arrow.svg" alt="Avatar" />
@@ -60,14 +68,18 @@ export default {
   background-color: var(--containerBackground);
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   padding: 0 2em;
+
+  .mobileNavigation {
+    display: none;
+  }
 
   .logout {
     cursor: pointer;
     margin-right: 1.2em;
     font-size: 0.9em;
     font-weight: bold;
+    margin-left: auto;
   }
 
   .options__wrapper {
@@ -116,6 +128,22 @@ export default {
           background-color: rgba(0, 0, 0, 0.07);
         }
       }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  #main-menu {
+    padding-left: 0;
+
+    .mobileNavigation {
+      display: flex;
+      padding: 8px;
+      cursor: pointer;
+      width: 80px;
+      height: 80px;
+      align-items: center;
+      justify-content: center;
     }
   }
 }

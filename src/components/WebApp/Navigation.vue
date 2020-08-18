@@ -19,6 +19,33 @@ export default {
   data() {
     return {};
   },
+  methods: {
+    // @param   e    Event
+    clickAway(e) {
+      // Important to put ref="" on menu element parent / container
+      // and also data-name="" for the name of the dropdown's visibility state
+
+      const target = e.target;
+      const el = document.getElementById("navigation");
+      const hamburger = document.getElementsByClassName("mobileNavigation")[0];
+
+      if (
+        el !== target &&
+        !el.contains(target) &&
+        el !== hamburger &&
+        !hamburger.contains(target)
+      ) {
+        this.$emit("toggle-mobile-menu", false);
+        console.log('close menu')
+      }
+    },
+  },
+  created() {
+    document.addEventListener("click", this.clickAway);
+  },
+  destroyed() {
+    document.removeEventListener("click", this.clickAway);
+  },
 };
 </script>
 

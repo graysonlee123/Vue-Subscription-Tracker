@@ -39,7 +39,7 @@ export default {
     return {
       loading: true,
       error: false,
-      tabName: '',
+      tabName: "",
     };
   },
   watch: {
@@ -60,6 +60,7 @@ export default {
   width: 100%;
   max-width: 596px;
   margin: 2em auto;
+  overflow: hidden;
 
   .settings__form {
     overflow-y: auto;
@@ -112,5 +113,20 @@ export default {
 .slide-leave-to {
   opacity: 0;
   transform: translateY(-6px);
+}
+
+@media screen and (max-width: 767px) {
+  .settings__container {
+    margin: 0;
+
+    .settings__form {
+      margin: 0;
+    }
+  }
+
+  .settingsNav {
+    font-size: 13px;
+    padding-bottom: 4px;
+  }
 }
 </style>

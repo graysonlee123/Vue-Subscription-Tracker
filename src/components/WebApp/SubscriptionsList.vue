@@ -14,13 +14,28 @@
           <div class="sortMethod" ref="sortMenu" data-name="showSortMenu">
             <p @click="handleDisplaySortMenu()">{{sortMethodDisplayName}}</p>
             <ul class="sortMethod__options" v-if="showSortMenu">
-              <li @click="sortMethod = 'name'">Name</li>
-              <li @click="sortMethod = 'duration'">Billing Period</li>
-              <li @click="sortMethod = 'paymentMethod'">Payment Method</li>
-              <li @click="sortMethod = 'price'">Price</li>
-              <li @click="sortMethod = 'paidToDate'">Paid To Date</li>
-              <li @click="sortMethod = 'firstPayment'">First Payment</li>
-              <li @click="sortMethod = 'nextPayment'">Next Payment</li>
+              <li @click="sortMethod = 'name'" :class="{bold: sortMethod === 'name'}">Name</li>
+              <li
+                @click="sortMethod = 'duration'"
+                :class="{bold: sortMethod === 'duration'}"
+              >Billing Period</li>
+              <li
+                @click="sortMethod = 'paymentMethod'"
+                :class="{bold: sortMethod === 'paymentMethod'}"
+              >Payment Method</li>
+              <li @click="sortMethod = 'price'" :class="{bold: sortMethod === 'price'}">Price</li>
+              <li
+                @click="sortMethod = 'paidToDate'"
+                :class="{bold: sortMethod === 'paidToDate'}"
+              >Paid To Date</li>
+              <li
+                @click="sortMethod = 'firstPayment'"
+                :class="{bold: sortMethod === 'firstPayment'}"
+              >First Payment</li>
+              <li
+                @click="sortMethod = 'nextPayment'"
+                :class="{bold: sortMethod === 'nextPayment'}"
+              >Next Payment</li>
             </ul>
           </div>
           <div class="sortDirection" :class="{ sortDirection_rotate: sortDirection === -1 }">
@@ -38,18 +53,18 @@
           data-name="showFilterMenu"
         >
           <span>
-            Filter
+            <span class="btn__text">Filter</span>
             <i class="fa fa-filter"></i>
           </span>
           <ul class="filter__options" v-if="showFilterMenu">
-            <li @click="filter = 'all'">Show All</li>
-            <li @click="filter = 'week'">In a week</li>
-            <li @click="filter = 'month'">In a month</li>
-            <li @click="filter = 'year'">In a year</li>
+            <li @click="filter = 'all'" :class="{bold: filter === 'all'}">Show All</li>
+            <li @click="filter = 'week'" :class="{bold: filter === 'week'}">In a week</li>
+            <li @click="filter = 'month'" :class="{bold: filter === 'month'}">In a month</li>
+            <li @click="filter = 'year'" :class="{bold: filter === 'year'}">In a year</li>
           </ul>
         </div>
         <router-link to="/dashboard/subscription/" tag="div" class="button button__add">
-          Add Subscription
+          <span class="btn__text">Add Subscription</span>
           <i class="fa fa-plus"></i>
         </router-link>
         <!-- Add back in later when things can go here
@@ -395,6 +410,7 @@ export default {
     background-color: var(--containerBackground);
     box-shadow: 0 8px 4px rgba(0, 0, 0, 0.15);
     white-space: nowrap;
+    z-index: 11;
 
     li {
       padding: 1em 2em;
@@ -403,6 +419,10 @@ export default {
 
       &:hover {
         background-color: rgba(0, 0, 0, 0.07);
+      }
+
+      &.bold {
+        font-weight: bold;
       }
     }
   }
@@ -567,6 +587,57 @@ export default {
 
 .flash {
   animation: flash 0.4s ease-in-out 2;
+}
+
+@media screen and (max-width: 767px) {
+  .subscriptionsList {
+    .subscriptionsList__header {
+      display: block;
+      margin-bottom: 1em;
+    }
+
+    .subscriptionsList__headerLeft {
+      flex-direction: column;
+      align-items: flex-start;
+      border-bottom: 2px solid var(--textLight);
+      margin-bottom: 1em;
+
+      h1 {
+        margin-bottom: 12px;
+      }
+
+      p {
+        margin-bottom: 16px;
+      }
+
+      .sortMethod__wrapper {
+        align-items: flex-start;
+      }
+    }
+
+    .subscriptionsList__headerRight {
+      .button {
+        padding-left: 1em;
+        padding-right: 1em;
+
+        i {
+          padding: 0;
+        }
+
+        .btn__text {
+          display: none;
+        }
+      }
+    }
+
+    .subscriptionsList__items {
+      max-height: calc(100% - 164px);
+
+      .subscriptionsList__labels {
+        display: none;
+      }
+    }
+  }
 }
 
 @keyframes flash {
