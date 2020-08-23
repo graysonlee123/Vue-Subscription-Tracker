@@ -4,7 +4,7 @@
       <router-link to="/dashboard" tag="li" class="dashboard__link">
         <i aria-hidden="true" class="fas fa-house-user"></i>
       </router-link>
-      <router-link to="/dashboard/subscription" class="new__link" tag="li">
+      <router-link to="/dashboard/subscription/new" class="new__link" tag="li">
         <i aria-hidden="true" class="fa fa-plus"></i>
       </router-link>
       <router-link to="/dashboard/settings" class="settings__link" tag="li">
@@ -36,7 +36,6 @@ export default {
         !hamburger.contains(target)
       ) {
         this.$emit("toggle-mobile-menu", false);
-        console.log('close menu')
       }
     },
   },

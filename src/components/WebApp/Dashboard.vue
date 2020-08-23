@@ -2,7 +2,9 @@
   <div id="dashboard" :class="{navVisibleMobile: navVisibleMobile}">
     <navigation @toggle-mobile-menu="toggleMenu" />
     <main-menu @toggle-mobile-menu="toggleMenu" />
+    <subscriptions-list />
     <transition name="fade" mode="out-in">
+      <!-- Sidebar -->
       <router-view></router-view>
     </transition>
   </div>
@@ -12,6 +14,7 @@
 import moment from "moment";
 import Navigation from "./Navigation";
 import MainMenu from "./MainMenu";
+import SubscriptionsList from "./SubscriptionsList";
 
 export default {
   data() {
@@ -33,6 +36,7 @@ export default {
   components: {
     navigation: Navigation,
     mainMenu: MainMenu,
+    subscriptionsList: SubscriptionsList,
   },
   watch: {
     $route() {

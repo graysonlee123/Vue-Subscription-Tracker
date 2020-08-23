@@ -1,23 +1,33 @@
 <template>
-  <div class="date-wrapper" ref="dateMenu" data-name="showDatePicker">
+  <div
+    class="inputGroup"
+    :class="{'inputGroup--error': errors.length}"
+    ref="datePicker"
+    data-name="showDatePicker"
+  >
+    <label for class="inputGroup__label">
+      {{label}}
+      <span class="inputGroup__label--error" v-if="errors.length">{{ errors[0].msg }}</span>
+    </label>
     <div
-      class="date-text"
-      :class="{'date-selected': selectedDate}"
-      @click="showDatePicker = true"
+      class="inputGroup__input"
+      :value="value"
+      @input="$emit('input', $event.target.value)"
+      @click="showDatePicker = !showDatePicker"
     >{{selectedDateString}}</div>
-    <div v-if="showDatePicker" class="date-picker">
-      <div class="header">
-        <div class="left buttons" @click="decreaseMonth">
+    <div v-if="showDatePicker" class="datePicker">
+      <div class="datePicker__header">
+        <div class="left datePicker__navButtons" @click="decreaseMonth">
           <i class="fa fa-chevron-left"></i>
         </div>
-        <p class="title">{{months[month - 1]}} {{year}}</p>
-        <div class="right buttons" @click="increaseMonth">
+        <p class="datePicker__currentMonth">{{months[month - 1]}} {{year}}</p>
+        <div class="right datePicker__navButtons" @click="increaseMonth">
           <i class="fa fa-chevron-right"></i>
         </div>
       </div>
       <table>
         <!-- Table day names -->
-        <tr class="daysOfWeek">
+        <tr class="datePicker__daysOfWeek">
           <td v-for="(day, index) in days" :key="index">{{day}}</td>
         </tr>
         <!-- Table main rows -->
@@ -30,32 +40,38 @@
           >
             <div
               class="date-button"
-              :class="{'selected': selectedDate === col.date, isOtherMonth: col.isOtherMonth !== 0}"
+              :class="{'selected': value === col.date, isOtherMonth: col.isOtherMonth !== 0}"
               @click="selectDate(col)"
             >{{col.dayCount}}</div>
           </td>
         </tr>
       </table>
-      <div class="footer">
-        <input type="button" value="Submit" @click="submitForm" />
-      </div>
     </div>
   </div>
 </template>
 
 <script>
 import moment from "moment";
-import { clickAway } from "../../mixins/clickAway";
+import { clickAway } from "../../../mixins/clickAway";
 
 export default {
   mixins: [clickAway],
   props: {
-    dateProp: String,
-    color: String,
+    value: {
+      required: true,
+      type: String,
+    },
+    label: {
+      type: String,
+      required: true,
+    },
+    errors: {
+      type: Array,
+      required: true,
+    },
   },
   data() {
     return {
-      selectedDate: "",
       day: "",
       month: "",
       year: "",
@@ -162,20 +178,10 @@ export default {
       }
     },
     selectDate(columnData) {
-      this.selectedDate = columnData.date;
-
       if (columnData.isOtherMonth) {
         this.month = moment.utc(columnData.date).month() + 1;
       }
-    },
-    submitForm() {
-      this.showDatePicker = false;
-      this.$emit("dateUpdated", this.selectedDate);
-    },
-  },
-  watch: {
-    month() {
-      this.loadMonth();
+      this.$emit("handle-change", columnData.date);
     },
   },
   created() {
@@ -188,8 +194,6 @@ export default {
       // ? so we add 1 to be able to work with iso time strings better
       this.month = date.month() + 1;
       this.day = date.date();
-
-      this.selectedDate = date.toISOString();
     } else {
       const currentDate = moment();
 
@@ -198,42 +202,62 @@ export default {
       this.day = currentDate.date();
     }
   },
+  watch: {
+    month() {
+      this.loadMonth();
+    },
+  },
   computed: {
     selectedDateString() {
-      return this.selectedDate
-        ? `${moment.utc(this.selectedDate).format("MMMM DD, YYYY")}`
+      return this.value
+        ? `${moment.utc(this.value).format("MMMM DD, YYYY")}`
         : "Select a date...";
     },
   },
 };
-
-// Should populate date if a prop is passed, or
-// should allow to start new based on current date
 </script>
 
 <style lang="scss" scoped>
-.date-wrapper {
+.inputGroup {
+  margin-bottom: 1.6rem;
   position: relative;
 
-  .date-text {
-    $height: 42px;
+  .inputGroup__label {
+    display: block;
+    margin-bottom: 0.8em;
+    color: var(--textLight);
+    font-size: 0.8em;
+    font-weight: bold;
+    padding-left: 1.6em;
 
-    height: $height;
+    .inputGroup__label--error {
+      color: var(--danger);
+    }
+  }
+
+  .inputGroup__input {
     width: 100%;
     border: 2px solid var(--textLight);
-    border-radius: $height / 2;
-    padding: 0 1.4em;
     font-size: 0.8em;
+    background-color: transparent;
     color: var(--textDark);
-    line-height: $height - 4px;
-    cursor: pointer;
+    border-radius: 21px;
+    height: 42px;
+    line-height: 42px;
+    padding: 0 1.4em;
   }
 }
 
-.date-picker {
+.inputGroup.inputGroup--error {
+  .inputGroup__input {
+    border-color: var(--danger);
+  }
+}
+
+.datePicker {
   position: absolute;
   z-index: 2;
-  bottom: 60px;
+  top: 60px;
   left: 0;
   width: 220px;
   font-size: 0.6rem;
@@ -243,20 +267,20 @@ export default {
   box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.2);
   user-select: none;
 
-  .header {
+  .datePicker__header {
     display: flex;
     align-items: center;
     margin-bottom: 0;
     color: var(--textDark);
 
-    .title {
+    .datePicker__currentMonth {
       flex-grow: 1;
       text-align: center;
       font-weight: bold;
       font-size: 0.9em;
     }
 
-    .buttons {
+    .datePicker__navButtons {
       cursor: pointer;
       padding: 1em;
     }
@@ -268,7 +292,7 @@ export default {
     color: var(--textDark);
     font-weight: bold;
 
-    .daysOfWeek {
+    .datePicker__daysOfWeek {
       color: var(--textLight);
     }
 
@@ -299,25 +323,6 @@ export default {
           color: #fff;
         }
       }
-    }
-  }
-}
-
-.footer {
-  text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  margin-top: 1em;
-  padding-top: 1em;
-
-  input {
-    border: none;
-    color: #fff;
-    background-color: #666;
-    padding: 0.8em 1.4em;
-    cursor: pointer;
-
-    &:focus {
-      outline: none;
     }
   }
 }

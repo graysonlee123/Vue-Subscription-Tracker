@@ -8,14 +8,19 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
+[] Add single subscription route
+[] Make sort methods work on the labels for desktop
 [] Mobile responsiveness for subscriptions list
 [] Mobile responsiveness
+[] X button on subscription form for mobile
 
 ### General
 
+[] Set input type to email for auth forms for mobile phone keyboards
 [] Landing page - just serve in node and link correspondingly?
 [] filter by tag, payment method
 [] Restrict IP's from Mongo Database
+[] Rework form overflow scrolling CSS
 
 ### Low Priority
 [] Tab onto date picker
@@ -100,6 +105,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Email reminders
 
 ## Quick Links
+- Component Input Fields https://bangjelkoski.com/blog/building-a-controlled-vue-input/
 - Deployment https://medium.com/netscape/deploying-a-vue-js-2-x-app-to-heroku-in-5-steps-tutorial-a69845ace489
 - https://stackoverflow.com/questions/46389267/using-async-await-with-webpack-simple-configuration-throwing-error-regeneratorr
 - https://vuejs.org/v2/cookbook/debugging-in-vscode.html
