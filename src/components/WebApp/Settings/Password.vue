@@ -1,7 +1,7 @@
 <template>
-  <div class="password_wrapper">
-    <form @submit.prevent="handleUpdatePassword()">
-      <div
+  <div>
+    <form>
+      <!-- <div
         class="inputGroup"
         :class="{hasError: formErrors.find(({field}) => field === 'currentPassword')}"
       >
@@ -12,7 +12,13 @@
             v-if="formErrors.find(({field}) => field === 'currentPassword')"
           >{{formErrors.find(({field}) => field ==='currentPassword').msg}}</span>
         </label>
-        <input type="password" name="password" id="currentPassword" v-model="currentPassword" v-on:blur="removeFormError('currentPassword')" />
+        <input
+          type="password"
+          name="password"
+          id="currentPassword"
+          v-model="currentPassword"
+          v-on:blur="removeFormError('currentPassword')"
+        />
       </div>
       <div
         class="inputGroup"
@@ -25,7 +31,13 @@
             v-if="formErrors.find(({field}) => field === 'newPassword')"
           >{{formErrors.find(({field}) => field ==='newPassword').msg}}</span>
         </label>
-        <input type="password" name="newPassword" id="newPassword" v-model="newPassword" v-on:blur="removeFormError('newPassword')" />
+        <input
+          type="password"
+          name="newPassword"
+          id="newPassword"
+          v-model="newPassword"
+          v-on:blur="removeFormError('newPassword')"
+        />
       </div>
       <div class="inputGroup">
         <label for="confirmPassword" class="inputGroup__label">Confirm password</label>
@@ -38,23 +50,52 @@
       </div>
       <div class="submit__wrapper">
         <input type="submit" value="Update" class="roundedButton" />
-      </div>
+      </div>-->
+      <settings-header>Password</settings-header>
+      <text-input
+        v-model="currentPassword"
+        type="password"
+        label="Current password"
+        :errors="formErrors.filter(error => error.field === 'currentPassword')"
+      ></text-input>
+      <text-input
+        v-model="newPassword"
+        type="password"
+        label="New password"
+        :errors="formErrors.filter(error => error.field === 'newPassword')"
+      ></text-input>
+      <text-input
+        v-model="confirmPassword"
+        type="password"
+        label="Confirm new password"
+        :errors="formErrors.filter(error => error.field === 'confirmPassword')"
+      ></text-input>
+      <submit-button @handle-submit="handleUpdatePassword">Save Password</submit-button>
     </form>
   </div>
 </template>
 
 <script>
-import { formErrors } from '../../../mixins/formErrors';
-import { v4 as uuidv4 } from 'uuid';
+import { formErrors } from "../../../mixins/formErrors";
+import { v4 as uuidv4 } from "uuid";
+
+import TextInput from "../General/TextInput";
+import SubmitButton from "../General/SubmitButton";
+import SettingsHeader from "./SettingsHeader";
 
 export default {
   data() {
     return {
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: '',
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
       formErrors: [],
     };
+  },
+  components: {
+    textInput: TextInput,
+    submitButton: SubmitButton,
+    settingsHeader: SettingsHeader,
   },
   mixins: [formErrors],
   methods: {
@@ -63,41 +104,41 @@ export default {
 
       if (!this.newPassword.length) {
         this.formErrors.push({
-          field: 'newPassword',
-          msg: 'must provide a new password',
+          field: "newPassword",
+          msg: "must provide a new password",
         });
 
         return;
       } else if (this.newPassword.trim() !== this.confirmPassword.trim()) {
-        this.newPassword = '';
-        this.confirmPassword = '';
+        this.newPassword = "";
+        this.confirmPassword = "";
 
         this.formErrors.push({
-          field: 'newPassword',
-          msg: 'passwords must match',
+          field: "newPassword",
+          msg: "passwords must match",
         });
 
         return;
       }
 
       try {
-        const update = await this.$http.post('/api/user/password', {
+        const update = await this.$http.post("/api/user/password", {
           currentPassword: this.currentPassword,
           newPassword: this.confirmPassword,
         });
 
-        this.$store.dispatch('addModal', {
-          type: 'success',
-          message: 'Password was succesfully changed.',
+        this.$store.dispatch("addModal", {
+          type: "success",
+          message: "Password was succesfully changed.",
           uuid: uuidv4(),
         });
 
-        this.currentPassword = '';
-        this.newPassword = '';
-        this.confirmPassword = '';
+        this.currentPassword = "";
+        this.newPassword = "";
+        this.confirmPassword = "";
       } catch (err) {
         console.log(err);
-        this.addFormError(err, 'newPassword');
+        this.addFormError(err, "newPassword");
       }
     },
   },
@@ -105,16 +146,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.password_wrapper {
-  padding: 2em 0;
-}
 
-.inputGroup {
-  margin-bottom: 1.6em;
-  max-width: 276px;
-}
-
-.submit__wrapper {
-  text-align: left;
-}
 </style>

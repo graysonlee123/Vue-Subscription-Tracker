@@ -119,6 +119,7 @@ export default {
       border-radius: var(--borderRadius);
       background-color: var(--containerBackground);
       box-shadow: 0 3px 16px rgba(0, 0, 0, 0.2);
+      z-index: 10;
 
       li {
         padding: 1em 2em;

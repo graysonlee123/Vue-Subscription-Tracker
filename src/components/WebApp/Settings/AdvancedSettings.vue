@@ -1,5 +1,6 @@
 <template>
-  <div class="advanced__wrapper">
+  <div>
+    <settings-header>Advanced</settings-header>
     <input
       type="button"
       value="Delete Account"
@@ -10,18 +11,23 @@
 </template>
 
 <script>
+import SettingsHeader from "./SettingsHeader";
+
 export default {
   data() {
     return {};
+  },
+  components: {
+    settingsHeader: SettingsHeader,
   },
   methods: {
     async deleteAccount() {
       if (
         confirm(
-          'Are you sure you want to delete your account? This action cannot be undone. All data associated with the account will be erased.',
+          "Are you sure you want to delete your account? This action cannot be undone. All data associated with the account will be erased."
         )
       ) {
-        const data = await this.$http.delete('/api/user');
+        const data = await this.$http.delete("/api/user");
 
         console.log(data);
         this.logout();
@@ -29,9 +35,9 @@ export default {
     },
     logout() {
       this.$store
-        .dispatch('logout')
+        .dispatch("logout")
         .then(() => {
-          this.$router.push('/login');
+          this.$router.push("/login");
         })
         .catch((err) => {
           console.error(err);
@@ -42,7 +48,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.advanced__wrapper {
-  padding: 2em 0;
-}
+
 </style>

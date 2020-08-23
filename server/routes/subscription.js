@@ -101,7 +101,7 @@ router.post(
       .isISO8601()
       .withMessage("must be a date with formatting yyyy-mm-dd")
       .toDate(),
-    check("interval", "Must be a number between 1 and 32")
+    check("interval", "must be between 1 and 32")
       .notEmpty()
       .withMessage("cannot be empty")
       .isInt({
@@ -114,8 +114,8 @@ router.post(
       .isString()
       .withMessage("must be a string")
       .trim()
-      .isIn(["day", "week", "month", "year"])
-      .withMessage("must be one of 'day', 'month', 'week', 'year'"),
+      .isIn(["day", "month", "year"])
+      .withMessage("must be one of day, month, or year"),
     check("color", "cannot be blank")
       .optional()
       .isHexColor(),
@@ -208,7 +208,7 @@ router.post(
       .isISO8601()
       .withMessage("must be a date with formatting yyyy-mm-dd")
       .toDate(),
-    check("interval", "Must be a number between 1 and 32")
+    check("interval", "must be between 1 and 32")
       .notEmpty()
       .withMessage("cannot be empty")
       .isInt({
@@ -221,8 +221,8 @@ router.post(
       .isString()
       .withMessage("must be a string")
       .trim()
-      .isIn(["day", "week", "month", "year"])
-      .withMessage("must be one of 'day', 'month', 'week', 'year'"),
+      .isIn(["day", "month", "year"])
+      .withMessage("must be one of day, month, or year"),
     check("color", "cannot be blank")
       .optional()
       .isHexColor(),

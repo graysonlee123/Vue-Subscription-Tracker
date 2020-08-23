@@ -1,5 +1,6 @@
 <template>
-  <div class="account__wrapper">
+  <div>
+    <settings-header>Account</settings-header>
     <header>
       <div class="img-container">
         <!-- Using a label to click on the hidden file upload field -->
@@ -23,48 +24,25 @@
       </div>
     </header>
     <div class="divider"></div>
-    <form @submit.prevent="handleSubmit">
-      <div class="inputGroup" :class="{hasError: formErrors.find(({field}) => field === 'email')}">
-        <label for="email" class="inputGroup__label">
-          Email
-          <span
-            class="fieldError"
-            v-if="formErrors.find(({field}) => field === 'email')"
-          >{{formErrors.find(({field}) => field ==='email').msg}}</span>
-        </label>
-        <input type="text" v-model="email" v-on:blur="removeFormError('email')" />
-      </div>
+    <form>
       <div class="col2">
-        <div
-          class="inputGroup"
-          :class="{hasError: formErrors.find(({field}) => field === 'first_name')}"
-        >
-          <label for="first_name" class="inputGroup__label">
-            First name
-            <span
-              class="fieldError"
-              v-if="formErrors.find(({field}) => field === 'first_name')"
-            >{{formErrors.find(({field}) => field ==='first_name').msg}}</span>
-          </label>
-          <input type="text" v-model="first_name" v-on:blur="removeFormError('first_name')" />
-        </div>
-        <div
-          class="inputGroup"
-          :class="{hasError: formErrors.find(({field}) => field === 'last_name')}"
-        >
-          <label for="last_name" class="inputGroup__label">
-            Last name
-            <span
-              class="fieldError"
-              v-if="formErrors.find(({field}) => field === 'last_name')"
-            >{{formErrors.find(({field}) => field ==='last_name').msg}}</span>
-          </label>
-          <input type="text" v-model="last_name" v-on:blur="removeFormError('last_name')" />
-        </div>
+        <text-input
+          v-model="first_name"
+          label="First Name"
+          :errors="formErrors.filter(error => error.field === 'first_name')"
+        ></text-input>
+        <text-input
+          v-model="last_name"
+          label="Last Name"
+          :errors="formErrors.filter(error => error.field === 'last_name')"
+        ></text-input>
       </div>
-      <div class="submitWrapper">
-        <input type="submit" class="roundedButton" value="Submit" />
-      </div>
+      <text-input
+        v-model="email"
+        label="Email"
+        :errors="formErrors.filter(error => error.field === 'email')"
+      ></text-input>
+      <submit-button @handle-submit="handleSubmit"></submit-button>
     </form>
   </div>
 </template>
@@ -72,8 +50,11 @@
 <script>
 import { formErrors } from "../../../mixins/formErrors";
 import { v4 as uuidv4 } from "uuid";
-import PictureInput from "vue-picture-input";
 import { storage } from "../../../firebase";
+
+import TextInput from "../General/TextInput";
+import SubmitButton from "../General/SubmitButton";
+import SettingsHeader from "./SettingsHeader";
 
 export default {
   data() {
@@ -88,7 +69,9 @@ export default {
     };
   },
   components: {
-    PictureInput,
+    textInput: TextInput,
+    submitButton: SubmitButton,
+    settingsHeader: SettingsHeader
   },
   mixins: [formErrors],
   methods: {
@@ -256,10 +239,6 @@ export default {
 <style lang="scss" scoped>
 $navBreak: 991px;
 
-.account__wrapper {
-  padding: 2em 0;
-}
-
 header {
   display: flex;
   flex-direction: column;
@@ -328,15 +307,7 @@ header {
   border-top: 3px solid var(--bodyBackground);
 }
 
-.inputGroup {
-  margin-bottom: 2em;
-}
-
 @media screen and (max-width: 767px) {
-  .account__wrapper {
-    overflow: auto;
-  }
-
   .divider {
     margin: 2.5em 0em;
     border-top: 3px solid var(--bodyBackground);

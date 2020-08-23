@@ -25,7 +25,6 @@
     "mongoose": "^5.9.25",
     "uuid": "^8.3.0",
     "vue": "^2.5.2",
-    "vue-picture-input": "^2.1.6",
     "vue-router": "^3.4.3",
     "vuex": "^3.5.1"
   },

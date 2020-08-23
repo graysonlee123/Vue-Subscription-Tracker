@@ -1,102 +1,201 @@
 <template>
   <div v-if="loading">Loading...</div>
-  <div v-else-if="error">Error, try again later!</div>
+  <div v-else-if="error">Error, please try again later!</div>
   <div class="subscriptionsList" v-else>
     <div class="subscriptionsList__header">
-      <div class="subscriptionsList__headerLeft">
-        <h1>Subscriptions</h1>
-        <p>
-          {{organizedSubscriptions.length}} total
-          <span v-if="filter !== 'all'">(filtered)</span>
-        </p>
-        <div class="sortMethod__wrapper">
-          <p>Sort by:</p>
-          <div class="sortMethod" ref="sortMenu" data-name="showSortMenu">
-            <p @click="handleDisplaySortMenu()">{{sortMethodDisplayName}}</p>
-            <ul class="sortMethod__options" v-if="showSortMenu">
-              <li @click="sortMethod = 'name'" :class="{bold: sortMethod === 'name'}">Name</li>
-              <li
-                @click="sortMethod = 'duration'"
-                :class="{bold: sortMethod === 'duration'}"
-              >Billing Period</li>
-              <li
-                @click="sortMethod = 'paymentMethod'"
-                :class="{bold: sortMethod === 'paymentMethod'}"
-              >Payment Method</li>
-              <li @click="sortMethod = 'price'" :class="{bold: sortMethod === 'price'}">Price</li>
-              <li
-                @click="sortMethod = 'paidToDate'"
-                :class="{bold: sortMethod === 'paidToDate'}"
-              >Paid To Date</li>
-              <li
-                @click="sortMethod = 'firstPayment'"
-                :class="{bold: sortMethod === 'firstPayment'}"
-              >First Payment</li>
-              <li
-                @click="sortMethod = 'nextPayment'"
-                :class="{bold: sortMethod === 'nextPayment'}"
-              >Next Payment</li>
-            </ul>
-          </div>
-          <div class="sortDirection" :class="{ sortDirection_rotate: sortDirection === -1 }">
-            <div @click="switchSortDirection()" class="sortDirection__clicker">
-              <img width="10" height="auto" src="@/assets/sort-arrow.svg" alt />
-            </div>
-          </div>
-        </div>
+      <h1>Subscriptions</h1>
+      <p>
+        {{organizedSubscriptions.length}} total
+        <span v-if="filter !== 'all'">(filtered)</span>
+      </p>
+      <div
+        class="filter subscriptionsList__button subscriptionsList__button--filter"
+        @click="handleDisplayFilterMenu()"
+        ref="filterMenu"
+        data-name="showFilterMenu"
+      >
+        <span>
+          <span class="btn__text">Filter</span>
+          <i class="fa fa-filter"></i>
+        </span>
+        <ul class="optionsList" v-if="showFilterMenu">
+          <li @click="filter = 'all'" :class="{bold: filter === 'all'}">Show All</li>
+          <li @click="filter = 'week'" :class="{bold: filter === 'week'}">In a week</li>
+          <li @click="filter = 'month'" :class="{bold: filter === 'month'}">In a month</li>
+          <li @click="filter = 'year'" :class="{bold: filter === 'year'}">In a year</li>
+        </ul>
       </div>
-      <div class="subscriptionsList__headerRight">
-        <div
-          class="button filter"
-          @click="handleDisplayFilterMenu()"
-          ref="filterMenu"
-          data-name="showFilterMenu"
-        >
-          <span>
-            <span class="btn__text">Filter</span>
-            <i class="fa fa-filter"></i>
-          </span>
-          <ul class="filter__options" v-if="showFilterMenu">
-            <li @click="filter = 'all'" :class="{bold: filter === 'all'}">Show All</li>
-            <li @click="filter = 'week'" :class="{bold: filter === 'week'}">In a week</li>
-            <li @click="filter = 'month'" :class="{bold: filter === 'month'}">In a month</li>
-            <li @click="filter = 'year'" :class="{bold: filter === 'year'}">In a year</li>
-          </ul>
-        </div>
-        <router-link to="/dashboard/subscription/" tag="div" class="button button__add">
-          <span class="btn__text">Add Subscription</span>
-          <i class="fa fa-plus"></i>
-        </router-link>
-        <!-- Add back in later when things can go here
+      <div
+        class="sort subscriptionsList__button subscriptionsList__button--sort"
+        @click="handleDisplaySortMenu()"
+        ref="sortMenu"
+        data-name="showSortMenu"
+      >
+        <span>
+          <span class="btn__text">Sort</span>
+          <i class="fa fa-sort"></i>
+        </span>
+        <ul class="optionsList" v-if="showSortMenu">
+          <li
+            @click="sortMethod = 'nextPayment'"
+            :class="{bold: filter === 'nextPayment'}"
+          >Next Payment</li>
+          <li @click="sortMethod = 'name'" :class="{bold: filter === 'name'}">Name</li>
+          <li @click="sortMethod = 'price'" :class="{bold: filter === 'price'}">Price</li>
+          <li
+            @click="sortMethod = 'paidToDate'"
+            :class="{bold: filter === 'paidToDate'}"
+          >Paid To Date</li>
+          <li
+            @click="sortMethod = 'paymentMethod'"
+            :class="{bold: filter === 'paymentMethod'}"
+          >Payment Method</li>
+          <li @click="sortMethod = 'duration'" :class="{bold: filter === 'duration'}">Billing Period</li>
+          <li
+            @click="sortMethod = 'firstPayment'"
+            :class="{bold: filter === 'firstPayment'}"
+          >First Payment</li>
+        </ul>
+      </div>
+      <router-link
+        to="/dashboard/subscription/new"
+        tag="div"
+        class="subscriptionsList__button subscriptionsList__button--add"
+      >
+        <span class="btn__text">Add</span>
+        <i class="fa fa-plus"></i>
+      </router-link>
+      <!-- Add back in later when things can go here
         <div class="button button__ellipsis">
           <i class="fas fa-ellipsis-h"></i>
-        </div>-->
-      </div>
+      </div>-->
     </div>
-    <div class="subscriptionsList__items">
-      <div class="subscriptionsList__labels">
-        <div class="color"></div>
-        <div class="name">Name</div>
-        <div class="price">Price</div>
-        <div class="paidToDate">Paid To Date</div>
-        <div class="billingPeriod">Billing Period</div>
-        <div class="paymentMethod">Payment Method</div>
-        <div class="tags">Tags</div>
-        <div class="firstPayment">First Payment</div>
-        <div class="nextPayment">Next Payment</div>
-        <div class="options"></div>
-      </div>
-      <ul v-if="subscriptions.length > 0">
-        <subscription-list-item
-          v-for="(subscription, index) in organizedSubscriptions"
-          :key="index"
-          :subscription="subscription"
+    <div class="subscriptionsList__labels">
+      <div class="color"></div>
+      <div
+        class="name"
+        :class="{selected: sortMethod === 'name'}"
+        @click="sortMethod === 'name' ? sortDirection === 1 ? sortDirection = -1 : sortDirection = 1 : sortMethod = 'name'"
+      >
+        Name
+        <img
+          v-if="sortMethod === 'name'"
+          src="@/assets/sort-arrow.svg"
+          alt="Sort direction"
+          class="sortIcon"
+          :class="{'sortIcon--flip': sortDirection === 1}"
         />
-      </ul>
-      <div class="empty" v-else>
-        Nothing to see here... try adding a
-        <router-link to="/dashboard/subscription">new subscription</router-link>.
       </div>
+      <div
+        class="price"
+        :class="{selected: sortMethod === 'price'}"
+        @click="sortMethod === 'price' ? sortDirection === 1 ? sortDirection = -1 : sortDirection = 1 : sortMethod = 'price'"
+      >
+        Price
+        <img
+          v-if="sortMethod === 'price'"
+          src="@/assets/sort-arrow.svg"
+          alt="Sort direction"
+          class="sortIcon"
+          :class="{'sortIcon--flip': sortDirection === 1}"
+        />
+      </div>
+      <div
+        class="paidToDate"
+        :class="{selected: sortMethod === 'paidToDate'}"
+        @click="sortMethod === 'paidToDate' ? sortDirection === 1 ? sortDirection = -1 : sortDirection = 1 : sortMethod = 'paidToDate'"
+      >
+        Paid To Date
+        <img
+          v-if="sortMethod === 'paidToDate'"
+          src="@/assets/sort-arrow.svg"
+          alt="Sort direction"
+          class="sortIcon"
+          :class="{'sortIcon--flip': sortDirection === 1}"
+        />
+      </div>
+      <div
+        class="billingPeriod"
+        :class="{selected: sortMethod === 'billingPeriod'}"
+        @click="sortMethod === 'billingPeriod' ? sortDirection === 1 ? sortDirection = -1 : sortDirection = 1 : sortMethod = 'billingPeriod'"
+      >
+        Billing Period
+        <img
+          v-if="sortMethod === 'billingPeriod'"
+          src="@/assets/sort-arrow.svg"
+          alt="Sort direction"
+          class="sortIcon"
+          :class="{'sortIcon--flip': sortDirection === 1}"
+        />
+      </div>
+      <div
+        class="paymentMethod"
+        :class="{selected: sortMethod === 'paymentMethod'}"
+        @click="sortMethod === 'paymentMethod' ? sortDirection === 1 ? sortDirection = -1 : sortDirection = 1 : sortMethod = 'paymentMethod'"
+      >
+        Payment Method
+        <img
+          v-if="sortMethod === 'paymentMethod'"
+          src="@/assets/sort-arrow.svg"
+          alt="Sort direction"
+          class="sortIcon"
+          :class="{'sortIcon--flip': sortDirection === 1}"
+        />
+      </div>
+      <div
+        class="tags"
+        :class="{selected: sortMethod === 'tags'}"
+        @click="sortMethod === 'tags' ? sortDirection === 1 ? sortDirection = -1 : sortDirection = 1 : sortMethod = 'tags'"
+      >
+        Tags
+        <img
+          v-if="sortMethod === 'tags'"
+          src="@/assets/sort-arrow.svg"
+          alt="Sort direction"
+          class="sortIcon"
+          :class="{'sortIcon--flip': sortDirection === 1}"
+        />
+      </div>
+      <div
+        class="firstPayment"
+        :class="{selected: sortMethod === 'firstPayment'}"
+        @click="sortMethod === 'firstPayment' ? sortDirection === 1 ? sortDirection = -1 : sortDirection = 1 : sortMethod = 'firstPayment'"
+      >
+        First Payment
+        <img
+          v-if="sortMethod === 'firstPayment'"
+          src="@/assets/sort-arrow.svg"
+          alt="Sort direction"
+          class="sortIcon"
+          :class="{'sortIcon--flip': sortDirection === 1}"
+        />
+      </div>
+      <div
+        class="nextPayment"
+        :class="{selected: sortMethod === 'nextPayment'}"
+        @click="sortMethod === 'nextPayment' ? sortDirection === 1 ? sortDirection = -1 : sortDirection = 1 : sortMethod = 'nextPayment'"
+      >
+        Next Payment
+        <img
+          v-if="sortMethod === 'nextPayment'"
+          src="@/assets/sort-arrow.svg"
+          alt="Sort direction"
+          class="sortIcon"
+          :class="{'sortIcon--flip': sortDirection === 1}"
+        />
+      </div>
+      <div class="options"></div>
+    </div>
+    <ul class="subscriptionsList__items" v-if="subscriptions.length > 0">
+      <subscription-list-item
+        v-for="(subscription, index) in organizedSubscriptions"
+        :key="index"
+        :subscription="subscription"
+      />
+    </ul>
+    <div class="empty" v-else>
+      Nothing to see here... try adding a
+      <router-link to="/dashboard/subscription">new subscription</router-link>.
     </div>
   </div>
 </template>
@@ -380,269 +479,194 @@ export default {
 
 <style lang="scss">
 .subscriptionsList {
-  padding: 2em;
+  margin: 2em;
   overflow: hidden;
+  max-height: 100%;
+  // Has to be flex to restrict .subscriptionsList__items's height
+  display: flex;
+  flex-flow: column;
 
   .subscriptionsList__header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 3em;
+    align-items: baseline;
+    margin-bottom: 2em;
     user-select: none;
+
+    h1 {
+      margin-right: 0.8em;
+    }
   }
 
-  .subscriptionsList__headerLeft,
-  .subscriptionsList__headerRight {
+  .subscriptionsList__labels {
+    $height: 62px;
+
     display: flex;
-    align-items: center;
-  }
+    padding: 0 0 1em;
+    font-size: 80%;
+    font-weight: bold;
+    user-select: none;
 
-  .filter,
-  .sortMethod {
-    position: relative;
-  }
-
-  ul.filter__options,
-  .sortMethod__options {
-    position: absolute;
-    top: 24px;
-    left: 0;
-    background-color: var(--containerBackground);
-    box-shadow: 0 8px 4px rgba(0, 0, 0, 0.15);
-    white-space: nowrap;
-    z-index: 11;
-
-    li {
-      padding: 1em 2em;
-      cursor: pointer;
-      line-height: 16px;
-
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.07);
-      }
-
-      &.bold {
-        font-weight: bold;
-      }
-    }
-  }
-
-  .subscriptionsList__headerLeft {
-    & > h1,
-    & > p {
-      margin-right: 32px;
+    .sortIcon {
+      display: none;
+      width: 10px;
+      height: auto;
     }
 
-    .sortMethod__wrapper {
-      display: flex;
-      flex-flow: row nowrap;
-      align-items: center;
+    // These should match the corresponding items in the subscription list item scss
 
-      .sortMethod {
-        margin-left: 12px;
-        margin-right: 3px;
-
-        p {
-          font-weight: bold;
-          cursor: pointer;
-        }
-      }
+    .color {
+      flex-basis: $height;
+      text-align: center;
+      flex-shrink: 0;
     }
 
-    .sortDirection {
-      img {
-        transition: transform 100ms ease-in-out;
-      }
+    .name {
+      flex-basis: 140px;
+    }
 
-      &.sortDirection_rotate {
-        img {
+    .price {
+      flex-basis: 100px;
+      font-weight: bold;
+    }
+
+    .paidToDate {
+      flex-basis: 120px;
+    }
+
+    .billingPeriod {
+      flex-basis: 140px;
+    }
+
+    .paymentMethod {
+      flex-basis: 150px;
+    }
+
+    .tags {
+      flex-basis: 100px;
+      flex-grow: 1;
+    }
+
+    .firstPayment {
+      flex-basis: 200px;
+    }
+
+    .nextPayment {
+      flex-basis: 260px;
+    }
+
+    .options {
+      flex-basis: $height;
+      text-align: center;
+    }
+
+    .selected {
+      font-weight: 800;
+
+      .sortIcon {
+        display: inline;
+
+        &.sortIcon--flip {
           transform: rotate(180deg);
-        }
-      }
-
-      .sortDirection__clicker {
-        padding: 8px;
-        border-radius: 32px;
-        width: 24px;
-        height: 24px;
-        cursor: pointer;
-        display: grid;
-        place-items: center;
-
-        &:hover {
-          background-color: rgba(0, 0, 0, 0.07);
-        }
-      }
-    }
-  }
-
-  .subscriptionsList__headerRight {
-    .button {
-      $height: 38px;
-
-      height: $height;
-      background-color: var(--containerBackground);
-      line-height: $height;
-      border-radius: var(--borderRadius);
-      padding-left: 2em;
-      padding-right: 2em;
-      cursor: pointer;
-
-      i {
-        padding-left: 0.4em;
-      }
-
-      &:not(:last-child) {
-        margin-right: 1em;
-      }
-
-      &.button__add {
-        background-color: var(--mainAccent);
-        color: #fff;
-      }
-
-      &.button__ellipsis {
-        padding: 0 1em;
-        background-color: var(--mainAccentFaint);
-        color: var(--mainAccent);
-
-        i {
-          padding-left: 0;
         }
       }
     }
   }
 
   .subscriptionsList__items {
-    overflow: auto;
-    max-height: calc(100% - 80px);
+    overflow-y: auto;
+  }
 
-    .empty {
-      padding: 1em;
+  .subscriptionsList__button {
+    $height: 38px;
 
-      a {
-        color: inherit;
-        text-decoration: underline;
-        text-decoration-color: var(--mainAccent);
+    height: $height;
+    background-color: var(--containerBackground);
+    line-height: $height;
+    border-radius: var(--borderRadius);
+    padding-left: 2em;
+    padding-right: 2em;
+    cursor: pointer;
+    position: relative;
+
+    &.subscriptionsList__button--filter {
+      margin-left: auto;
+      margin-right: 1em;
+    }
+
+    &.subscriptionsList__button--add {
+      background-color: var(--mainAccent);
+      color: #fff;
+    }
+
+    &.subscriptionsList__button--sort {
+      display: none;
+    }
+  }
+}
+
+.optionsList {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  background-color: var(--containerBackground);
+  box-shadow: 0 8px 4px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
+  z-index: 11;
+
+  li {
+    padding: 1em 2em;
+    cursor: pointer;
+    line-height: 16px;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.07);
+    }
+
+    &.bold {
+      font-weight: bold;
+    }
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .subscriptionsList {
+    overflow-y: auto;
+
+    .subscriptionsList__header {
+      .subscriptionsList__button--sort {
+        display: block;
+        margin-right: 1em;
       }
     }
 
     .subscriptionsList__labels {
-      $height: 62px;
+      display: none;
+    }
 
-      display: flex;
-      padding: 0 0 1em;
-      font-size: 80%;
-      font-weight: bold;
-
-      // These should match the corresponding items in the subscription list item scss
-
-      .color {
-        flex-basis: $height;
-        text-align: center;
-        flex-shrink: 0;
-      }
-
-      .name {
-        flex-basis: 140px;
-      }
-
-      .price {
-        flex-basis: 100px;
-        font-weight: bold;
-      }
-
-      .paidToDate {
-        flex-basis: 120px;
-      }
-
-      .billingPeriod {
-        flex-basis: 140px;
-      }
-
-      .paymentMethod {
-        flex-basis: 150px;
-      }
-
-      .tags {
-        flex-basis: 100px;
-        flex-grow: 1;
-      }
-
-      .firstPayment {
-        flex-basis: 200px;
-      }
-
-      .nextPayment {
-        flex-basis: 260px;
-      }
-
-      .options {
-        flex-basis: $height;
-        text-align: center;
-      }
+    .subscriptionsList__items {
+      overflow: visible;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-gap: 16px;
     }
   }
-}
-
-.flash {
-  animation: flash 0.4s ease-in-out 2;
 }
 
 @media screen and (max-width: 767px) {
   .subscriptionsList {
+    margin: 1em;
+
     .subscriptionsList__header {
-      display: block;
-      margin-bottom: 1em;
-    }
+      flex-wrap: wrap;
 
-    .subscriptionsList__headerLeft {
-      flex-direction: column;
-      align-items: flex-start;
-      border-bottom: 2px solid var(--textLight);
-      margin-bottom: 1em;
-
-      h1 {
-        margin-bottom: 12px;
+      .subscriptionsList__button--filter {
+        margin-left: 0;
       }
 
-      p {
-        margin-bottom: 16px;
-      }
-
-      .sortMethod__wrapper {
-        align-items: flex-start;
+      > p {
+        margin-right: auto;
       }
     }
-
-    .subscriptionsList__headerRight {
-      .button {
-        padding-left: 1em;
-        padding-right: 1em;
-
-        i {
-          padding: 0;
-        }
-
-        .btn__text {
-          display: none;
-        }
-      }
-    }
-
-    .subscriptionsList__items {
-      max-height: calc(100% - 164px);
-
-      .subscriptionsList__labels {
-        display: none;
-      }
-    }
-  }
-}
-
-@keyframes flash {
-  50% {
-    opacity: 0;
   }
 }
 </style>

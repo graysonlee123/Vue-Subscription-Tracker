@@ -1,11 +1,18 @@
 <template>
-  <li class="subscriptionListItem">
+  <router-link
+    :to="`/dashboard/subscription/${subscription._id}/view`"
+    tag="li"
+    class="subscriptionListItem"
+  >
     <div class="flexChild color">
       <div class="color__swatch" :style="{borderColor: subscription.color}"></div>
     </div>
     <div class="flexChild textContainer name" data-label="Name">{{subscription.name}}</div>
     <div class="flexChild textContainer price" data-label="Price">${{subscription.price}}</div>
-    <div class="flexChild textContainer paidToDate" data-label="Paid to date">${{subscription.paidToDate}}</div>
+    <div
+      class="flexChild textContainer paidToDate"
+      data-label="Paid to date"
+    >${{subscription.paidToDate}}</div>
     <div class="flexChild textContainer billingPeriod" data-label="Billing period">{{billingPeriod}}</div>
     <div
       class="flexChild textContainer paymentMethod"
@@ -14,31 +21,37 @@
     <div class="flexChild tags" data-label="Tags">
       <span class="tag">tags coming soon</span>
     </div>
-    <div class="flexChild textContainer firstPayment" data-label="First payment">{{firstPaymentDateString}}</div>
-    <div class="flexChild textContainer nextPayment" data-label="Next payment">{{upcomingPaymentString}}</div>
+    <div
+      class="flexChild textContainer firstPayment"
+      data-label="First payment"
+    >{{firstPaymentDateString}}</div>
+    <div
+      class="flexChild textContainer nextPayment"
+      data-label="Next payment"
+    >{{upcomingPaymentString}}</div>
     <div class="flexChild options">
       <div
         class="options__clickZone"
         :class="{options__clickZone_active: showOptions}"
-        @click="handleOptionsMenu()"
+        @click="handleOptionsMenu"
         ref="subscriptionOptionsMenu"
         data-name="showOptions"
       >
         <i class="fas fa-ellipsis-h"></i>
       </div>
       <ul class="optionsMenu" v-if="showOptions">
-        <router-link :to="`/dashboard/subscription/${subscription._id}`" tag="li">
+        <router-link :to="`/dashboard/subscription/${subscription._id}/edit`" tag="li">
           <i class="fa fa-pencil"></i> Edit
         </router-link>
-        <li @click="handleRemoveSubscription()">
+        <li @click="handleRemoveSubscription">
           <i class="fa fa-trash"></i> Remove
         </li>
-        <li @click="handleDuplicateSubscription()">
+        <li @click="handleDuplicateSubscription">
           <i class="fa fa-copy"></i> Duplicate
         </li>
       </ul>
     </div>
-  </li>
+  </router-link>
 </template>
 
 <script>
@@ -61,7 +74,9 @@ export default {
     };
   },
   methods: {
-    async handleRemoveSubscription() {
+    async handleRemoveSubscription(e) {
+      e.preventDefault();
+
       try {
         const req = await this.$http.delete(
           `/api/subscription/${this.subscription._id}`
@@ -85,7 +100,9 @@ export default {
         console.log(err);
       }
     },
-    async handleDuplicateSubscription() {
+    async handleDuplicateSubscription(e) {
+      e.preventDefault();
+
       try {
         const subscriptionReq = {
           price: this.subscription.price,
@@ -107,13 +124,13 @@ export default {
         EventBus.$emit("refreshSubscriptions");
 
         this.$router.push(
-          `/dashboard/subscription/${req.data.subscription._id}`
+          `/dashboard/subscription/${req.data.subscription._id}/view`
         );
 
         this.$store.dispatch("addModal", {
           type: "success",
           message:
-            "Subscription was duplicated. You are now editing the duplicated subscription.",
+            "Subscription was duplicated succesfully.",
           uuid: uuidv4(),
         });
       } catch (err) {
@@ -126,15 +143,10 @@ export default {
         });
       }
     },
-    handleOptionsMenu(bool) {
-      if (typeof bool === "boolean") {
-        // Menu logic if a specific option is passed
-      } else {
-        // Just toggle the menu
-        this.showOptions
-          ? (this.showOptions = false)
-          : (this.showOptions = true);
-      }
+    handleOptionsMenu(e) {
+      e.preventDefault();
+
+      this.showOptions = !this.showOptions;
     },
   },
   computed: {
@@ -192,6 +204,7 @@ $height: 62px;
   border-radius: var(--borderRadius);
   white-space: nowrap;
   box-shadow: 0px 4px 4px rgba(43, 46, 51, 0.05);
+  cursor: pointer;
 
   &:hover {
     background-color: #ebf7fc;
@@ -247,6 +260,7 @@ $height: 62px;
   .tags {
     flex-basis: 100px;
     flex-grow: 1;
+    overflow: hidden;
 
     .tag {
       background-color: #e9f7ec;
@@ -312,15 +326,38 @@ $height: 62px;
   }
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 1200px) {
   .subscriptionListItem {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     height: auto;
-    padding: 1em;
+    padding: 0.75em;
 
-    > div {
-      flex-basis: auto !important;
+    .flexChild {
+      flex-basis: auto;
       line-height: 1.3;
+      padding-right: 0 !important;
+    }
+
+    .color {
+      padding-right: 12px !important;
+    }
+
+    .name {
+      flex-grow: 1;
+    }
+
+    .paidToDate,
+    .billingPeriod,
+    .nextPayment {
+      text-align: right;
+      flex-basis: 100%;
+    }
+
+    .tags,
+    .paymentMethod,
+    .firstPayment {
+      display: none;
     }
   }
 }
