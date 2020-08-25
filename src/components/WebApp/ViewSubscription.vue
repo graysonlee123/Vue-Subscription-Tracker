@@ -31,10 +31,6 @@
       </div>
     </div>
     <div class="divider"></div>
-    <div class="displayGroup">
-      <label class="displayGroup__label">Next payment</label>
-      <p class="displayGroup__text">{{computeNextPaymentString}}</p>
-    </div>
     <div class="col2">
       <div class="displayGroup">
         <label class="displayGroup__label">First payment</label>
@@ -44,6 +40,20 @@
         <label class="displayGroup__label">Paid in total</label>
         <p class="displayGroup__text">${{subscription.paidToDate}}</p>
       </div>
+    </div>
+    <div class="displayGroup">
+      <label class="displayGroup__label">Next payment</label>
+      <p class="displayGroup__text">{{computeNextPaymentString}}</p>
+    </div>
+    <div class="displayGroup">
+      <label class="displayGroup__label">Upcoming payments</label>
+      <ul class="upcomingPayments">
+        <li
+          class="upcomingPayments__item"
+          v-for="(paymentDate, index) in subscription.upcomingPayments"
+          :key="index"
+        >{{convertToString(paymentDate.isoString)}}</li>
+      </ul>
     </div>
     <div class="divider" v-if="subscription.note"></div>
     <div class="displayGroup" v-if="subscription.note">
@@ -146,6 +156,15 @@ export default {
 
       this.loading = false;
     },
+    convertToString(isoString) {
+      const date = moment.utc(isoString);
+
+      if (!date.isValid()) {
+        return;
+      }
+
+      return date.format("MM/DD/YYYY");
+    },
   },
   created() {
     this.fetchSubscription();
@@ -168,11 +187,15 @@ export default {
       }
     },
     computeFirstPaymentString() {
-      return moment.utc(this.subscription.firstPaymentDate).format('MMMM DD, YYYY');
+      return moment
+        .utc(this.subscription.firstPaymentDate)
+        .format("MMMM DD, YYYY");
     },
     computeNextPaymentString() {
-      return moment.utc(this.subscription.upcomingPayments[0].isoString).format('MMMM DD, YYYY');
-    }
+      return moment
+        .utc(this.subscription.upcomingPayments[0].isoString)
+        .format("MMMM DD, YYYY");
+    },
   },
 };
 </script>
@@ -231,6 +254,22 @@ export default {
   .displayGroup__text {
     color: var(--textDark);
     font-size: 1.1em;
+  }
+}
+
+.upcomingPayments {
+  margin: 1em -0.3em 0;
+  display: flex;
+  flex-wrap: wrap;
+
+  .upcomingPayments__item {
+    padding: 12px 16px;
+    background-color: var(--bodyBackground);
+    margin: 0.3em;
+    font-size: 80%;
+    flex-grow: 1;
+    text-align: center;
+    color: var(--textDark);
   }
 }
 
