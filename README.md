@@ -8,29 +8,28 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
-[] Buttons on list header still not on their own line
 [] Photo uploads file size increase
 [] Scrolling on forms
-[] Limit sort options to name, price, next payment on mobile
 [] Smaller margin between input fields
+[] Instead of posting a new subscription on duplication, fill out a blank form
+[] Loading spinners
 
 ### General
 
-[] Loading spinners
 [] Set input type to email for auth forms for mobile phone keyboards
 [] Landing page - just serve in node and link correspondingly?
-[] filter by tag, payment method
 [] Restrict IP's from Mongo Database
-[] Rework form overflow scrolling CSS
-[] Mobile responsiveness for subscriptions list, specifically on tablet
 [] Add, for example, "in two months" to upcoming payment dates
 
 ### Low Priority
+[] Mobile responsiveness for subscriptions list, specifically on tablet
 [] Tab onto date picker
 [] "Flash" subscription on update / creation in list
 
 ### Done
 
+[x] Buttons on list header still not on their own line
+[x] Limit sort options to name, price, next payment on mobile
 [x] Add "update description" and "remove subscription" actions to a mixin
 [x] Add options menu to view subscription component
 [x] Show more than one upcoming payment date
@@ -111,6 +110,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### Icebox
 [] Integrate Tags
+  [] filter by tag, payment method
 [] Incorporate theme picker
 [] Add "zoom out" month picker for date picker component
 [] Email reminders
