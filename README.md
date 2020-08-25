@@ -8,11 +8,8 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
-[] Add single subscription route
-[] Make sort methods work on the labels for desktop
-[] Mobile responsiveness for subscriptions list
-[] Mobile responsiveness
-[] X button on subscription form for mobile
+[] Show more than one upcoming payment date
+[] Add options menu to view subscription component
 
 ### General
 
@@ -21,6 +18,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] filter by tag, payment method
 [] Restrict IP's from Mongo Database
 [] Rework form overflow scrolling CSS
+[] Mobile responsiveness for subscriptions list, specifically on tablet
 
 ### Low Priority
 [] Tab onto date picker
@@ -28,6 +26,11 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### Done
 
+[x] Add view subscription page
+[x] Toggle sort direction on mobile
+[x] Mobile responsiveness for subscriptions list header
+[x] Make sort methods work on the labels for desktop
+[x] X button on subscription form for mobile
 [x] Clicking off of menus
 [x] Handle removing error on blur for an error'd field's input
 [x] add random string before avatar file names

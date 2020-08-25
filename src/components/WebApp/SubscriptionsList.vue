@@ -37,24 +37,89 @@
         </span>
         <ul class="optionsList" v-if="showSortMenu">
           <li
-            @click="sortMethod = 'nextPayment'"
-            :class="{bold: filter === 'nextPayment'}"
-          >Next Payment</li>
-          <li @click="sortMethod = 'name'" :class="{bold: filter === 'name'}">Name</li>
-          <li @click="sortMethod = 'price'" :class="{bold: filter === 'price'}">Price</li>
+            @click="sortMethod === 'nextPayment' ? (sortDirection === -1 ? sortDirection = 1 : sortDirection = -1) : sortMethod = 'nextPayment'"
+            :class="{selected: sortMethod === 'nextPayment'}"
+          >
+            <img
+              v-if="sortMethod === 'nextPayment'"
+              src="@/assets/sort-arrow.svg"
+              alt="Sort direction"
+              class="optionsList__sortIcon"
+              :class="{'optionsList__sortIcon--flipped': sortDirection === 1}"
+            />Next Payment
+          </li>
           <li
-            @click="sortMethod = 'paidToDate'"
-            :class="{bold: filter === 'paidToDate'}"
-          >Paid To Date</li>
+            @click="sortMethod === 'name' ? (sortDirection === -1 ? sortDirection = 1 : sortDirection = -1) : sortMethod = 'name'"
+            :class="{selected: sortMethod === 'name'}"
+          >
+            <img
+              v-if="sortMethod === 'name'"
+              src="@/assets/sort-arrow.svg"
+              alt="Sort direction"
+              class="optionsList__sortIcon"
+              :class="{'optionsList__sortIcon--flipped': sortDirection === 1}"
+            />Name
+          </li>
           <li
-            @click="sortMethod = 'paymentMethod'"
-            :class="{bold: filter === 'paymentMethod'}"
-          >Payment Method</li>
-          <li @click="sortMethod = 'duration'" :class="{bold: filter === 'duration'}">Billing Period</li>
+            :class="{selected: sortMethod === 'price'}"
+            @click="sortMethod === 'price' ? (sortDirection === -1 ? sortDirection = 1 : sortDirection = -1) : sortMethod = 'price'"
+          >
+            <img
+              v-if="sortMethod === 'price'"
+              src="@/assets/sort-arrow.svg"
+              alt="Sort direction"
+              class="optionsList__sortIcon"
+              :class="{'optionsList__sortIcon--flipped': sortDirection === 1}"
+            />Price
+          </li>
           <li
-            @click="sortMethod = 'firstPayment'"
-            :class="{bold: filter === 'firstPayment'}"
-          >First Payment</li>
+            :class="{selected: sortMethod === 'paidToDate'}"
+            @click="sortMethod === 'paidToDate' ? (sortDirection === -1 ? sortDirection = 1 : sortDirection = -1) : sortMethod = 'paidToDate'"
+          >
+            <img
+              v-if="sortMethod === 'paidToDate'"
+              src="@/assets/sort-arrow.svg"
+              alt="Sort direction"
+              class="optionsList__sortIcon"
+              :class="{'optionsList__sortIcon--flipped': sortDirection === 1}"
+            />Paid To Date
+          </li>
+          <li
+            :class="{selected: sortMethod === 'paymentMethod'}"
+            @click="sortMethod === 'paymentMethod' ? (sortDirection === -1 ? sortDirection = 1 : sortDirection = -1) : sortMethod = 'paymentMethod'"
+          >
+            <img
+              v-if="sortMethod === 'paymentMethod'"
+              src="@/assets/sort-arrow.svg"
+              alt="Sort direction"
+              class="optionsList__sortIcon"
+              :class="{'optionsList__sortIcon--flipped': sortDirection === 1}"
+            />Payment Method
+          </li>
+          <li
+            :class="{selected: sortMethod === 'duration'}"
+            @click="sortMethod === 'duration' ? (sortDirection === -1 ? sortDirection = 1 : sortDirection = -1) : sortMethod = 'duration'"
+          >
+            <img
+              v-if="sortMethod === 'duration'"
+              src="@/assets/sort-arrow.svg"
+              alt="Sort direction"
+              class="optionsList__sortIcon"
+              :class="{'optionsList__sortIcon--flipped': sortDirection === 1}"
+            />Billing Period
+          </li>
+          <li
+            :class="{selected: sortMethod === 'firstPayment'}"
+            @click="sortMethod === 'firstPayment' ? (sortDirection === -1 ? sortDirection = 1 : sortDirection = -1) : sortMethod = 'firstPayment'"
+          >
+            <img
+              v-if="sortMethod === 'firstPayment'"
+              src="@/assets/sort-arrow.svg"
+              alt="Sort direction"
+              class="optionsList__sortIcon"
+              :class="{'optionsList__sortIcon--flipped': sortDirection === 1}"
+            />First Payment
+          </li>
         </ul>
       </div>
       <router-link
@@ -65,7 +130,7 @@
         <span class="btn__text">Add</span>
         <i class="fa fa-plus"></i>
       </router-link>
-      <!-- Add back in later when things can go here
+      <!-- Add back in later when things can go here... such as save as csv
         <div class="button button__ellipsis">
           <i class="fas fa-ellipsis-h"></i>
       </div>-->
@@ -622,20 +687,49 @@ export default {
       background-color: rgba(0, 0, 0, 0.07);
     }
 
-    &.bold {
+    img.optionsList__sortIcon {
+      width: 10px;
+      margin-right: 12px;
+      vertical-align: middle;
+
+      &.optionsList__sortIcon--flipped {
+        transform: rotate(180deg);
+      }
+    }
+
+    &.selected {
       font-weight: bold;
     }
   }
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 767px) {
   .subscriptionsList {
     overflow-y: auto;
+    margin: 1em;
 
     .subscriptionsList__header {
+      flex-wrap: wrap;
+
+      .subscriptionsList__button .btn__text {
+        display: none;
+      }
+
       .subscriptionsList__button--sort {
         display: block;
         margin-right: 1em;
+      }
+
+      .subscriptionsList__button--filter {
+        margin-left: 0;
+      }
+
+      h1 {
+        margin-bottom: 12px;
+      }
+
+      p {
+        break-after: always;
       }
     }
 
@@ -647,25 +741,7 @@ export default {
       overflow: visible;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      grid-gap: 16px;
-    }
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .subscriptionsList {
-    margin: 1em;
-
-    .subscriptionsList__header {
-      flex-wrap: wrap;
-
-      .subscriptionsList__button--filter {
-        margin-left: 0;
-      }
-
-      > p {
-        margin-right: auto;
-      }
+      grid-column-gap: 16px;
     }
   }
 }

@@ -1,40 +1,23 @@
 <template>
-  <div class="settingsHeader">
-    <div class="settingsHeader__text">
+  <div class="formHeader">
+    <div class="formHeader__text">
       <h2>
         <slot></slot>
       </h2>
-      <a @click="handleClose">
+      <a @click="$router.push('/dashboard')">
         <img src="@/assets/close.svg" alt="Close" />
       </a>
     </div>
     <div class="divider"></div>
-    <settings-nav/>
-    <div class="divider"></div>
   </div>
 </template>
 
-<script>
-import SettingsNav from "./SettingsNav";
-
-export default {
-  components: {
-    SettingsNav
-  },
-  methods: {
-    handleClose() {
-      this.$router.push('/dashboard');
-    },
-  },
-};
-</script>
-
 <style lang="scss" scoped>
-.settingsHeader {
+.formHeader {
   margin-bottom: 2em;
 }
 
-.settingsHeader__text {
+.formHeader__text {
   display: flex;
   align-items: center;
   justify-content: space-between;
