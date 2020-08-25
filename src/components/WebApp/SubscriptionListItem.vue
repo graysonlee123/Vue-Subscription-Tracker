@@ -3,6 +3,7 @@
     :to="`/dashboard/subscription/${subscription._id}/view`"
     tag="li"
     class="subscriptionListItem"
+    :style="{backgroundColor: subscription.color}"
   >
     <div class="flexChild color">
       <div class="color__swatch" :style="{borderColor: subscription.color}"></div>
@@ -129,8 +130,7 @@ export default {
 
         this.$store.dispatch("addModal", {
           type: "success",
-          message:
-            "Subscription was duplicated succesfully.",
+          message: "Subscription was duplicated succesfully.",
           uuid: uuidv4(),
         });
       } catch (err) {
@@ -197,7 +197,6 @@ $height: 62px;
 
 .subscriptionListItem {
   display: flex;
-  background-color: var(--containerBackground);
   margin-bottom: 16px;
   height: $height;
   line-height: $height;
@@ -326,38 +325,40 @@ $height: 62px;
   }
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (min-width: 768px) {
+  .subscriptionListItem {
+    background-color: var(--containerBackground) !important;
+  }
+}
+
+@media screen and (max-width: 767px) {
   .subscriptionListItem {
     flex-direction: row;
-    flex-wrap: wrap;
     height: auto;
-    padding: 0.75em;
+    padding: 1em;
+    color: #fff;
 
     .flexChild {
+      display: none;
       flex-basis: auto;
-      line-height: 1.3;
-      padding-right: 0 !important;
-    }
-
-    .color {
-      padding-right: 12px !important;
+      line-height: 100%;
+      padding: 0 !important;
     }
 
     .name {
+      display: block;
       flex-grow: 1;
     }
 
-    .paidToDate,
-    .billingPeriod,
-    .nextPayment {
-      text-align: right;
-      flex-basis: 100%;
+    .price {
+      display: block;
     }
 
-    .tags,
-    .paymentMethod,
-    .firstPayment {
-      display: none;
+    .options {
+      ul.optionsMenu {
+        left: 0;
+        right: unset;
+      }
     }
   }
 }

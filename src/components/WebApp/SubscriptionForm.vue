@@ -7,6 +7,7 @@
     <router-link to="/dashboard">Go back</router-link>
   </div>
   <div v-else key="form">
+    <form-header>{{postAsNew ? 'New' : 'Edit'}}</form-header>
     <div class="col2">
       <number-input
         v-model="subscription.price"
@@ -70,6 +71,12 @@
         :errors="formErrors.filter(error => error.field === 'paymentMethod')"
       ></text-input>
     </div>
+    <textarea-input
+      v-model="subscription.note"
+      placeholder="e.g. Couldn't get the student discount"
+      :errors="formErrors.filter(error => error.field === 'note')"
+      label="Note"
+    ></textarea-input>
     <submit-button @handle-submit="handleSubmit">Add Subscription</submit-button>
   </div>
 </template>
@@ -87,6 +94,8 @@ import SubmitButton from "./General/SubmitButton";
 import ColorInput from "./General/ColorInput";
 import SelectInput from "./General/SelectInput";
 import DateInput from "./General/DateInput";
+import FormHeader from "../WebApp/FormHeader";
+import TextareaInput from "./General/TextareaInput";
 
 export default {
   props: {
@@ -211,7 +220,9 @@ export default {
     NumberInput,
     ColorInput,
     SelectInput,
-    DateInput
+    DateInput,
+    FormHeader,
+    TextareaInput,
   },
 };
 </script>
