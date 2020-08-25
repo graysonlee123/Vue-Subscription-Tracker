@@ -77,7 +77,7 @@
       :errors="formErrors.filter(error => error.field === 'note')"
       label="Note"
     ></textarea-input>
-    <submit-button @handle-submit="handleSubmit">Add Subscription</submit-button>
+    <submit-button @handle-submit="handleSubmit">{{postAsNew ? 'Add Subscription' : 'Update Subscription'}}</submit-button>
   </div>
 </template>
 
