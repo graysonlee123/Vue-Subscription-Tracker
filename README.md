@@ -16,6 +16,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### General
 
+[] Loading spinners
 [] Set input type to email for auth forms for mobile phone keyboards
 [] Landing page - just serve in node and link correspondingly?
 [] filter by tag, payment method
@@ -27,10 +28,10 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ### Low Priority
 [] Tab onto date picker
 [] "Flash" subscription on update / creation in list
-[] Add "update description" and "remove subscription" actions to a mixin
 
 ### Done
 
+[x] Add "update description" and "remove subscription" actions to a mixin
 [x] Add options menu to view subscription component
 [x] Show more than one upcoming payment date
 [x] Add view subscription page

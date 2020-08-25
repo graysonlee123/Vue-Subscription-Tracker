@@ -44,10 +44,10 @@
         <router-link :to="`/dashboard/subscription/${subscription._id}/edit`" tag="li">
           <i class="fa fa-pencil"></i> Edit
         </router-link>
-        <li @click="handleRemoveSubscription">
+        <li @click="handleRemoveSubscription($event, subscription._id)">
           <i class="fa fa-trash"></i> Remove
         </li>
-        <li @click="handleDuplicateSubscription">
+        <li @click="handleDuplicateSubscription($event, subscription)">
           <i class="fa fa-copy"></i> Duplicate
         </li>
       </ul>
@@ -60,9 +60,10 @@ import moment from "moment";
 import { EventBus } from "../../EventBus";
 import { v4 as uuidv4 } from "uuid";
 import { clickAway } from "../../mixins/clickAway";
+import { subscriptionActions } from "../../mixins/subscriptionActions";
 
 export default {
-  mixins: [clickAway],
+  mixins: [clickAway, subscriptionActions],
   props: {
     subscription: {
       type: Object,
@@ -75,74 +76,6 @@ export default {
     };
   },
   methods: {
-    async handleRemoveSubscription(e) {
-      e.preventDefault();
-
-      try {
-        const req = await this.$http.delete(
-          `/api/subscription/${this.subscription._id}`
-        );
-
-        EventBus.$emit("refreshSubscriptions");
-
-        this.$router.push("/dashboard");
-        this.$store.dispatch("addModal", {
-          type: "success",
-          message: "Subscription was removed.",
-          uuid: uuidv4(),
-        });
-      } catch (err) {
-        this.$store.dispatch("addModal", {
-          type: "danger",
-          message:
-            "There was an error removing that subscription. Please try again later.",
-          uuid: uuidv4(),
-        });
-        console.log(err);
-      }
-    },
-    async handleDuplicateSubscription(e) {
-      e.preventDefault();
-
-      try {
-        const subscriptionReq = {
-          price: this.subscription.price,
-          name: this.subscription.name,
-          description: this.subscription.description,
-          firstPaymentDate: this.subscription.firstPaymentDate,
-          interval: this.subscription.interval,
-          duration: this.subscription.duration,
-          color: this.subscription.color,
-          paymentMethod: this.subscription.paymentMethod,
-          note: this.subscription.note,
-        };
-
-        const req = await this.$http.post(
-          "/api/subscription/",
-          subscriptionReq
-        );
-
-        EventBus.$emit("refreshSubscriptions");
-
-        this.$router.push(
-          `/dashboard/subscription/${req.data.subscription._id}/view`
-        );
-
-        this.$store.dispatch("addModal", {
-          type: "success",
-          message: "Subscription was duplicated succesfully.",
-          uuid: uuidv4(),
-        });
-      } catch (err) {
-        console.log(err);
-        this.$store.dispatch("addModal", {
-          type: "danger",
-          message:
-            "There was an error duplicating that subscription. Please try again later.",
-          uuid: uuidv4(),
-        });
-      }
-    },
     handleOptionsMenu(e) {
       e.preventDefault();
 

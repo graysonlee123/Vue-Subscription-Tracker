@@ -77,7 +77,7 @@
 
 <script>
 import { formErrors } from "../../../mixins/formErrors";
-import { v4 as uuidv4 } from "uuid";
+import { modal } from "../../../mixins/modal";
 
 import TextInput from "../General/TextInput";
 import SubmitButton from "../General/SubmitButton";
@@ -97,7 +97,7 @@ export default {
     submitButton: SubmitButton,
     settingsHeader: SettingsHeader,
   },
-  mixins: [formErrors],
+  mixins: [formErrors, modal],
   methods: {
     async handleUpdatePassword() {
       this.formErrors = [];
@@ -127,11 +127,7 @@ export default {
           newPassword: this.confirmPassword,
         });
 
-        this.$store.dispatch("addModal", {
-          type: "success",
-          message: "Password was succesfully changed.",
-          uuid: uuidv4(),
-        });
+        this.modal("Password was succesfully changed.", "success");
 
         this.currentPassword = "";
         this.newPassword = "";
@@ -146,5 +142,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>

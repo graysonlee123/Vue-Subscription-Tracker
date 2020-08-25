@@ -149,6 +149,11 @@ strong {
     color: var(--dangerFaint);
   }
 
+  &.neutral {
+    background-color: grey;
+    color: var(--textdark);
+  }
+
   p {
     padding: 1em;
     flex-grow: 1;
