@@ -63,21 +63,22 @@
 </template>
 
 <script>
-import LanguageSelect from '../Global/LanguageSelect';
-import { v4 as uuidv4 } from 'uuid';
+import LanguageSelect from "../Global/LanguageSelect";
+import { v4 as uuidv4 } from "uuid";
 
-import { formErrors } from '../../mixins/formErrors';
+import { formErrors } from "../../mixins/formErrors";
+import { modal } from "../../mixins/modal";
 
 export default {
   data() {
     return {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       showPassword: false,
       formErrors: [],
     };
   },
-  mixins: [formErrors],
+  mixins: [formErrors, modal],
   components: {
     languageSelect: LanguageSelect,
   },
@@ -91,56 +92,48 @@ export default {
       };
 
       this.$store
-        .dispatch('login', data)
+        .dispatch("login", data)
         .then(() => {
-          this.$router.push('/dashboard');
+          this.$router.push("/dashboard");
         })
         .catch((err) => {
           console.error(err);
 
           if (err.response.status === 403) {
-            this.$store.dispatch('addModal', {
-              type: 'danger',
-              message: err.response.data.msg,
-              uuid: uuidv4(),
-            });
+            this.modal(err.response.data.msg, "danger");
 
-            this.password = '';
+            this.password = "";
           } else if (err.response.status === 500) {
-            this.$store.dispatch('addModal', {
-              type: 'danger',
-              message: 'Server error, please try again later.',
-              uuid: uuidv4(),
-            });
+            this.modal("Server error, please try again later.", "danger");
 
-            this.password = '';
+            this.password = "";
           } else {
-            this.addFormError(err, 'email');
+            this.addFormError(err, "email");
           }
         });
     },
     handleShowPassword() {
-      const passEl = document.getElementById('password');
-      const eyeEl = document.getElementById('password-icon');
+      const passEl = document.getElementById("password");
+      const eyeEl = document.getElementById("password-icon");
 
       if (this.showPassword) {
-        passEl.type = 'password';
+        passEl.type = "password";
         this.showPassword = false;
 
-        eyeEl.classList.remove('fa-eye-slash');
-        eyeEl.classList.add('fa-eye');
+        eyeEl.classList.remove("fa-eye-slash");
+        eyeEl.classList.add("fa-eye");
       } else {
-        passEl.type = 'text';
+        passEl.type = "text";
         this.showPassword = true;
 
-        eyeEl.classList.remove('fa-eye');
-        eyeEl.classList.add('fa-eye-slash');
+        eyeEl.classList.remove("fa-eye");
+        eyeEl.classList.add("fa-eye-slash");
       }
     },
   },
   beforeCreate() {
     if (this.$store.state.isAuthenticated) {
-      this.$router.push('/dashboard');
+      this.$router.push("/dashboard");
     }
   },
 };

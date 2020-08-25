@@ -3,11 +3,13 @@
   <div v-else-if="error">Error, please try again later!</div>
   <div class="subscriptionsList" v-else>
     <div class="subscriptionsList__header">
-      <h1>Subscriptions</h1>
-      <p>
-        {{organizedSubscriptions.length}} total
-        <span v-if="filter !== 'all'">(filtered)</span>
-      </p>
+      <div class="subscriptionsList__headerText">
+        <h1>Subscriptions</h1>
+        <p>
+          {{organizedSubscriptions.length}} total
+          <span v-if="filter !== 'all'">(filtered)</span>
+        </p>
+      </div>
       <div
         class="filter subscriptionsList__button subscriptionsList__button--filter"
         @click="handleDisplayFilterMenu()"
@@ -39,6 +41,7 @@
           <li
             @click="sortMethod === 'nextPayment' ? (sortDirection === -1 ? sortDirection = 1 : sortDirection = -1) : sortMethod = 'nextPayment'"
             :class="{selected: sortMethod === 'nextPayment'}"
+            class="optionsList__nextPayment"
           >
             <img
               v-if="sortMethod === 'nextPayment'"
@@ -51,6 +54,7 @@
           <li
             @click="sortMethod === 'name' ? (sortDirection === -1 ? sortDirection = 1 : sortDirection = -1) : sortMethod = 'name'"
             :class="{selected: sortMethod === 'name'}"
+            class="optionsList__name"
           >
             <img
               v-if="sortMethod === 'name'"
@@ -62,6 +66,7 @@
           </li>
           <li
             :class="{selected: sortMethod === 'price'}"
+            class="optionsList__price"
             @click="sortMethod === 'price' ? (sortDirection === -1 ? sortDirection = 1 : sortDirection = -1) : sortMethod = 'price'"
           >
             <img
@@ -74,6 +79,7 @@
           </li>
           <li
             :class="{selected: sortMethod === 'paidToDate'}"
+            class="optionsList__paidToDate"
             @click="sortMethod === 'paidToDate' ? (sortDirection === -1 ? sortDirection = 1 : sortDirection = -1) : sortMethod = 'paidToDate'"
           >
             <img
@@ -86,6 +92,7 @@
           </li>
           <li
             :class="{selected: sortMethod === 'paymentMethod'}"
+            class="optionsList__paymentMethod"
             @click="sortMethod === 'paymentMethod' ? (sortDirection === -1 ? sortDirection = 1 : sortDirection = -1) : sortMethod = 'paymentMethod'"
           >
             <img
@@ -98,6 +105,7 @@
           </li>
           <li
             :class="{selected: sortMethod === 'duration'}"
+            class="optionsList__duration"
             @click="sortMethod === 'duration' ? (sortDirection === -1 ? sortDirection = 1 : sortDirection = -1) : sortMethod = 'duration'"
           >
             <img
@@ -110,6 +118,7 @@
           </li>
           <li
             :class="{selected: sortMethod === 'firstPayment'}"
+            class="optionsList__firstPayment"
             @click="sortMethod === 'firstPayment' ? (sortDirection === -1 ? sortDirection = 1 : sortDirection = -1) : sortMethod = 'firstPayment'"
           >
             <img
@@ -557,8 +566,13 @@ export default {
     margin-bottom: 2em;
     user-select: none;
 
-    h1 {
-      margin-right: 0.8em;
+    .subscriptionsList__headerText {
+      display: flex;
+      align-items: baseline;
+
+      h1 {
+        margin-right: 0.8em;
+      }
     }
   }
 
@@ -711,6 +725,12 @@ export default {
     .subscriptionsList__header {
       flex-wrap: wrap;
 
+      .subscriptionsList__button {
+        width: 60px;
+        padding: 0;
+        text-align: center;
+      }
+
       .subscriptionsList__button .btn__text {
         display: none;
       }
@@ -723,13 +743,18 @@ export default {
       .subscriptionsList__button--filter {
         margin-left: 0;
       }
+    }
+
+    .subscriptionsList__headerText {
+      margin-bottom: 14px;
+      flex-basis: 100%;
 
       h1 {
-        margin-bottom: 12px;
+        font-size: 1.6em;
       }
 
       p {
-        break-after: always;
+        font-size: 0.8em;
       }
     }
 
@@ -742,6 +767,15 @@ export default {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       grid-column-gap: 16px;
+    }
+  }
+
+  .optionsList {
+    .optionsList__paidToDate,
+    .optionsList__paymentMethod,
+    .optionsList__duration,
+    .optionsList__firstPayment {
+      display: none;
     }
   }
 }

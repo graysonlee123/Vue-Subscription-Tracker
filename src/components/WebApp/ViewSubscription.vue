@@ -27,10 +27,10 @@
             <router-link :to="`/dashboard/subscription/${subscription._id}/edit`" tag="li">
               <i class="fa fa-pencil"></i> Edit
             </router-link>
-            <li @click="handleRemoveSubscription">
+            <li @click="handleRemoveSubscription($event, subscription._id)">
               <i class="fa fa-trash"></i> Remove
             </li>
-            <li @click="handleDuplicateSubscription">
+            <li @click="handleDuplicateSubscription($event, subscription)">
               <i class="fa fa-copy"></i> Duplicate
             </li>
           </ul>
@@ -88,9 +88,12 @@
 
 <script>
 import moment from "moment";
-import { v4 as uuidv4 } from "uuid";
-import { clickAway } from "../../mixins/clickAway";
+
 import { EventBus } from "../../EventBus";
+
+import { clickAway } from "../../mixins/clickAway";
+import { subscriptionActions } from "../../mixins/subscriptionActions";
+import { modal } from "../../mixins/modal";
 
 export default {
   props: {
@@ -99,7 +102,7 @@ export default {
       required: true,
     },
   },
-  mixins: [clickAway],
+  mixins: [clickAway, subscriptionActions, modal],
   data() {
     return {
       loading: true,
@@ -124,92 +127,16 @@ export default {
         this.error = true;
         this.loading = false;
 
-        this.$store.dispatch("addModal", {
-          type: "danger",
-          message:
-            "There was an error loading that subscription. Please try again later.",
-          uuid: uuidv4(),
-        });
-
-        console.log(err);
-      }
-    },
-    async handleRemoveSubscription(e) {
-      e.preventDefault();
-
-      try {
-        const req = await this.$http.delete(
-          `/api/subscription/${this.subscription._id}`
+        this.modal(
+          "There was an error loading that subscription. Please try again later.",
+          "danger"
         );
 
-        EventBus.$emit("refreshSubscriptions");
-
-        this.$router.push("/dashboard");
-        this.$store.dispatch("addModal", {
-          type: "success",
-          message: "Subscription was removed.",
-          uuid: uuidv4(),
-        });
-      } catch (err) {
-        this.$store.dispatch("addModal", {
-          type: "danger",
-          message:
-            "There was an error removing that subscription. Please try again later.",
-          uuid: uuidv4(),
-        });
         console.log(err);
-      }
-    },
-    async handleDuplicateSubscription(e) {
-      e.preventDefault();
-
-      try {
-        const subscriptionReq = {
-          price: this.subscription.price,
-          name: this.subscription.name,
-          description: this.subscription.description,
-          firstPaymentDate: this.subscription.firstPaymentDate,
-          interval: this.subscription.interval,
-          duration: this.subscription.duration,
-          color: this.subscription.color,
-          paymentMethod: this.subscription.paymentMethod,
-          note: this.subscription.note,
-        };
-
-        const req = await this.$http.post(
-          "/api/subscription/",
-          subscriptionReq
-        );
-
-        EventBus.$emit("refreshSubscriptions");
-
-        this.$router.push(
-          `/dashboard/subscription/${req.data.subscription._id}/edit`
-        );
-
-        this.$store.dispatch("addModal", {
-          type: "success",
-          message: "You are now editing the duplicated subscription.",
-          uuid: uuidv4(),
-          duration: 5000
-        });
-      } catch (err) {
-        console.log(err);
-        this.$store.dispatch("addModal", {
-          type: "danger",
-          message:
-            "There was an error duplicating that subscription. Please try again later.",
-          uuid: uuidv4(),
-        });
       }
     },
     handleNotification() {
-      this.$store.dispatch("addModal", {
-        type: "danger",
-        message:
-          "Notifications are coming soon!",
-        uuid: uuidv4(),
-      });
+      this.modal("Notifications are coming soon!", "danger");
     },
     getUpcomingPayments() {
       const subscription = this.subscription;

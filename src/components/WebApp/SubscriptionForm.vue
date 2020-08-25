@@ -77,14 +77,17 @@
       :errors="formErrors.filter(error => error.field === 'note')"
       label="Note"
     ></textarea-input>
-    <submit-button @handle-submit="handleSubmit">{{postAsNew ? 'Add Subscription' : 'Update Subscription'}}</submit-button>
+    <submit-button
+      @handle-submit="handleSubmit"
+    >{{postAsNew ? 'Add Subscription' : 'Update Subscription'}}</submit-button>
   </div>
 </template>
 
 <script>
 import moment from "moment";
+
 import { formErrors } from "../../mixins/formErrors";
-import { v4 as uuidv4 } from "uuid";
+import { modal } from "../../mixins/modal";
 
 import { EventBus } from "../../EventBus";
 
@@ -123,7 +126,7 @@ export default {
       postAsNew: false,
     };
   },
-  mixins: [formErrors],
+  mixins: [formErrors, modal],
   methods: {
     async fetchSubscription() {
       this.loading = true;
@@ -143,12 +146,10 @@ export default {
         this.error = true;
         this.loading = false;
 
-        this.$store.dispatch("addModal", {
-          type: "danger",
-          message:
-            "There was an error loading that subscription. Please try again later.",
-          uuid: uuidv4(),
-        });
+        this.modal(
+          "There was an error loading that subscription. Please try again later.",
+          "danger"
+        );
 
         console.log(err);
       }
@@ -173,13 +174,12 @@ export default {
         EventBus.$emit("refreshSubscriptions");
         this.$router.push("/dashboard");
 
-        this.$store.dispatch("addModal", {
-          type: "success",
-          message: `Your subscription was succesfully ${
+        this.modal(
+          `Your subscription was succesfully ${
             this.postAsNew ? "added" : "updated"
           }.`,
-          uuid: uuidv4(),
-        });
+          "success"
+        );
       } catch (err) {
         this.loading = false;
         this.addFormError(err);

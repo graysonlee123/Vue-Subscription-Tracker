@@ -48,9 +48,10 @@
 </template>
 
 <script>
-import { formErrors } from "../../../mixins/formErrors";
-import { v4 as uuidv4 } from "uuid";
 import { storage } from "../../../firebase";
+
+import { formErrors } from "../../../mixins/formErrors";
+import { modal } from "../../../mixins/modal";
 
 import TextInput from "../General/TextInput";
 import SubmitButton from "../General/SubmitButton";
@@ -71,9 +72,9 @@ export default {
   components: {
     textInput: TextInput,
     submitButton: SubmitButton,
-    settingsHeader: SettingsHeader
+    settingsHeader: SettingsHeader,
   },
-  mixins: [formErrors],
+  mixins: [formErrors, modal],
   methods: {
     async handleSubmit() {
       this.formErrors = [];
@@ -100,19 +101,13 @@ export default {
           this.$store
             .dispatch("refreshUser")
             .then(() => {
-              this.$store.dispatch("addModal", {
-                type: "success",
-                message: "Your accout was succesfully updated.",
-                uuid: uuidv4(),
-              });
+              this.modal("Your accout was succesfully updated.", "success");
             })
             .catch((err) => {
-              this.$store.dispatch("addModal", {
-                type: "danger",
-                message:
-                  "There was a problem with that request. Please try again later.",
-                uuid: uuidv4(),
-              });
+              this.modal(
+                "There was a problem with that request. Please try again later.",
+                "danger"
+              );
             });
         } catch (err) {
           this.addFormError(err);
@@ -127,11 +122,10 @@ export default {
       const fileExtensions = /(\.jpg|\.jpeg|\.png)$/i;
 
       if (!fileExtensions.exec(file.name)) {
-        this.$store.dispatch("addModal", {
-          type: "danger",
-          message: "File type not supported for avatars! Use .jpg or .png.",
-          uuid: uuidv4(),
-        });
+        this.modal(
+          "File type not supported for avatars! Use .jpg or .png.",
+          "danger"
+        );
 
         document.getElementById("avatar").value = "";
 
@@ -140,11 +134,7 @@ export default {
 
       // 1 MB = 125000
       if (file.size > 125000 * 3) {
-        this.$store.dispatch("addModal", {
-          type: "danger",
-          message: "Please upload an image that is less than 3MB.",
-          uuid: uuidv4(),
-        });
+        this.modal("Please upload an image that is less than 3MB.", "danger");
 
         document.getElementById("avatar").value = "";
 
@@ -160,14 +150,11 @@ export default {
           // console.log(snapshot);
         },
         (err) => {
+          this.modal(
+            "There was an error uploading that avatar. Try a different file or try again later.",
+            "danger"
+          );
           console.log(err);
-          this.$store.dispatch("addModal", {
-            type: "danger",
-            message:
-              "There was an error uploading that avatar. Try a different file or try again later.",
-            uuid: uuidv4(),
-          });
-
           this.avatarIsUploading = false;
         },
         async () => {
@@ -184,19 +171,14 @@ export default {
             await this.$http.patch("/api/user", payload);
 
             this.$store.dispatch("refreshUser");
-            this.$store.dispatch("addModal", {
-              type: "success",
-              message: "Your avatar was succesfully updated.",
-              uuid: uuidv4(),
-            });
+            this.modal("Your avatar was succesfully updated.", "success");
             this.avatarIsUploading = false;
           } catch (error) {
-            this.$store.dispatch("addModal", {
-              type: "danger",
-              message:
-                "There was an error uploading that avatar. Try a different file or try again later.",
-              uuid: uuidv4(),
-            });
+            this.modal(
+              "There was an error uploading that avatar. Try a different file or try again later.",
+              "danger",
+              5000
+            );
             this.avatarIsUploading = false;
           }
         }
