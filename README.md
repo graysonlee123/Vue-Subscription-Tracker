@@ -8,8 +8,12 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
-[] Show more than one upcoming payment date
 [] Add options menu to view subscription component
+[] Buttons on list header still not on their own line
+[] Photo uploads file size increase
+[] Scrolling on forms
+[] Limit sort options to name, price, next payment on mobile
+[] Smaller margin between input fields
 
 ### General
 
@@ -19,6 +23,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Restrict IP's from Mongo Database
 [] Rework form overflow scrolling CSS
 [] Mobile responsiveness for subscriptions list, specifically on tablet
+[] Add, for example, "in two months" to upcoming payment dates
 
 ### Low Priority
 [] Tab onto date picker
@@ -26,6 +31,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### Done
 
+[x] Show more than one upcoming payment date
 [x] Add view subscription page
 [x] Toggle sort direction on mobile
 [x] Mobile responsiveness for subscriptions list header
