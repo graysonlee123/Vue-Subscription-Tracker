@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading">Loading...</div>
+  <spinner v-if="loading"></spinner>
   <div v-else-if="error">Error, please try again later!</div>
   <div class="subscriptionsList" v-else>
     <div class="subscriptionsList__header">
@@ -275,14 +275,18 @@
 </template>
 
 <script>
-import SubscriptionListItem from "./SubscriptionListItem";
-import { EventBus } from "../../EventBus";
 import moment from "moment";
+
+import { EventBus } from "../../EventBus";
 import { clickAway } from "../../mixins/clickAway";
+
+import SubscriptionListItem from "./SubscriptionListItem";
+import Spinner from "../WebApp/General/Spinner";
 
 export default {
   components: {
     SubscriptionListItem,
+    Spinner,
   },
   data() {
     return {

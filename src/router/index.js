@@ -6,13 +6,11 @@ import Login from "../components/Auth/Login";
 import Register from "../components/Auth/Register";
 import Dashboard from "../components/WebApp/Dashboard";
 import SubscriptionForm from "../components/WebApp/SubscriptionForm";
-import SettingsSidebar from "../components/WebApp/Settings/SettingsSidebar";
 import Preferences from "../components/WebApp/Settings/Preferences";
 import AdvancedSettings from "../components/WebApp/Settings/AdvancedSettings";
 import Account from "../components/WebApp/Settings/Account";
 import Password from "../components/WebApp/Settings/Password";
 import catchAll from "../components/404";
-import SubscriptionsList from "../components/WebApp/SubscriptionsList";
 import ViewSubscription from "../components/WebApp/ViewSubscription";
 import Sidebar from "../components/WebApp/Sidebar"
 

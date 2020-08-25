@@ -1,7 +1,5 @@
 <template>
-  <div v-if="loading" key="spinner" class="spinner-container">
-    <i class="spinner"></i>
-  </div>
+  <spinner v-if="loading"></spinner>
   <div v-else-if="error">
     There was a problem with that request. Please try again later.
     <router-link to="/dashboard">Go back</router-link>
@@ -99,8 +97,21 @@ import SelectInput from "./General/SelectInput";
 import DateInput from "./General/DateInput";
 import FormHeader from "../WebApp/FormHeader";
 import TextareaInput from "./General/TextareaInput";
+import Spinner from "./General/Spinner";
 
 export default {
+  mixins: [formErrors, modal],
+  components: {
+    TextInput,
+    SubmitButton,
+    NumberInput,
+    ColorInput,
+    SelectInput,
+    DateInput,
+    FormHeader,
+    TextareaInput,
+    Spinner,
+  },
   props: {
     subscriptionId: {
       type: String,
@@ -126,7 +137,6 @@ export default {
       postAsNew: false,
     };
   },
-  mixins: [formErrors, modal],
   methods: {
     async fetchSubscription() {
       this.loading = true;
@@ -213,16 +223,6 @@ export default {
       this.loading = false;
       this.postAsNew = true;
     }
-  },
-  components: {
-    TextInput,
-    SubmitButton,
-    NumberInput,
-    ColorInput,
-    SelectInput,
-    DateInput,
-    FormHeader,
-    TextareaInput,
   },
 };
 </script>
