@@ -8,10 +8,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
-[] Scrolling on forms
-[] Smaller margin between input fields
 [] Instead of posting a new subscription on duplication, fill out a blank form
-[] Loading spinners
 
 ### General
 
@@ -27,6 +24,8 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### Done
 
+[x] Loading spinners
+[x] Scrolling on forms
 [x] Photo uploads file size increase
 [x] Buttons on list header still not on their own line
 [x] Limit sort options to name, price, next payment on mobile

@@ -2,7 +2,7 @@
   <div>
     <div id="sidebarDark" @click="handleClose"></div>
     <div id="sidebar">
-      <router-view></router-view>
+      <router-view class="sidebar__content"></router-view>
     </div>
   </div>
 </template>
@@ -20,9 +20,6 @@ export default {
 <style lang="scss" scoped>
 $width: 620px;
 
-#sidebarWrapper {
-}
-
 #sidebarDark {
   position: fixed;
   width: calc(100% - #{$width});
@@ -38,8 +35,13 @@ $width: 620px;
   right: 0;
   width: $width;
   height: 100%;
-  padding: 4rem;
+  padding: 4rem 4rem 0;
   background-color: var(--containerBackground);
+  overflow-y: auto;
+}
+
+.sidebar__content {
+  margin-bottom: 2em;
 }
 
 @media screen and (max-width: 767px) {
@@ -49,7 +51,11 @@ $width: 620px;
 
   #sidebar {
     width: 100%;
-    padding: 1em;
+    padding: 1em 1em 0;
+  }
+
+  .sidebar__content {
+    margin-bottom: 1em;
   }
 }
 </style>

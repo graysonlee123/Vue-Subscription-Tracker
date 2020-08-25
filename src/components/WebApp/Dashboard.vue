@@ -19,8 +19,6 @@ import SubscriptionsList from "./SubscriptionsList";
 export default {
   data() {
     return {
-      loading: false,
-      error: false,
       navVisibleMobile: false,
     };
   },

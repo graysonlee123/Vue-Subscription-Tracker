@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading">Loading...</div>
+  <spinner v-if="loading"></spinner>
   <div v-else-if="error">There was an error. Please try again later.</div>
   <div v-else>
     <div class="colorHeader" :style="{backgroundColor: subscription.color}">
@@ -95,14 +95,19 @@ import { clickAway } from "../../mixins/clickAway";
 import { subscriptionActions } from "../../mixins/subscriptionActions";
 import { modal } from "../../mixins/modal";
 
+import Spinner from "../WebApp/General/Spinner";
+
 export default {
+  mixins: [clickAway, subscriptionActions, modal],
+  components: {
+    Spinner,
+  },
   props: {
     subscriptionId: {
       type: String,
       required: true,
     },
   },
-  mixins: [clickAway, subscriptionActions, modal],
   data() {
     return {
       loading: true,
