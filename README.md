@@ -8,7 +8,6 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
-[] Photo uploads file size increase
 [] Scrolling on forms
 [] Smaller margin between input fields
 [] Instead of posting a new subscription on duplication, fill out a blank form
@@ -28,6 +27,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### Done
 
+[x] Photo uploads file size increase
 [x] Buttons on list header still not on their own line
 [x] Limit sort options to name, price, next payment on mobile
 [x] Add "update description" and "remove subscription" actions to a mixin

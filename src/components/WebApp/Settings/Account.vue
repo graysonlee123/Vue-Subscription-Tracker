@@ -132,9 +132,9 @@ export default {
         return;
       }
 
-      // 1 MB = 125000
-      if (file.size > 125000 * 3) {
-        this.modal("Please upload an image that is less than 3MB.", "danger");
+      // 1 MB = 1000000
+      if (file.size > 1000000 * 10) {
+        this.modal("Please upload an image that is less than 10MB.", "danger");
 
         document.getElementById("avatar").value = "";
 
