@@ -2,57 +2,23 @@
   <div class="auth-wrapper">
     <div class="auth-left"></div>
     <div class="auth-right">
-      <form class="auth-form" @submit.prevent="handleSubmit">
+      <form class="auth-form">
         <h4>Login to your account to view, edit, and track your subscriptions.</h4>
-        <div
-          class="inputGroup"
-          :class="{hasError: formErrors.find(({field}) => field === 'email')}"
-        >
-          <label for="email" class="inputGroup__label">
-            Email
-            <span
-              class="fieldError"
-              v-if="formErrors.find(({field}) => field === 'email')"
-            >{{formErrors.find(({field}) => field ==='email').msg}}</span>
-          </label>
-          <div class="input-wrapper">
-            <input
-              id="email"
-              type="text"
-              placeholder="johnnyappleseed@gmail.com"
-              v-model="email"
-              v-on:blur="removeFormError('email')"
-              autofocus
-            />
-          </div>
-        </div>
-        <div
-          class="inputGroup"
-          :class="{hasError: formErrors.find(({field}) => field === 'password')}"
-        >
-          <label for="password" class="inputGroup__label">
-            Password
-            <span
-              v-if="formErrors.find(({field}) => field === 'password')"
-              class="fieldError"
-            >{{formErrors.find(({field}) => field ==='password').msg}}</span>
-          </label>
-          <div class="input-wrapper password">
-            <input
-              id="password"
-              type="password"
-              placeholder="At least 8 characters"
-              v-model="password"
-              v-on:blur="removeFormError('password')"
-            />
-            <span class="show-password-button" @click="handleShowPassword">
-              <i id="password-icon" class="fas fa-eye"></i>
-            </span>
-          </div>
-        </div>
-        <div class="submit__wrapper">
-          <input type="submit" class="roundedButton" value="Login" />
-        </div>
+        <text-input
+          v-model="email"
+          label="Email"
+          type="email"
+          placeholder="e.g. chrismartin@music.com"
+          :errors="formErrors.filter(error => error.field === 'email')"
+        ></text-input>
+        <text-input
+          v-model="password"
+          label="Password"
+          type="password"
+          placeholder="At least 8 characters"
+          :errors="formErrors.filter(error => error.field === 'password')"
+        ></text-input>
+        <submit-button @handle-submit="handleSubmit">Login</submit-button>
         <p class="footerP">
           Don't have an account?
           <router-link to="/register">Register</router-link>
@@ -63,13 +29,18 @@
 </template>
 
 <script>
-import LanguageSelect from "../Global/LanguageSelect";
-import { v4 as uuidv4 } from "uuid";
-
 import { formErrors } from "../../mixins/formErrors";
 import { modal } from "../../mixins/modal";
 
+import TextInput from "../WebApp/General/TextInput";
+import SubmitButton from "../WebApp/General/SubmitButton";
+
 export default {
+  mixins: [formErrors, modal],
+  components: {
+    TextInput,
+    SubmitButton
+  },
   data() {
     return {
       email: "",
@@ -78,12 +49,8 @@ export default {
       formErrors: [],
     };
   },
-  mixins: [formErrors, modal],
-  components: {
-    languageSelect: LanguageSelect,
-  },
   methods: {
-    handleSubmit() {
+    handleSubmit() {    
       this.clearErrors();
 
       const data = {
@@ -177,16 +144,8 @@ export default {
       margin-bottom: 2em;
     }
 
-    .inputGroup {
-      margin-bottom: 1.5em;
-    }
-
-    .submit__wrapper {
-      text-align: center;
-      margin-bottom: 2em;
-    }
-
     .footerP {
+      margin-top: 2em;
       text-align: center;
 
       a {
