@@ -8,7 +8,6 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
-[] Add options menu to view subscription component
 [] Buttons on list header still not on their own line
 [] Photo uploads file size increase
 [] Scrolling on forms
@@ -28,9 +27,11 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ### Low Priority
 [] Tab onto date picker
 [] "Flash" subscription on update / creation in list
+[] Add "update description" and "remove subscription" actions to a mixin
 
 ### Done
 
+[x] Add options menu to view subscription component
 [x] Show more than one upcoming payment date
 [x] Add view subscription page
 [x] Toggle sort direction on mobile

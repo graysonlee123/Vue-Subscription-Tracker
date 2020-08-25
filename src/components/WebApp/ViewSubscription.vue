@@ -10,8 +10,31 @@
           src="@/assets/close-light.svg"
           alt="Close"
         />
-        <img class="colorHeader__bell" src="@/assets/bell-light.svg" alt="Notifications" />
-        <img class="colorHeader__more" src="@/assets/more-light.svg" alt="More" />
+        <img
+          class="colorHeader__bell"
+          src="@/assets/bell-light.svg"
+          alt="Notifications"
+          @click="handleNotification"
+        />
+        <div
+          class="colorHeader__more"
+          ref="subscriptionOptionsMenu"
+          data-name="showOptions"
+          @click="showOptions = !showOptions"
+        >
+          <img class="colorHeader__more--img" src="@/assets/more-light.svg" alt="More" />
+          <ul class="colorHeader__more--menu" v-if="showOptions">
+            <router-link :to="`/dashboard/subscription/${subscription._id}/edit`" tag="li">
+              <i class="fa fa-pencil"></i> Edit
+            </router-link>
+            <li @click="handleRemoveSubscription">
+              <i class="fa fa-trash"></i> Remove
+            </li>
+            <li @click="handleDuplicateSubscription">
+              <i class="fa fa-copy"></i> Duplicate
+            </li>
+          </ul>
+        </div>
       </div>
       <h3>{{subscription.name}}</h3>
       <h2>${{subscription.price}}</h2>
@@ -66,6 +89,8 @@
 <script>
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
+import { clickAway } from "../../mixins/clickAway";
+import { EventBus } from "../../EventBus";
 
 export default {
   props: {
@@ -74,11 +99,13 @@ export default {
       required: true,
     },
   },
+  mixins: [clickAway],
   data() {
     return {
       loading: true,
       error: false,
       subscription: null,
+      showOptions: false,
     };
   },
   methods: {
@@ -106,6 +133,83 @@ export default {
 
         console.log(err);
       }
+    },
+    async handleRemoveSubscription(e) {
+      e.preventDefault();
+
+      try {
+        const req = await this.$http.delete(
+          `/api/subscription/${this.subscription._id}`
+        );
+
+        EventBus.$emit("refreshSubscriptions");
+
+        this.$router.push("/dashboard");
+        this.$store.dispatch("addModal", {
+          type: "success",
+          message: "Subscription was removed.",
+          uuid: uuidv4(),
+        });
+      } catch (err) {
+        this.$store.dispatch("addModal", {
+          type: "danger",
+          message:
+            "There was an error removing that subscription. Please try again later.",
+          uuid: uuidv4(),
+        });
+        console.log(err);
+      }
+    },
+    async handleDuplicateSubscription(e) {
+      e.preventDefault();
+
+      try {
+        const subscriptionReq = {
+          price: this.subscription.price,
+          name: this.subscription.name,
+          description: this.subscription.description,
+          firstPaymentDate: this.subscription.firstPaymentDate,
+          interval: this.subscription.interval,
+          duration: this.subscription.duration,
+          color: this.subscription.color,
+          paymentMethod: this.subscription.paymentMethod,
+          note: this.subscription.note,
+        };
+
+        const req = await this.$http.post(
+          "/api/subscription/",
+          subscriptionReq
+        );
+
+        EventBus.$emit("refreshSubscriptions");
+
+        this.$router.push(
+          `/dashboard/subscription/${req.data.subscription._id}/edit`
+        );
+
+        this.$store.dispatch("addModal", {
+          type: "success",
+          message: "You are now editing the duplicated subscription.",
+          uuid: uuidv4(),
+          duration: 5000
+        });
+      } catch (err) {
+        console.log(err);
+        this.$store.dispatch("addModal", {
+          type: "danger",
+          message:
+            "There was an error duplicating that subscription. Please try again later.",
+          uuid: uuidv4(),
+        });
+      }
+    },
+    handleNotification() {
+      this.$store.dispatch("addModal", {
+        type: "danger",
+        message:
+          "Notifications are coming soon!",
+        uuid: uuidv4(),
+      });
     },
     getUpcomingPayments() {
       const subscription = this.subscription;
@@ -233,10 +337,42 @@ export default {
     .colorHeader__more {
       cursor: pointer;
       padding: 8px;
+      position: relative;
     }
 
     .colorHeader__close {
       margin-right: auto;
+    }
+
+    .colorHeader__more {
+      margin-left: 12px;
+
+      .colorHeader__more--menu {
+        position: absolute;
+        right: 0;
+        top: 48px;
+        background: var(--containerBackground);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+        z-index: 2;
+        border-radius: var(--borderRadius);
+        color: var(--textLight);
+        white-space: nowrap;
+        text-align: left;
+
+        li {
+          padding: 1em 2em;
+          line-height: 0.2;
+          cursor: pointer;
+
+          &:hover {
+            background-color: rgba($color: #000000, $alpha: 0.05);
+          }
+
+          i {
+            padding-right: 0.8em;
+          }
+        }
+      }
     }
   }
 }
