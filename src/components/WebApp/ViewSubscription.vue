@@ -321,16 +321,16 @@ export default {
 }
 
 .upcomingPayments {
-  margin: 1em -0.3em 0;
-  display: flex;
-  flex-wrap: wrap;
+  margin-top: 0.8em;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-rows: auto;
+  grid-gap: 0.4em;
 
   .upcomingPayments__item {
     padding: 12px 16px;
     background-color: var(--bodyBackground);
-    margin: 0.3em;
     font-size: 80%;
-    flex-grow: 1;
     text-align: center;
     color: var(--textDark);
   }
