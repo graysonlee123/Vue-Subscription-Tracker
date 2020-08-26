@@ -73,9 +73,14 @@
       <ul class="upcomingPayments">
         <li
           class="upcomingPayments__item"
-          v-for="(paymentDate, index) in subscription.upcomingPayments"
+          v-for="(paymentDate, index) in skipFirstPayment"
           :key="index"
-        >{{convertToString(paymentDate.isoString)}}</li>
+        >
+          <p>{{convertToFromNow(paymentDate.isoString)}}</p>
+          <p>
+            <span>{{convertToString(paymentDate.isoString)}}</span>
+          </p>
+        </li>
       </ul>
     </div>
     <div class="divider" v-if="subscription.note"></div>
@@ -201,6 +206,15 @@ export default {
 
       return date.format("MM/DD/YYYY");
     },
+    convertToFromNow(isoString) {
+      const date = moment.utc(isoString);
+
+      if (!date.isValid()) {
+        return;
+      }
+
+      return date.fromNow();
+    }
   },
   created() {
     this.fetchSubscription();
@@ -232,6 +246,9 @@ export default {
         .utc(this.subscription.upcomingPayments[0].isoString)
         .format("MMMM DD, YYYY");
     },
+    skipFirstPayment() {
+      return this.subscription.upcomingPayments.slice(1);
+    }
   },
 };
 </script>
@@ -335,9 +352,18 @@ export default {
   .upcomingPayments__item {
     padding: 12px 16px;
     background-color: var(--bodyBackground);
-    font-size: 80%;
+    font-size: 100%;
     text-align: center;
-    color: var(--textDark);
+    color: var(--textLight);
+
+    p:first-child {
+      margin-bottom: 6px;
+    }
+
+    span {
+      font-size: 85%;
+      font-weight: bold;
+    }
   }
 }
 

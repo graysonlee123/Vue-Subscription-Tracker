@@ -12,19 +12,19 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### General
 
-[] Set input type to email for auth forms for mobile phone keyboards
 [] Landing page - just serve in node and link correspondingly?
 [] Restrict IP's from Mongo Database
 [] Add, for example, "in two months" to upcoming payment dates
 
 ### Low Priority
 [] Mobile responsiveness for subscriptions list, specifically on tablet
-[] Tab onto date picker
 [] "Flash" subscription on update / creation in list
+[] fix "onblur" remove errors for input components
 
 ### Done
 
 [x] Loading spinners
+[x] Set input type to email for auth forms for mobile phone keyboards
 [x] Scrolling on forms
 [x] Photo uploads file size increase
 [x] Buttons on list header still not on their own line
