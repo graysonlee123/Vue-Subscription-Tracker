@@ -8,7 +8,6 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
-[] Instead of posting a new subscription on duplication, fill out a blank form
 
 ### General
 
@@ -16,6 +15,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Restrict IP's from Mongo Database
 [] Blank subscription
 [] Double check new user avatar
+[] Instead of posting a new subscription on duplication, fill out a blank form
 
 ### Low Priority
 [] Mobile responsiveness for subscriptions list, specifically on tablet

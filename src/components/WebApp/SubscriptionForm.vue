@@ -36,7 +36,7 @@
       @handle-change="subscription.firstPaymentDate = $event"
       :errors="formErrors.filter(error => error.field === 'firstPaymentDate')"
     ></date-input>
-    <div class="col2">
+    <div class="col2 splitMobile">
       <number-input
         v-model="subscription.interval"
         label="Interval"
@@ -228,14 +228,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.col2 {
-  display: flex;
 
-  > div {
-    flex-basis: 50%;
+@media screen and (min-width: 768px) {
+  .col2 {
+    display: flex;
 
-    &:first-of-type {
-      margin-right: 2em;
+    > div {
+      flex-basis: 50%;
+
+      &:first-of-type {
+        margin-right: 2em;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .splitMobile {
+    display: flex;
+    justify-content: space-between;
+
+    .inputGroup:first-of-type {
+      flex-basis: 30%;
+    }
+    
+    .inputGroup:last-of-type {
+      flex-basis: 65%;
     }
   }
 }
