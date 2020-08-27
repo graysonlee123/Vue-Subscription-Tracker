@@ -268,7 +268,7 @@
       />
     </ul>
     <div class="empty" v-else>
-      Nothing to see here... try adding a
+      Nothing to see here yet... try adding a
       <router-link to="/dashboard/subscription/new">new subscription</router-link>.
     </div>
   </div>
@@ -719,6 +719,11 @@ export default {
       font-weight: bold;
     }
   }
+}
+
+.empty a {
+  color: inherit;
+  text-decoration-color: var(--mainAccent);
 }
 
 @media screen and (max-width: 767px) {

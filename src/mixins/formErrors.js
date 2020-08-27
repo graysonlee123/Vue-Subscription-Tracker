@@ -7,8 +7,10 @@ export const formErrors = {
     // @param   elementId     String          Optional input element's ID to focus on error
     addFormError(err, elementId) {
       if (err && err.response && err.response.data) {
-        if (document.getElementById(elementId)) {
-          document.getElementById(elementId).focus();
+        if (elementId) {
+          const element = document.getElementById(elementId);
+
+          element && element.focus();
         }
 
         err.response.data.errors.forEach(({ param: field, msg }) =>

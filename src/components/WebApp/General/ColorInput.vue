@@ -149,6 +149,7 @@ export default {
 .inputGroup {
   position: relative;
   user-select: none;
+  margin-bottom: 1.6rem;
 
   .inputGroup__input {
     $height: 42px;
