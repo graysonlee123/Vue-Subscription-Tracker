@@ -269,7 +269,7 @@
     </ul>
     <div class="empty" v-else>
       Nothing to see here... try adding a
-      <router-link to="/dashboard/subscription">new subscription</router-link>.
+      <router-link to="/dashboard/subscription/new">new subscription</router-link>.
     </div>
   </div>
 </template>
@@ -775,6 +775,8 @@ export default {
   }
 
   .optionsList {
+    text-align: left;
+
     .optionsList__paidToDate,
     .optionsList__paymentMethod,
     .optionsList__duration,

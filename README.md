@@ -14,7 +14,8 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 [] Landing page - just serve in node and link correspondingly?
 [] Restrict IP's from Mongo Database
-[] Add, for example, "in two months" to upcoming payment dates
+[] Blank subscription
+[] Double check new user avatar
 
 ### Low Priority
 [] Mobile responsiveness for subscriptions list, specifically on tablet
@@ -23,6 +24,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### Done
 
+[x] Add, for example, "in two months" to upcoming payment dates
 [x] Loading spinners
 [x] Set input type to email for auth forms for mobile phone keyboards
 [x] Scrolling on forms

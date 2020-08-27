@@ -58,21 +58,62 @@ export default {
     return {
       showColorModal: false,
       colors: [
-        "#00aa55",
-        "#008040",
-        "#1e90ff",
-        "#0f4880",
-        "#00a4a6",
-        "#e26a6a",
-        "#bf6ee0",
-        "#77448b",
-        "#b8860b",
-        "#e65722",
-        "#e63022",
-        "#e76e3c",
-        "#f64747",
-        "#939393",
-        "#2e343b",
+        // Red
+        "#FF3226",
+        "#E62C22",
+        "#CC271F",
+        "#B3221B",
+
+        // Orange
+        "#FF8521",
+        "#E6781E",
+        "#CC6A1B",
+        "#B85F18",
+
+        // Yellow
+        "#FFAD29",
+        "#E69C25",
+        "#CC8A21",
+        "#B87C1D",
+
+        // Green
+        "#49CC56",
+        "#40B34C",
+        "#379941",
+        "#2E8036",
+
+        // Blue
+        "#49C1E6",
+        "#41ACCC",
+        "#3B9AB8",
+        "#308098",
+
+        // Indigo
+        "#4C65E6",
+        "#435ACC",
+        "#3D51B8",
+        "#334499",
+
+        // Violet
+        "#8947E6",
+        "#7A3FCC",
+        "#6E39B8",
+        "#5C3099",
+
+        // Pink
+        "#DB4EE6",
+        "#C345CC",
+        "#B03EB8",
+        "#923499",
+
+        // Neutral
+        "#222222",
+        "#333333",
+        "#666666",
+        "#999999",
+
+        // Colors generated using
+        // https://color.adobe.com/create/color-wheel
       ],
     };
   },
