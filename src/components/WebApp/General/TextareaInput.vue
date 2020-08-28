@@ -11,8 +11,7 @@
       :placeholder="placeholder"
       :value="value"
       @input="$emit('input', $event.target.value)"
-    >
-    </textarea>
+    ></textarea>
   </div>
 </template>
 
@@ -33,7 +32,7 @@ export default {
     },
     placeholder: {
       type: String,
-    }
+    },
   },
   methods: {
     handleChange(e) {
@@ -72,14 +71,44 @@ export default {
     background-color: transparent;
     color: var(--textDark);
     border-radius: 21px;
-    line-height: 42px;
-    padding: 0 1.4em;
+    line-height: 1.6;
+    padding: 1em 1.4em;
+
+    &::-webkit-input-placeholder {
+      color: var(--textLight);
+    }
+
+    &::-moz-placeholder {
+      opacity: 1;
+      color: var(--textLight);
+    }
+
+    &:-ms-input-placeholder {
+      color: var(--textLight);
+    }
+
+    &:-moz-placeholder {
+      opacity: 1;
+      color: var(--textLight);
+    }
   }
 }
 
 .inputGroup.inputGroup--error {
   .inputGroup__input {
     border-color: var(--danger);
+  }
+}
+
+@media screen and (max-width: 464px) {
+  .col2 {
+    .inputGroup {
+      .inputGroup__label {
+        .inputGroup__label--error {
+          display: block;
+        }
+      }
+    }
   }
 }
 </style>

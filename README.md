@@ -21,6 +21,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Mobile responsiveness for subscriptions list, specifically on tablet
 [] "Flash" subscription on update / creation in list
 [] fix "onblur" remove errors for input components
+[] Style select inputs
 
 ### Done
 

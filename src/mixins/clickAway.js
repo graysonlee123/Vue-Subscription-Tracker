@@ -21,8 +21,10 @@ export const clickAway = {
   },
   created() {
     document.addEventListener("click", this.clickAway);
+    document.addEventListener("touchstart", this.clickAway);
   },
   destroyed() {
     document.removeEventListener("click", this.clickAway);
+    document.removeEventListener("touchstart", this.clickAway);
   }
 };
