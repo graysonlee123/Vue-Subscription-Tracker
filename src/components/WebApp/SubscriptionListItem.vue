@@ -266,7 +266,7 @@ $height: 62px;
 
 @media screen and (max-width: 767px) {
   .subscriptionListItem {
-    flex-direction: row;
+    flex-flow: row wrap;
     height: auto;
     padding: 1em;
     color: #fff;
@@ -285,6 +285,15 @@ $height: 62px;
 
     .price {
       display: block;
+    }
+
+    .nextPayment {
+      display: block;
+      flex-basis: 100%;
+      font-size: 80%;
+      font-weight: bold;
+      opacity: 0.5;
+      line-height: 1.5;
     }
 
     .options {

@@ -21,10 +21,13 @@
           <i class="fa fa-filter"></i>
         </span>
         <ul class="optionsList" v-if="showFilterMenu">
-          <li @click="filter = 'all'" :class="{bold: filter === 'all'}">Show All</li>
-          <li @click="filter = 'week'" :class="{bold: filter === 'week'}">In a week</li>
-          <li @click="filter = 'month'" :class="{bold: filter === 'month'}">In a month</li>
-          <li @click="filter = 'year'" :class="{bold: filter === 'year'}">In a year</li>
+          <li
+            @click="filter = 'all'"
+            :class="{bold: filter === 'all', 'optionsList__option--active': filter === 'all'}"
+          >Show All</li>
+          <li @click="filter = 'week'" :class="{bold: filter === 'week', 'optionsList__option--active': filter === 'week'}">In a week</li>
+          <li @click="filter = 'month'" :class="{bold: filter === 'month', 'optionsList__option--active': filter === 'month'}">In a month</li>
+          <li @click="filter = 'year'" :class="{bold: filter === 'year', 'optionsList__option--active': filter === 'year'}">In a year</li>
         </ul>
       </div>
       <div
@@ -697,9 +700,13 @@ export default {
   z-index: 11;
 
   li {
-    padding: 1em 2em;
+    padding: 1em 1.6em;
     cursor: pointer;
     line-height: 16px;
+
+    &.optionsList__option--active {
+      font-weight: bold;
+    }
 
     &:hover {
       background-color: rgba(0, 0, 0, 0.07);

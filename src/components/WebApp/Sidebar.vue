@@ -51,7 +51,7 @@ $width: 620px;
 
   #sidebar {
     width: 100%;
-    padding: 1em 1em 0;
+    padding: 2em 2em 0;
   }
 
   .sidebar__content {

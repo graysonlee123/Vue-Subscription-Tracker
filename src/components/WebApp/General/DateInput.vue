@@ -12,6 +12,7 @@
     <div
       class="inputGroup__input"
       :value="value"
+      :class="{'inputGroup__input--empty': !this.value}"
       @input="$emit('input', $event.target.value)"
       @click="showDatePicker = !showDatePicker"
     >{{selectedDateString}}</div>
@@ -245,6 +246,10 @@ export default {
     height: 42px;
     line-height: 42px;
     padding: 0 1.4em;
+
+    &.inputGroup__input--empty {
+      color:var(--textLight);
+    }
   }
 }
 

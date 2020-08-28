@@ -163,7 +163,7 @@ export default {
     border-radius: $height / 2;
     padding: 0 1.4em;
     font-size: 0.8em;
-    color: var(--textDark);
+    color: var(--textLight);
     position: relative;
 
     .inputGroup__swatch {
@@ -227,6 +227,18 @@ export default {
 .inputGroup.inputGroup--error {
   .inputGroup__input {
     border-color: var(--danger);
+  }
+}
+
+@media screen and (max-width: 464px) {
+  .col2 {
+    .inputGroup {
+      .inputGroup__label {
+        .inputGroup__label--error {
+          display: block;
+        }
+      }
+    }
   }
 }
 </style>
