@@ -4,7 +4,7 @@
       {{label}}
       <span class="inputGroup__label--error" v-if="errors.length">{{ errors[0].msg }}</span>
     </label>
-    <select :name="label" id :value="value" @input="$emit('input', $event.target.value)">
+    <select class="inputGroup__input" :name="label" id :value="value" @input="$emit('input', $event.target.value)">
       <option
         v-for="(option, index) in options"
         :key="index"
@@ -75,8 +75,31 @@ export default {
     color: var(--textDark);
     border-radius: 21px;
     height: 42px;
-    line-height: 42px;
-    padding: 0 1.4em;
+    line-height: 36px;
+    padding: 0 1.6em;
+
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+
+    // Using the prefix '~' enforces Webpack to treat it as a module request,
+    // similar to require in JS
+    background-image: url('~@/assets/sort-arrow-reversed.svg');
+    background-repeat: no-repeat;
+    background-position: right 16px top 50%;
+    background-size: 10px auto;
+
+    &::-ms-expand {
+      display: none;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    option {
+      font-weight: normal;
+    }
   }
 }
 

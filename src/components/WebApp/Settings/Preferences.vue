@@ -2,19 +2,12 @@
   <div>
     <settings-header>Preferences</settings-header>
     <form>
-      <div class="inputGroup">
-        <label for="themeSelect" class="inputGroup__label">
-          Theme
-          <span
-            v-if="theme === 'dark01'"
-            class="fieldError"
-          >sorry, dark mode isn't supported (yet).</span>
-        </label>
-        <select name="theme" id="themeSelect" v-model="theme">
-          <option value="light01">Light</option>
-          <option value="dark01">Dark</option>
-        </select>
-      </div>
+      <select-input
+        v-model="theme"
+        label="Theme"
+        :errors="theme === 'dark' ? [{msg: 'is not supported (yet)'}] : []"
+        :options="['light', 'dark']"
+      ></select-input>
       <submit-button @handle-submit="handleSubmit"></submit-button>
     </form>
   </div>
@@ -23,15 +16,17 @@
 <script>
 import SubmitButton from "../General/SubmitButton";
 import SettingsHeader from "./SettingsHeader";
+import SelectInput from "../General/SelectInput";
 
 export default {
   components: {
     submitButton: SubmitButton,
-    settingsHeader: SettingsHeader
+    settingsHeader: SettingsHeader,
+    SelectInput,
   },
   data() {
     return {
-      theme: "light01",
+      theme: "light",
     };
   },
   methods: {
