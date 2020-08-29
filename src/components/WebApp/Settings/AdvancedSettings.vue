@@ -1,17 +1,13 @@
 <template>
   <div>
     <settings-header>Advanced</settings-header>
-    <input
-      type="button"
-      value="Delete Account"
-      class="roundedButton danger"
-      @click="deleteAccount()"
-    />
+    <submit-button align="left" color="danger" @handle-submit="deleteAccount">Delete Account</submit-button>
   </div>
 </template>
 
 <script>
 import SettingsHeader from "./SettingsHeader";
+import SubmitButton from "../General/SubmitButton";
 
 export default {
   data() {
@@ -19,6 +15,7 @@ export default {
   },
   components: {
     settingsHeader: SettingsHeader,
+    SubmitButton,
   },
   methods: {
     async deleteAccount() {
@@ -48,5 +45,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>

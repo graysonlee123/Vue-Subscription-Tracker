@@ -98,6 +98,15 @@ export default {
       opacity: 1;
       color: var(--textLight);
     }
+
+    // Hide arrows / spinners
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    -moz-appearance: textfield;
   }
 }
 

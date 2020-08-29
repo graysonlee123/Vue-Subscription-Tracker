@@ -312,6 +312,7 @@ header {
 
   .col2 {
     display: flex;
+    align-items: flex-end;
 
     .inputGroup {
       width: 50%;

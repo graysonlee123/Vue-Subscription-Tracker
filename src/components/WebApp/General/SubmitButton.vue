@@ -1,6 +1,6 @@
 <template>
-  <div class="button__wrapper">
-    <button @click="handleSubmit">
+  <div class="button__wrapper" :style="{textAlign: align}">
+    <button @click="handleSubmit" :class="{ [className]: true }">
       <slot>Submit</slot>
     </button>
   </div>
@@ -8,6 +8,16 @@
 
 <script>
 export default {
+  props: {
+    color: {
+      type: String,
+      default: "success",
+    },
+    align: {
+      type: String,
+      default: "center",
+    },
+  },
   methods: {
     handleSubmit(e) {
       e.preventDefault();
@@ -15,12 +25,22 @@ export default {
       this.$emit("handle-submit");
     },
   },
+  computed: {
+    className() {
+      switch (this.color) {
+        case 'danger':
+          return 'button--danger';
+        case 'success':
+        default:
+          return 'button--success';
+      }
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .button__wrapper {
-  text-align: center;
 }
 
 button {
@@ -39,7 +59,7 @@ button {
     outline: none;
   }
 
-  &.danger {
+  &.button--danger {
     background-color: var(--danger);
   }
 }

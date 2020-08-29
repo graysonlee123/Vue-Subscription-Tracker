@@ -151,6 +151,19 @@ export default {
   user-select: none;
   margin-bottom: 1.6rem;
 
+  .inputGroup__label {
+    display: block;
+    margin-bottom: 0.8em;
+    color: var(--textLight);
+    font-size: 0.8em;
+    font-weight: bold;
+    padding-left: 1.6em;
+
+    .inputGroup__label--error {
+      color: var(--danger);
+    }
+  }
+
   .inputGroup__input {
     $height: 42px;
 
