@@ -7,7 +7,7 @@
 
 <script>
 import SettingsHeader from "./SettingsHeader";
-import SubmitButton from "../General/SubmitButton";
+import SubmitButton from "../general/inputs/SubmitButton";
 
 export default {
   data() {

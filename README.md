@@ -8,6 +8,8 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
+[] Add id's for labels and inputs
+[] Make menus full-width slide up at bottom of page?
 
 ### General
 

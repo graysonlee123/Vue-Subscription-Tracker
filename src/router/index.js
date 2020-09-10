@@ -1,20 +1,24 @@
 import Vue from "vue";
 import Router from "vue-router";
+import store from "../store";
 
 // Components
-import Login from "../components/Auth/Login";
-import Register from "../components/Auth/Register";
-import Dashboard from "../components/WebApp/Dashboard";
-import SubscriptionForm from "../components/WebApp/SubscriptionForm";
-import Preferences from "../components/WebApp/Settings/Preferences";
-import AdvancedSettings from "../components/WebApp/Settings/AdvancedSettings";
-import Account from "../components/WebApp/Settings/Account";
-import Password from "../components/WebApp/Settings/Password";
-import catchAll from "../components/404";
-import ViewSubscription from "../components/WebApp/ViewSubscription";
-import Sidebar from "../components/WebApp/Sidebar"
+import Login from "../components/auth-pages/Login";
+import Register from "../components/auth-pages/Register";
 
-import store from "../store";
+import Dashboard from "../components/dashboard/Dashboard";
+
+import Settings from "../components/settings/Settings";
+import Preferences from "../components/settings/Preferences";
+import Account from "../components/settings/Account";
+import Password from "../components/settings/Password";
+import AdvancedSettings from "../components/settings/AdvancedSettings";
+
+import Subscription from "../components/subscription/Subscription";
+import SubscriptionForm from "../components/subscription/SubscriptionForm";
+import SubscriptionView from "../components/subscription/SubscriptionView";
+
+import catchAll from "../components/404";
 
 Vue.use(Router);
 
@@ -33,64 +37,68 @@ const router = new Router({
       component: Register
     },
     {
-      path: "/dashboard",
-      component: Dashboard,
-      meta: {
-        requiresAuth: true
+      path: "/settings",
+      component: Settings,
+      meta: { requiresAuth: true },
+      children: [
+        {
+          path: "",
+          redirect: "preferences"
+        },
+        {
+          path: "preferences",
+          name: "Preferences",
+          component: Preferences
+        },
+        {
+          path: "account",
+          name: "Account",
+          component: Account
+        },
+        {
+          path: "password",
+          name: "Password",
+          component: Password
+        },
+        {
+          path: "advanced",
+          name: "Advanced",
+          component: AdvancedSettings
+        }
+      ]
+    },
+    {
+      path: "/subscription",
+      components: {
+        default: Subscription
       },
       children: [
         {
-          path: "subscription",
-          component: Sidebar,
-          children: [
-            {
-              path: "new",
-              name: "New Subscription",
-              component: SubscriptionForm
-            },
-            {
-              path: ":subscriptionId/view",
-              props: true,
-              component: ViewSubscription
-            },
-            {
-              path: ":subscriptionId/edit",
-              props: true,
-              component: SubscriptionForm
-            }
-          ]
+          path: "",
+          alias: "new",
+          name: "New Subscription",
+          component: SubscriptionForm
         },
         {
-          path: "settings",
-          component: Sidebar,
-          children: [
-            {
-              path: "",
-              redirect: "preferences"
-            },
-            {
-              path: "preferences",
-              name: "Preferences",
-              component: Preferences
-            },
-            {
-              path: "account",
-              name: "Account",
-              component: Account
-            },
-            {
-              path: "password",
-              name: "Password",
-              component: Password
-            },
-            {
-              path: "advanced",
-              name: "Advanced",
-              component: AdvancedSettings
-            }
-          ]
+          path: "view/:subscriptionId",
+          props: true,
+          component: SubscriptionView
+        },
+        {
+          path: "edit/:subscriptionId",
+          props: true,
+          component: SubscriptionForm
         }
       ]
+    },
+    {
+      path: "/dashboard",
+      components: {
+        default: Dashboard,
+      },
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: "*",

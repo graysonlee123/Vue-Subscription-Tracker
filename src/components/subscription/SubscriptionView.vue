@@ -24,7 +24,7 @@
         >
           <img class="colorHeader__more--img" src="@/assets/more-light.svg" alt="More" />
           <ul class="colorHeader__more--menu" v-if="showOptions">
-            <router-link :to="`/dashboard/subscription/${subscription._id}/edit`" tag="li">
+            <router-link :to="`/subscription/edit/${subscription._id}`" tag="li">
               <i class="fa fa-pencil"></i> Edit
             </router-link>
             <li @click="handleRemoveSubscription($event, subscription._id)">
@@ -100,7 +100,7 @@ import { clickAway } from "../../mixins/clickAway";
 import { subscriptionActions } from "../../mixins/subscriptionActions";
 import { modal } from "../../mixins/modal";
 
-import Spinner from "../WebApp/General/Spinner";
+import Spinner from "../general/Spinner";
 
 export default {
   mixins: [clickAway, subscriptionActions, modal],

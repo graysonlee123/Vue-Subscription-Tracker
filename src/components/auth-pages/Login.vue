@@ -3,23 +3,7 @@
     <div class="auth-left"></div>
     <div class="auth-right">
       <form class="auth-form">
-        <h4>Register to get in control of your subscriptions.</h4>
-        <div class="col2">
-          <text-input
-            v-model="first_name"
-            label="First name"
-            type="text"
-            placeholder="Chris"
-            :errors="formErrors.filter(error => error.field === 'first_name')"
-          ></text-input>
-          <text-input
-            v-model="last_name"
-            label="Last name"
-            type="text"
-            placeholder="Martin"
-            :errors="formErrors.filter(error => error.field === 'last_name')"
-          ></text-input>
-        </div>
+        <h4>Login to your account to view, edit, and track your subscriptions.</h4>
         <text-input
           v-model="email"
           label="Email"
@@ -34,10 +18,10 @@
           placeholder="At least 8 characters"
           :errors="formErrors.filter(error => error.field === 'password')"
         ></text-input>
-        <submit-button @handle-submit="handleSubmit"></submit-button>
+        <submit-button @handle-submit="handleSubmit">Login</submit-button>
         <p class="footerP">
-          Already have an account?
-          <router-link to="/login">Login</router-link>
+          Don't have an account?
+          <router-link to="/register">Register</router-link>
         </p>
       </form>
     </div>
@@ -48,50 +32,50 @@
 import { formErrors } from "../../mixins/formErrors";
 import { modal } from "../../mixins/modal";
 
-import TextInput from "../WebApp/General/TextInput";
-import SubmitButton from "../WebApp/General/SubmitButton";
+import TextInput from "../general/inputs/TextInput";
+import SubmitButton from "../general/inputs/SubmitButton";
 
 export default {
   mixins: [formErrors, modal],
   components: {
     TextInput,
-    SubmitButton,
+    SubmitButton
   },
   data() {
     return {
       email: "",
-      first_name: "",
-      last_name: "",
       password: "",
       showPassword: false,
       formErrors: [],
     };
   },
   methods: {
-    handleSubmit() {
-      this.formErrors = [];
+    handleSubmit() {    
+      this.clearErrors();
 
       const data = {
         email: this.email,
-        first_name: this.first_name,
-        last_name: this.last_name,
         password: this.password,
       };
 
       this.$store
-        .dispatch("register", data)
+        .dispatch("login", data)
         .then(() => {
           this.$router.push("/dashboard");
         })
         .catch((err) => {
           console.error(err);
 
-          if (err.response.status === 500) {
+          if (err.response.status === 403) {
+            this.modal(err.response.data.msg, "danger");
+
+            this.password = "";
+          } else if (err.response.status === 500) {
             this.modal("Server error, please try again later.", "danger");
 
             this.password = "";
           } else {
-            this.addFormError(err, "first_name");
+            this.addFormError(err, "email");
           }
         });
     },
@@ -113,12 +97,11 @@ export default {
         eyeEl.classList.add("fa-eye-slash");
       }
     },
-    handleLostFocus(e) {
-      const elementId = e.target.id;
-      if (this.formErrors.length) {
-        this.removeFormError(elementId);
-      }
-    },
+  },
+  beforeCreate() {
+    if (this.$store.state.isAuthenticated) {
+      this.$router.push("/dashboard");
+    }
   },
 };
 </script>
@@ -144,7 +127,7 @@ export default {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
     padding: 1rem;
   }
 
@@ -185,15 +168,6 @@ export default {
     position: absolute;
     bottom: 12px;
     right: 14px;
-  }
-}
-
-.col2 {
-  display: flex;
-  justify-content: space-between;
-
-  .inputGroup {
-    flex: 0 0 48%;
   }
 }
 

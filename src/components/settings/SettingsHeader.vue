@@ -5,11 +5,20 @@
         <slot></slot>
       </h2>
       <a @click="handleClose">
-        <img src="@/assets/close.svg" alt="Close" />
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M1 1L13 13" stroke="white" stroke-width="2" stroke-linecap="round" />
+          <path d="M1 13L13 0.999999" stroke="white" stroke-width="2" stroke-linecap="round" />
+        </svg>
       </a>
     </div>
     <div class="divider"></div>
-    <settings-nav/>
+    <settings-nav />
     <div class="divider"></div>
   </div>
 </template>
@@ -19,11 +28,11 @@ import SettingsNav from "./SettingsNav";
 
 export default {
   components: {
-    SettingsNav
+    SettingsNav,
   },
   methods: {
     handleClose() {
-      this.$router.push('/dashboard');
+      this.$router.push("/dashboard");
     },
   },
 };

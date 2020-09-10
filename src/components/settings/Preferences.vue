@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import SubmitButton from "../General/SubmitButton";
+import SubmitButton from "../general/inputs/SubmitButton";
 import SettingsHeader from "./SettingsHeader";
-import SelectInput from "../General/SelectInput";
+import SelectInput from "../general/inputs/SelectInput";
 
 export default {
   components: {
