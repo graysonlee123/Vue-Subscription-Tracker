@@ -48,13 +48,13 @@
 </template>
 
 <script>
-import { storage } from "../../../firebase";
+import { storage } from "../../firebase";
 
-import { formErrors } from "../../../mixins/formErrors";
-import { modal } from "../../../mixins/modal";
+import { formErrors } from "../../mixins/formErrors";
+import { modal } from "../../mixins/modal";
 
-import TextInput from "../General/TextInput";
-import SubmitButton from "../General/SubmitButton";
+import TextInput from "../general/inputs/TextInput";
+import SubmitButton from "../general/inputs/SubmitButton";
 import SettingsHeader from "./SettingsHeader";
 
 export default {
@@ -223,18 +223,17 @@ $navBreak: 991px;
 
 header {
   display: flex;
-  flex-direction: column;
-  text-align: center;
+  flex-direction: row;
+  text-align: left;
   align-items: center;
 
   .img-container {
-    $size: 6em;
+    $size: 4em;
     width: $size;
     height: $size;
     border-radius: $size / 2;
     overflow: hidden;
     flex-shrink: 0;
-    margin-bottom: 2em;
     position: relative;
 
     img {
@@ -272,13 +271,16 @@ header {
   }
 
   .header-text {
+    margin-left: 1em;
+    text-align: left;
+
     h2 {
-      font-size: 2em;
+      font-size: 1.4em;
       text-transform: capitalize;
-      color: var(--textDark);
     }
 
     p {
+      font-size: 0.8em;
       margin-top: 0.6em;
     }
   }
@@ -289,27 +291,18 @@ header {
   border-top: 3px solid var(--bodyBackground);
 }
 
-@media screen and (max-width: 767px) {
-  .divider {
-    margin: 2.5em 0em;
-    border-top: 3px solid var(--bodyBackground);
+@media screen and (min-width: 767px) {
+  header {    
+    .img-container {
+      $size: 6rem;
+      width: $size;
+      height: $size;
+      border-radius: $size / 2;
+    }
   }
 }
 
 @media screen and (min-width: 767px) {
-  header {
-    flex-flow: row nowrap;
-
-    .img-container {
-      margin-bottom: 0;
-    }
-
-    .header-text {
-      margin-left: 2em;
-      text-align: left;
-    }
-  }
-
   .col2 {
     display: flex;
     align-items: flex-end;

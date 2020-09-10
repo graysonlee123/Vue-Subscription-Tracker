@@ -12,7 +12,9 @@ export default new Vuex.Store({
     token: localStorage.getItem("token") || "",
     user: {},
     preferences: {
-      language: "en"
+      sortBy: 'nextPayment',
+      sortDirection: 1,
+      filter: '',
     },
     alerts: []
   },
@@ -55,6 +57,10 @@ export default new Vuex.Store({
     },
     clear_modals(state) {
       state.alerts = [];
+    },
+    change_sort(state, {sortBy, sortDirection}) {
+      state.preferences.sortBy = sortBy;
+      state.preferences.sortDirection = sortDirection;
     }
   },
   // Vuex actions are used to commit mutations to the vuex store
@@ -147,9 +153,6 @@ export default new Vuex.Store({
           });
       });
     },
-    languageChange({ commit }, lang) {
-      commit("change_language", lang);
-    },
     refreshUser({ commit }) {
       return new Promise((resolve, reject) => {
         axios({
@@ -172,12 +175,21 @@ export default new Vuex.Store({
       setTimeout(() => {
         commit("remove_modal", modal.uuid);
       }, modal.duration || 3000);
-    }
+    },
+    changeSort({commit}, payload) {
+      commit('change_sort', payload);
+    },
+    changeFilter({commit}, payload) {
+
+    },
   },
   // Use a vuex getter to get a value of vuex state
   getters: {
     isAuthenticated: state => state.isAuthenticated,
     isLoading: state => state.isLoading,
-    alert: state => state.alerts[0] || null
+    alert: state => state.alerts[0] || null,
+    sortingBy: state => state.preferences.sortBy,
+    sortingDirection: state => state.preferences.sortDirection,
+    avatarUrl: state => state.user.avatar,
   }
 });

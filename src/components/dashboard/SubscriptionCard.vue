@@ -1,6 +1,6 @@
 <template>
   <router-link
-    :to="`/dashboard/subscription/${subscription._id}/view`"
+    :to="`/subscription/view/${subscription._id}`"
     tag="li"
     class="subscriptionListItem"
     :style="{backgroundColor: subscription.color}"

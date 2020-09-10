@@ -5,7 +5,14 @@
     <router-link to="/dashboard">Go back</router-link>
   </div>
   <div v-else key="form">
-    <form-header>{{postAsNew ? 'New' : 'Edit'}}</form-header>
+    <div class="subscriptionHeader">
+      <div class="subscriptionHeader__text">
+        <h2>{{postAsNew ? 'New' : 'Edit'}}</h2>
+        <a @click="$router.push('/dashboard')">
+          <img src="@/assets/close.svg" alt="Close" />
+        </a>
+      </div>
+    </div>
     <div class="col2">
       <number-input
         v-model="subscription.price"
@@ -51,9 +58,10 @@
         label="Duration"
         :errors="formErrors.filter(error => error.field === 'duration')"
         :options="['month', 'day', 'year']"
-        :plural="subscription.interval > 1 ? true : false"
+        :plural="parseInt(subscription.interval) > 1 ? true : false"
       ></select-input>
     </div>
+    <div class="divider"></div>
     <div class="col2">
       <color-input
         :value="subscription.color"
@@ -89,15 +97,14 @@ import { modal } from "../../mixins/modal";
 
 import { EventBus } from "../../EventBus";
 
-import TextInput from "./General/TextInput";
-import NumberInput from "./General/NumberInput";
-import SubmitButton from "./General/SubmitButton";
-import ColorInput from "./General/ColorInput";
-import SelectInput from "./General/SelectInput";
-import DateInput from "./General/DateInput";
-import FormHeader from "../WebApp/FormHeader";
-import TextareaInput from "./General/TextareaInput";
-import Spinner from "./General/Spinner";
+import TextInput from "../general/inputs/TextInput";
+import NumberInput from "../general/inputs/NumberInput";
+import SubmitButton from "../general/inputs/SubmitButton";
+import ColorInput from "../general/inputs/ColorInput";
+import SelectInput from "../general/inputs/SelectInput";
+import DateInput from "../general/inputs/DateInput";
+import TextareaInput from "../general/inputs/TextareaInput";
+import Spinner from "../general/Spinner";
 
 export default {
   mixins: [formErrors, modal],
@@ -108,7 +115,6 @@ export default {
     ColorInput,
     SelectInput,
     DateInput,
-    FormHeader,
     TextareaInput,
     Spinner,
   },
@@ -228,6 +234,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.subscriptionHeader {
+  margin-bottom: 1.6em;
+}
+
+.subscriptionHeader__text {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+h2 {
+  font-size: 32px;
+  color: #8369fe;
+}
 
 .col2 {
   display: flex;
@@ -240,7 +260,7 @@ export default {
 }
 
 .divider {
-  margin: 2em 0;
+  margin-bottom: 1.6em;
   height: 3px;
   background-color: var(--bodyBackground);
 }

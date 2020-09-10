@@ -13,8 +13,7 @@
 </template>
 
 <script>
-import Navigation from './components/WebApp/Navigation';
-import MainMenu from './components/WebApp/MainMenu';
+import Navigation from './components/dashboard/Navigation';
 
 export default {
   computed: {
@@ -42,7 +41,6 @@ export default {
   },
   components: {
     navigation: Navigation,
-    mainMenu: MainMenu,
   },
   beforeCreate() {
     // When the app is first created (or the page is refreshed),

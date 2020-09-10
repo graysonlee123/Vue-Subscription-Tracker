@@ -1,56 +1,6 @@
 <template>
   <div>
     <form>
-      <!-- <div
-        class="inputGroup"
-        :class="{hasError: formErrors.find(({field}) => field === 'currentPassword')}"
-      >
-        <label for="currentPassword" class="inputGroup__label">
-          Current password
-          <span
-            class="fieldError"
-            v-if="formErrors.find(({field}) => field === 'currentPassword')"
-          >{{formErrors.find(({field}) => field ==='currentPassword').msg}}</span>
-        </label>
-        <input
-          type="password"
-          name="password"
-          id="currentPassword"
-          v-model="currentPassword"
-          v-on:blur="removeFormError('currentPassword')"
-        />
-      </div>
-      <div
-        class="inputGroup"
-        :class="{hasError: formErrors.find(({field}) => field === 'newPassword')}"
-      >
-        <label for="newPassword" class="inputGroup__label">
-          New password
-          <span
-            class="fieldError"
-            v-if="formErrors.find(({field}) => field === 'newPassword')"
-          >{{formErrors.find(({field}) => field ==='newPassword').msg}}</span>
-        </label>
-        <input
-          type="password"
-          name="newPassword"
-          id="newPassword"
-          v-model="newPassword"
-          v-on:blur="removeFormError('newPassword')"
-        />
-      </div>
-      <div class="inputGroup">
-        <label for="confirmPassword" class="inputGroup__label">Confirm password</label>
-        <input
-          type="password"
-          name="confirmPassword"
-          id="confirmPassword"
-          v-model="confirmPassword"
-        />
-      </div>
-      <div class="submit__wrapper">
-        <input type="submit" value="Update" class="roundedButton" />
-      </div>-->
       <settings-header>Password</settings-header>
       <text-input
         v-model="currentPassword"
@@ -76,11 +26,11 @@
 </template>
 
 <script>
-import { formErrors } from "../../../mixins/formErrors";
-import { modal } from "../../../mixins/modal";
+import { formErrors } from "../../mixins/formErrors";
+import { modal } from "../../mixins/modal";
 
-import TextInput from "../General/TextInput";
-import SubmitButton from "../General/SubmitButton";
+import TextInput from "../general/inputs/TextInput";
+import SubmitButton from "../general/inputs/SubmitButton";
 import SettingsHeader from "./SettingsHeader";
 
 export default {

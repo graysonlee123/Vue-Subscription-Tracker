@@ -7,16 +7,18 @@ export const clickAway = {
       // and also data-name="" for the name of the dropdown's visibility state
       
       const target = e.target;
-      
-      Object.keys(this.$refs).forEach(menu => {
-        const el = this.$refs[menu];
 
-        if (el !== target && !el.contains(target)) {
-          if (el.dataset.name) {
-            this[el.dataset.name] = false;
-          }
+      for (let ref in this.$refs) {
+        const el = this.$refs[ref];
+
+        if (el && el !== target && !el.contains(target) || target.dataset.ignoreclickaway) {
+          const dataOption = el.dataset.name;
+
+          if (!dataOption) return;
+
+          this[dataOption] = false;
         }
-      });
+      }
     }
   },
   created() {
