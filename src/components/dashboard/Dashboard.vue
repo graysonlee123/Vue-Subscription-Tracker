@@ -15,7 +15,7 @@
       </ul>
       <div class="empty" v-else>
         Nothing to see here yet... try adding a
-        <router-link to="/dashboard/subscription/new">new subscription</router-link>.
+        <router-link to="/subscription/new">new subscription</router-link>.
       </div>
     </div>
     <navigation />
