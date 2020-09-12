@@ -1,46 +1,43 @@
 <template>
   <div class="auth-wrapper">
-    <div class="auth-left"></div>
-    <div class="auth-right">
-      <form class="auth-form">
-        <h4>Register to get in control of your subscriptions.</h4>
-        <div class="col2">
-          <text-input
-            v-model="first_name"
-            label="First name"
-            type="text"
-            placeholder="Chris"
-            :errors="formErrors.filter(error => error.field === 'first_name')"
-          ></text-input>
-          <text-input
-            v-model="last_name"
-            label="Last name"
-            type="text"
-            placeholder="Martin"
-            :errors="formErrors.filter(error => error.field === 'last_name')"
-          ></text-input>
-        </div>
+    <form class="auth-form">
+      <h1>Register to get in control of your subscriptions.</h1>
+      <div class="col2">
         <text-input
-          v-model="email"
-          label="Email"
-          type="email"
-          placeholder="e.g. chrismartin@music.com"
-          :errors="formErrors.filter(error => error.field === 'email')"
+          v-model="first_name"
+          label="First name"
+          type="text"
+          placeholder="Chris"
+          :errors="formErrors.filter(error => error.field === 'first_name')"
         ></text-input>
         <text-input
-          v-model="password"
-          label="Password"
-          type="password"
-          placeholder="At least 8 characters"
-          :errors="formErrors.filter(error => error.field === 'password')"
+          v-model="last_name"
+          label="Last name"
+          type="text"
+          placeholder="Martin"
+          :errors="formErrors.filter(error => error.field === 'last_name')"
         ></text-input>
-        <submit-button @handle-submit="handleSubmit"></submit-button>
-        <p class="footerP">
-          Already have an account?
-          <router-link to="/login">Login</router-link>
-        </p>
-      </form>
-    </div>
+      </div>
+      <text-input
+        v-model="email"
+        label="Email"
+        type="email"
+        placeholder="e.g. chrismartin@music.com"
+        :errors="formErrors.filter(error => error.field === 'email')"
+      ></text-input>
+      <text-input
+        v-model="password"
+        label="Password"
+        type="password"
+        placeholder="At least 8 characters"
+        :errors="formErrors.filter(error => error.field === 'password')"
+      ></text-input>
+      <submit-button @handle-submit="handleSubmit"></submit-button>
+      <p class="footerP">
+        Already have an account?
+        <router-link to="/login">Login</router-link>
+      </p>
+    </form>
   </div>
 </template>
 
@@ -126,44 +123,27 @@ export default {
 <style lang="scss" scoped>
 .auth-wrapper {
   height: 100%;
+  padding: 1em;
   display: flex;
-  flex-flow: row nowrap;
-
-  .auth-left {
-    flex-basis: 40%;
-    background: {
-      image: url("https://source.unsplash.com/random");
-      size: cover;
-      repeat: no-repeat;
-      position: center;
-    }
-  }
-
-  .auth-right {
-    flex-basis: 60%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    padding: 1rem;
-  }
+  align-items: center;
+  justify-content: center;
 
   .auth-form {
+    font-size: 1.1rem;
     background-color: var(--containerBackground);
-    max-width: 460px;
-    padding: 4em 2em;
+    padding: 3em 1.6em;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
     border-radius: var(--borderRadius);
 
-    h4 {
-      font-size: 2em;
-      line-height: 140%;
-      margin-bottom: 2em;
+    h1 {
+      color: var(--textLight);
+      margin-bottom: 1.6em;
     }
 
     .footerP {
-      margin-top: 2em;
+      margin-top: 4em;
       text-align: center;
+      font-size: 0.9rem;
 
       a {
         color: inherit;
@@ -177,20 +157,10 @@ export default {
   }
 }
 
-.password {
-  position: relative;
-
-  .show-password-button {
-    cursor: pointer;
-    position: absolute;
-    bottom: 12px;
-    right: 14px;
-  }
-}
-
 .col2 {
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
 
   .inputGroup {
     flex: 0 0 48%;
