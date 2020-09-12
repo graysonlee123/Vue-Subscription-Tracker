@@ -1,9 +1,9 @@
 <template>
   <div class="settingsHeader">
     <div class="settingsHeader__text">
-      <h2>
+      <h1>
         <slot></slot>
-      </h2>
+      </h1>
       <a @click="handleClose">
         <svg
           width="14"
@@ -55,11 +55,6 @@ export default {
   margin-bottom: 1em;
   height: 3px;
   background-color: var(--bodyBackground);
-}
-
-h2 {
-  font-size: 32px;
-  color: #8369fe;
 }
 
 a {

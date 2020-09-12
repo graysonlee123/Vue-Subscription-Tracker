@@ -294,7 +294,7 @@ $height: 62px;
     .nextPayment {
       display: block;
       flex-basis: 100%;
-      font-size: 80%;
+      font-size: 0.8em;
       font-weight: bold;
       opacity: 0.5;
       line-height: 1.5;

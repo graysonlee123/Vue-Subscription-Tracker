@@ -102,7 +102,7 @@ export default {
     },
     handleChangeShowTime() {
       this.$store.dispatch("changeShowTime");
-    }
+    },
   },
   computed: {
     avatarUrl() {
@@ -110,14 +110,14 @@ export default {
     },
     showTime() {
       return this.$store.state.preferences.showTime;
-    }
+    },
   },
   watch: {
     $route() {
       // Close menu if we are navigating around
       this.visible = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -128,6 +128,7 @@ export default {
   margin: 0;
   padding: 6px;
   cursor: pointer;
+  color: var(--textDark);
 
   .optionsButton__icon {
     width: 24px;
