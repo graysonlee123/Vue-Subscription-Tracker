@@ -4,25 +4,58 @@
   <div v-else>
     <div class="colorHeader" :style="{backgroundColor: subscription.color}">
       <div class="colorHeader__options">
-        <img
+        <svg
           @click="$router.push('/dashboard')"
           class="colorHeader__close"
-          src="@/assets/close-light.svg"
-          alt="Close"
-        />
-        <img
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M1 1L13 13" stroke="white" stroke-width="2" stroke-linecap="round" />
+          <path d="M1 13L13 0.999999" stroke="white" stroke-width="2" stroke-linecap="round" />
+        </svg>
+
+        <svg
           class="colorHeader__bell"
-          src="@/assets/bell-light.svg"
-          alt="Notifications"
           @click="handleNotification"
-        />
+          width="17"
+          height="20"
+          viewBox="0 0 17 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M6.875 1.375C6.875 0.614167 7.48917 0 8.25 0C9.01083 0 9.625 0.614167 9.625 1.375V2.4475C12.5033 3.07083 14.6667 5.6375 14.6667 8.70833V14.2083L16.5 16.0417V16.9583H0V16.0417L1.83333 14.2083V8.70833C1.83333 5.6375 3.99667 3.07083 6.875 2.4475V1.375ZM8.25001 4.125C10.78 4.125 12.8333 6.17833 12.8333 8.70833V15.125H3.66667V8.70833C3.66667 6.17833 5.72001 4.125 8.25001 4.125ZM6.42585 17.8842C6.42585 18.8925 7.24169 19.7083 8.25002 19.7083C9.25836 19.7083 10.0742 18.8925 10.0742 17.8842H6.42585Z"
+            fill="white"
+          />
+        </svg>
+
         <div
           class="colorHeader__more"
           ref="subscriptionOptionsMenu"
           data-name="showOptions"
           @click="showOptions = !showOptions"
         >
-          <img class="colorHeader__more--img" src="@/assets/more-light.svg" alt="More" />
+          <svg
+            class="colorHeader__more"
+            width="4"
+            height="15"
+            viewBox="0 0 4 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M2 3.75C3.1 3.75 4 2.90625 4 1.875C4 0.84375 3.1 0 2 0C0.9 0 0 0.84375 0 1.875C0 2.90625 0.9 3.75 2 3.75ZM2 5.625C0.9 5.625 0 6.46875 0 7.5C0 8.53125 0.9 9.375 2 9.375C3.1 9.375 4 8.53125 4 7.5C4 6.46875 3.1 5.625 2 5.625ZM0 13.125C0 12.0938 0.9 11.25 2 11.25C3.1 11.25 4 12.0938 4 13.125C4 14.1562 3.1 15 2 15C0.9 15 0 14.1562 0 13.125Z"
+              fill="white"
+            />
+          </svg>
+
           <ul class="colorHeader__more--menu" v-if="showOptions">
             <router-link :to="`/subscription/edit/${subscription._id}`" tag="li">
               <i class="fa fa-pencil"></i> Edit
@@ -37,8 +70,8 @@
         </div>
       </div>
       <h3>{{subscription.name}}</h3>
-      <h2>${{subscription.price}}</h2>
       <p v-if="subscription.description">{{subscription.description}}</p>
+      <h2>${{subscription.price}}</h2>
     </div>
     <!-- <ul class="tags">
       <li class="tag">Tag</li>
@@ -65,15 +98,11 @@
       </div>
     </div>
     <div class="displayGroup">
-      <label class="displayGroup__label">Next payment</label>
-      <p class="displayGroup__text">{{computeNextPaymentString}}</p>
-    </div>
-    <div class="displayGroup">
       <label class="displayGroup__label">Upcoming payments</label>
       <ul class="upcomingPayments">
         <li
           class="upcomingPayments__item"
-          v-for="(paymentDate, index) in skipFirstPayment"
+          v-for="(paymentDate, index) in subscription.upcomingPayments"
           :key="index"
         >
           <p>{{convertToFromNow(paymentDate.isoString)}}</p>
@@ -214,7 +243,7 @@ export default {
       }
 
       return date.fromNow();
-    }
+    },
   },
   created() {
     this.fetchSubscription();
@@ -241,14 +270,6 @@ export default {
         .utc(this.subscription.firstPaymentDate)
         .format("MMMM DD, YYYY");
     },
-    computeNextPaymentString() {
-      return moment
-        .utc(this.subscription.upcomingPayments[0].isoString)
-        .format("MMMM DD, YYYY");
-    },
-    skipFirstPayment() {
-      return this.subscription.upcomingPayments.slice(1);
-    }
   },
 };
 </script>
@@ -262,30 +283,30 @@ export default {
   margin-bottom: 2em;
 
   h3 {
-    font-size: 1.6em;
+    font-size: 1.4em;
     margin-bottom: 0.4em;
   }
 
   h2 {
-    font-size: 2.8em;
-    margin-bottom: 0.4em;
+    font-size: 2.2em;
+    margin-top: 0.4em;
+    margin-bottom: 0.6em;
   }
 
   p {
-    margin-top: 1em;
-    font-size: 1.3em;
-    margin-bottom: 0.6em;
+    font-size: 1em;
   }
 
   .colorHeader__options {
     display: flex;
     align-items: center;
+    padding: 1em;
 
     .colorHeader__close,
     .colorHeader__bell,
     .colorHeader__more {
       cursor: pointer;
-      padding: 8px;
+      padding: 0px;
       position: relative;
     }
 
@@ -327,10 +348,10 @@ export default {
 }
 
 .displayGroup {
-  margin-bottom: 2em;
+  margin-bottom: 1.2em;
 
   .displayGroup__label {
-    font-size: 0.9em;
+    font-size: 0.8em;
     color: var(--textLight);
     margin-bottom: 0.4em;
     display: block;
@@ -338,7 +359,7 @@ export default {
 
   .displayGroup__text {
     color: var(--textDark);
-    font-size: 1.1em;
+    font-size: 1em;
   }
 }
 
@@ -368,7 +389,7 @@ export default {
 }
 
 .divider {
-  margin-bottom: 2em;
+  margin-bottom: 1em;
   height: 3px;
   background-color: var(--bodyBackground);
 }

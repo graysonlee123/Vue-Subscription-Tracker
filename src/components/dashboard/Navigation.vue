@@ -44,7 +44,7 @@ export default {
 }
 
 .navigation__optionsButton {
-  flex-grow: 1;
+  margin-right: auto !important;
   text-align: left;
 }
 

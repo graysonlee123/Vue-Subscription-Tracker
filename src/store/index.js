@@ -15,6 +15,7 @@ export default new Vuex.Store({
       sortBy: 'nextPayment',
       sortDirection: 1,
       filter: '',
+      showTime: true,
     },
     alerts: []
   },
@@ -61,6 +62,9 @@ export default new Vuex.Store({
     change_sort(state, {sortBy, sortDirection}) {
       state.preferences.sortBy = sortBy;
       state.preferences.sortDirection = sortDirection;
+    },
+    change_show_time(state) {
+      state.preferences.showTime = !state.preferences.showTime;
     }
   },
   // Vuex actions are used to commit mutations to the vuex store
@@ -182,6 +186,9 @@ export default new Vuex.Store({
     changeFilter({commit}, payload) {
 
     },
+    changeShowTime({commit}) {
+      commit("change_show_time");
+    }
   },
   // Use a vuex getter to get a value of vuex state
   getters: {
