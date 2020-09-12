@@ -8,7 +8,9 @@
         </div>
       </div>
     </transition>
-    <router-view />
+    <transition name="page-transition" mode="out-in">
+      <router-view />
+    </transition>
   </div>
 </template>
 
@@ -172,6 +174,26 @@ strong {
 }
 
 // Vue Transitions
+
+.page-transition-enter-active,
+.page-transition-leave-active {
+  transition: top 400ms ease-in-out, opacity 200ms ease;
+  position: fixed;
+  left: 0;
+  right: 0;
+}
+
+.page-transition-enter-to,
+.page-transition-leave {
+  top: 0;
+  opacity: 1;
+}
+
+.page-transition-enter,
+.page-transition-leave-to {
+  top: 20px;
+  opacity: 0;
+}
 
 .modal-enter-active,
 .modal-leave-active {

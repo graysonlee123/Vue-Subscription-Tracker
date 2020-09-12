@@ -44,8 +44,6 @@ export default {
       loading: true,
       error: false,
       subscriptions: [],
-      sortDirection: -1,
-      sortMethod: "nextPayment",
       showSortMenu: false,
       filter: "all",
       showFilterMenu: false,
@@ -124,42 +122,14 @@ export default {
         pushDateToUpcoming(date);
       }
     },
-    switchSortDirection() {
-      this.sortDirection === -1
-        ? (this.sortDirection = 1)
-        : (this.sortDirection = -1);
-    },
-    handleDisplaySortMenu(bool) {
-      if (typeof bool === "boolean") {
-        this.showSortMenu = bool;
-      } else {
-        this.showSortMenu
-          ? (this.showSortMenu = false)
-          : (this.showSortMenu = true);
-      }
-    },
-    handleDisplayFilterMenu(bool) {
-      if (typeof bool === "boolean") {
-        this.showFilterMenu = bool;
-      } else {
-        this.showFilterMenu
-          ? (this.showFilterMenu = false)
-          : (this.showFilterMenu = true);
-      }
-    },
-  },
-  watch: {
-    $route() {
-      this.navVisibleMobile = false;
-    },
-    sortMethod() {
-      this.showSortMenu = false;
-    },
-    filter() {
-      this.showFilterMenu = false;
-    },
   },
   computed: {
+    sortMethod() {
+      return this.$store.getters.sortingBy;
+    },
+    sortDirection() {
+      return this.$store.getters.sortingDirection;
+    },
     organizedSubscriptions() {
       let organizedSubs = this.subscriptions;
 
@@ -265,38 +235,6 @@ export default {
 
       return organizedSubs;
     },
-    sortMethodDisplayName() {
-      switch (this.sortMethod) {
-        case "name": {
-          return "Name";
-          break;
-        }
-        case "duration": {
-          return "Billing Period";
-          break;
-        }
-        case "paymentMethod": {
-          return "Payment Method";
-          break;
-        }
-        case "price": {
-          return "Price";
-          break;
-        }
-        case "paidToDate": {
-          return "Paid To Date";
-          break;
-        }
-        case "firstPayment": {
-          return "First Payment";
-          break;
-        }
-        case "nextPayment": {
-          return "Next Payment";
-          break;
-        }
-      }
-    },
   },
   created() {
     this.fetchSubscriptions();
@@ -304,34 +242,6 @@ export default {
     EventBus.$on("refreshSubscriptions", () => {
       this.fetchSubscriptions();
     });
-
-    // Watch for sort method changed
-    this.$store.watch(
-      function (state, getters) {
-        // console.log(getters.sortingBy);
-        return state.preferences.sortBy;
-      },
-      (newVal, oldVal) => {
-        this.sortMethod = newVal;
-      },
-      {
-        deep: true,
-      }
-    );
-
-    // Watch for sort direction changed
-    this.$store.watch(
-      function (state, getters) {
-        // console.log(getters.sortingBy);
-        return state.preferences.sortDirection;
-      },
-      (newVal, oldVal) => {
-        this.sortDirection = newVal;
-      },
-      {
-        deep: true,
-      }
-    );
   },
 };
 </script>
