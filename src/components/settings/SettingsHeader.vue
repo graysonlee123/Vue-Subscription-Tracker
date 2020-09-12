@@ -12,8 +12,8 @@
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <path d="M1 1L13 13" stroke="white" stroke-width="2" stroke-linecap="round" />
-          <path d="M1 13L13 0.999999" stroke="white" stroke-width="2" stroke-linecap="round" />
+          <path d="M1 1L13 13" stroke="#829fae" stroke-width="2" stroke-linecap="round" />
+          <path d="M1 13L13 0.999999" stroke="#829fae" stroke-width="2" stroke-linecap="round" />
         </svg>
       </a>
     </div>
@@ -47,6 +47,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 1.6rem 1.6rem 0;
 }
 
 .divider {

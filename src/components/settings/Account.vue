@@ -226,6 +226,7 @@ header {
   flex-direction: row;
   text-align: left;
   align-items: center;
+  padding: 0 1.6rem 0;
 
   .img-container {
     $size: 4em;
@@ -277,6 +278,7 @@ header {
     h2 {
       font-size: 1.4em;
       text-transform: capitalize;
+      color: var(--textDark);
     }
 
     p {
@@ -287,8 +289,12 @@ header {
 }
 
 .divider {
-  margin: 2.5em -2em;
+  margin: 1.6rem 0;
   border-top: 3px solid var(--bodyBackground);
+}
+
+form {
+  padding: 0 1.6em;
 }
 
 @media screen and (min-width: 767px) {

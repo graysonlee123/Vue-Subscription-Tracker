@@ -1,7 +1,7 @@
 <template>
   <div>
+    <settings-header>Password</settings-header>
     <form>
-      <settings-header>Password</settings-header>
       <text-input
         v-model="currentPassword"
         type="password"
@@ -92,4 +92,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+form {
+  padding: 0 1.6rem;
+}
 </style>

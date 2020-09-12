@@ -17,6 +17,7 @@ export default {
   .settingsNav {
     display: flex;
     flex-wrap: wrap;
+    padding: 0 1.6rem;
 
     .settingsNav__link {
       text-decoration: none;
@@ -26,6 +27,7 @@ export default {
 
       &.settingsNav__link--active {
         font-weight: bold;
+        color: var(--textDark);
       }
     }
   }

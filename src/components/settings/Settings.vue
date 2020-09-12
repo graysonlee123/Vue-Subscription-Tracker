@@ -13,8 +13,6 @@ export default {};
     height: 100%;
     max-height: 100%;
     overflow: scroll;
-    padding: 2rem;
-    background-color: var(--textDark);
-    color: var(--containerBackground);
+    background-color: var(--containerBackground);
   }
 </style>
