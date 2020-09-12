@@ -15,41 +15,6 @@
       <li class="filterButton__option filterButton__option--header">
         Filter by
       </li>
-      <!-- <li class="filterButton__option">
-        <label>Name</label>
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          class="filterButton__arrow"
-          :class="{'filterButton__arrow--selected': $store.getters.sortingBy === 'name' && $store.getters.sortingDirection === -1}"
-          @click="changeSort({sortBy: 'name', sortDirection: -1})"
-        >
-          <path
-            d="M7.41 8.29501L12 12.875L16.59 8.29501L18 9.70501L12 15.705L6 9.70501L7.41 8.29501Z"
-            fill="black"
-            fill-opacity="0.54"
-          />
-        </svg>
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          class="filterButton__arrow"
-          :class="{'filterButton__arrow--selected': $store.getters.sortingBy === 'name' && $store.getters.sortingDirection === 1}"
-          @click="changeSort({sortBy: 'name', sortDirection: 1})"
-        >
-          <path
-            d="M7.41 15.705L12 11.125L16.59 15.705L18 14.295L12 8.29501L6 14.295L7.41 15.705Z"
-            fill="black"
-            fill-opacity="0.54"
-          />
-        </svg>
-      </li> -->
     </ul>
   </button>
 </template>
@@ -89,6 +54,7 @@ export default {
   margin: 0;
   padding: 6px;
   cursor: pointer;
+  color: var(--textDark);
 
   .filterButton__icon {
     width: 24px;

@@ -58,13 +58,56 @@
 
           <ul class="colorHeader__more--menu" v-if="showOptions">
             <router-link :to="`/subscription/edit/${subscription._id}`" tag="li">
-              <i class="fa fa-pencil"></i> Edit
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M18.3687 3.29001L20.7087 5.63C21.0988 6.01999 21.0988 6.64999 20.7087 7.04001L18.8788 8.87L15.1288 5.12L16.9587 3.29001C17.1487 3.10001 17.3987 3 17.6588 3C17.9188 3 18.1688 3.09 18.3687 3.29001ZM2.99875 17.25V21H6.74875L17.8087 9.94L14.0587 6.19L2.99875 17.25ZM5.91876 19H4.99875V18.08L14.0587 9.01999L14.9788 9.94L5.91876 19Z"
+                  fill="black"
+                  fill-opacity="1"
+                />
+              </svg>
+              Edit
             </router-link>
             <li @click="handleRemoveSubscription($event, subscription._id)">
-              <i class="fa fa-trash"></i> Remove
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
+                  fill="black"
+                  fill-opacity="1"
+                />
+              </svg>
+              Remove
             </li>
             <li @click="handleDuplicateSubscription($event, subscription)">
-              <i class="fa fa-copy"></i> Duplicate
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M16.5 1H4.5C3.39999 1 2.5 1.89999 2.5 3V17H4.5V3H16.5V1ZM15.5 5H8.5C7.4 5 6.51 5.89999 6.51 7L6.5 21C6.5 22.1 7.39 23 8.49 23H19.5C20.6 23 21.5 22.1 21.5 21V11L15.5 5ZM8.5 7V21H19.5V12H14.5V7H8.5Z"
+                  fill="black"
+                  fill-opacity="1"
+                />
+              </svg>
+              Duplicate
             </li>
           </ul>
         </div>
@@ -320,7 +363,7 @@ export default {
       .colorHeader__more--menu {
         position: absolute;
         right: 0;
-        top: 48px;
+        top: 28px;
         background: var(--containerBackground);
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
         z-index: 2;
@@ -328,18 +371,24 @@ export default {
         color: var(--textLight);
         white-space: nowrap;
         text-align: left;
+        padding: 0.6em 0;
 
         li {
-          padding: 1em 2em;
-          line-height: 0.2;
+          padding: 1em 1.8em;
           cursor: pointer;
+          display: flex;
+          align-items: center;
 
           &:hover {
             background-color: rgba($color: #000000, $alpha: 0.05);
           }
 
-          i {
-            padding-right: 0.8em;
+          svg {
+            margin-right: 0.9em;
+
+            path {
+              fill: currentColor;
+            }
           }
         }
       }

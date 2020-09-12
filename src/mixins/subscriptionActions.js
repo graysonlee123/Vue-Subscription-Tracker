@@ -65,7 +65,7 @@ export const subscriptionActions = {
         EventBus.$emit("refreshSubscriptions");
 
         this.$router.push(
-          `/dashboard/subscription/${req.data.subscription._id}/edit`
+          `/subscription/edit/${req.data.subscription._id}`
         );
 
         this.modal(

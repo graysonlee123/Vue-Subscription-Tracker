@@ -12,9 +12,7 @@
     </svg>
     <div v-if="visible" class="sortButton__fullscreenDarken" data-ignoreclickaway="true"></div>
     <ul class="sortButton__menu" v-if="visible">
-      <li class="sortButton__option sortButton__option--header">
-        Sort by
-      </li>
+      <li class="sortButton__option sortButton__option--header">Sort by</li>
       <li class="sortButton__option">
         <label>Name</label>
         <svg
@@ -132,12 +130,12 @@ export default {
   props: {
     iconColor: {
       type: String,
-      default: "#fff"
+      default: "#fff",
     },
     iconOpacity: {
       type: Number,
-      default: 1
-    }
+      default: 1,
+    },
   },
   data() {
     return {
@@ -155,8 +153,8 @@ export default {
     },
     sortingDirection() {
       return this.$store.getters.sortingDirection;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -167,6 +165,7 @@ export default {
   margin: 0;
   padding: 6px;
   cursor: pointer;
+  color: var(--textDark);
 
   .sortButton__icon {
     width: 24px;
