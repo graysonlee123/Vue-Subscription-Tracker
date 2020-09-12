@@ -13,11 +13,11 @@ export default {};
   height: 100%;
   max-height: 100%;
   overflow: auto;
-  padding: 1.6rem;
+  padding: 1rem;
   background-color: var(--containerBackground);
 }
 
 .subscription__content {
-  margin-bottom: 1.6rem;
+  margin-bottom: 1rem;
 }
 </style>

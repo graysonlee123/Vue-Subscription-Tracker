@@ -27,6 +27,7 @@
       data-label="First payment"
     >{{firstPaymentDateString}}</div>
     <div
+      v-if="showTime"
       class="flexChild textContainer nextPayment"
       data-label="Next payment"
     >{{upcomingPaymentString}}</div>
@@ -87,6 +88,9 @@ export default {
       return moment
         .utc(this.subscription.firstPaymentDate)
         .format("MMMM DD, YYYY");
+    },
+    showTime() {
+      return this.$store.state.preferences.showTime;
     },
     upcomingPaymentString() {
       return `

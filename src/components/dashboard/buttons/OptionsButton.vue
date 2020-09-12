@@ -12,7 +12,7 @@
     <div v-if="visible" class="optionsButton__fullscreenDarken" data-ignoreclickaway="true"></div>
     <ul class="optionsButton__menu" v-if="visible">
       <li class="optionsButton__option optionsButton__option--header">Options</li>
-      <li class="optionsButton__option">
+      <li class="optionsButton__option" @click="handleChangeShowTime">
         <svg
           width="24"
           height="24"
@@ -28,7 +28,7 @@
             fill-opacity="1"
           />
         </svg>
-        <span>Show time until next payment</span>
+        <span>{{showTime ? 'Hide': 'Show'}} time until next payment</span>
       </li>
       <router-link tag="li" to="/settings/account" class="optionsButton__option">
         <img :src="avatarUrl" alt="Avatar" />
@@ -100,11 +100,17 @@ export default {
         this.$router.push("/login");
       });
     },
+    handleChangeShowTime() {
+      this.$store.dispatch("changeShowTime");
+    }
   },
   computed: {
     avatarUrl() {
       return this.$store.getters.avatarUrl;
     },
+    showTime() {
+      return this.$store.state.preferences.showTime;
+    }
   },
   watch: {
     $route() {
