@@ -9,7 +9,6 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ### Priority
 
 [] Add id's for labels and inputs
-[] Make menus full-width slide up at bottom of page?
 
 ### General
 
@@ -23,10 +22,11 @@ To start vue webpack server, run `npm run dev` from the client folder.
 [] Mobile responsiveness for subscriptions list, specifically on tablet
 [] "Flash" subscription on update / creation in list
 [] fix "onblur" remove errors for input components
-[] Style select inputs
 
 ### Done
 
+[x] Style select inputs
+[x] Make menus full-width slide up at bottom of page?
 [x] Add, for example, "in two months" to upcoming payment dates
 [x] Loading spinners
 [x] Set input type to email for auth forms for mobile phone keyboards

@@ -38,6 +38,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+form {
+  padding: 0 1.6em;
+}
+
 .inputGroup {
   margin-bottom: 2em;
 }

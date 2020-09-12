@@ -1,7 +1,9 @@
 <template>
   <div>
     <settings-header>Advanced</settings-header>
-    <submit-button align="left" color="danger" @handle-submit="deleteAccount">Delete Account</submit-button>
+    <div class="buttonWrapper">
+      <submit-button align="left" color="danger" @handle-submit="deleteAccount">Delete Account</submit-button>
+    </div>
   </div>
 </template>
 
@@ -45,4 +47,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.buttonWrapper {
+  padding: 0 1.6rem;
+}
 </style>
