@@ -5,11 +5,11 @@
     data-name="showColorModal"
     :class="{'inputGroup--error': errors.length}"
   >
-    <label for class="inputGroup__label">
+    <label class="inputGroup__label" @click="toggleColorModal">
       {{label}}
       <span class="inputGroup__label--error" v-if="errors.length">{{ errors[0].msg }}</span>
     </label>
-    <div class="inputGroup__input" @click="toggleColorModal">
+    <div :class="{colorPicked: value}" class="inputGroup__input" @click="toggleColorModal">
       {{placeholder}}
       <div v-if="value" class="inputGroup__swatch" :style="{backgroundColor: value}"></div>
     </div>
@@ -178,6 +178,10 @@ export default {
     font-size: 0.8em;
     color: var(--textLight);
     position: relative;
+
+    &.colorPicked {
+      color: var(--textDark);
+    }
 
     .inputGroup__swatch {
       position: absolute;
