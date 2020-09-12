@@ -8,23 +8,25 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
-[] Add id's for labels and inputs
+
 
 ### General
 
+[] fix "onblur" remove errors for input components
 [] Landing page - just serve in node and link correspondingly?
 [] Restrict IP's from Mongo Database
-[] Blank subscription
-[] Double check new user avatar
-[] Instead of posting a new subscription on duplication, fill out a blank form
+[] Instead of posting a new subscription on duplication, fill out a not-yet posted form
 
 ### Low Priority
-[] Mobile responsiveness for subscriptions list, specifically on tablet
 [] "Flash" subscription on update / creation in list
-[] fix "onblur" remove errors for input components
+[] Fix user avatar loading when opening options menu
 
 ### Done
 
+[x] Mobile responsiveness for subscriptions list, specifically on tablet
+[x] Blank subscription
+[x] Double check new user avatar
+[x] Add id's for labels and inputs
 [x] Style select inputs
 [x] Make menus full-width slide up at bottom of page?
 [x] Add, for example, "in two months" to upcoming payment dates
@@ -113,6 +115,7 @@ To start vue webpack server, run `npm run dev` from the client folder.
   [x] Work on right form menu
 
 ### Icebox
+[] Desktop version
 [] Integrate Tags
   [] filter by tag, payment method
 [] Incorporate theme picker

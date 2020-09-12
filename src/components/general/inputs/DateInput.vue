@@ -5,7 +5,7 @@
     ref="datePicker"
     data-name="showDatePicker"
   >
-    <label for class="inputGroup__label">
+    <label class="inputGroup__label" @click="showDatePicker = !showDatePicker">
       {{label}}
       <span class="inputGroup__label--error" v-if="errors.length">{{ errors[0].msg }}</span>
     </label>
@@ -248,7 +248,7 @@ export default {
     padding: 0 1.4em;
 
     &.inputGroup__input--empty {
-      color:var(--textLight);
+      color: var(--textLight);
     }
   }
 }

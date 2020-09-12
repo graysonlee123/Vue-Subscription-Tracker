@@ -1,10 +1,16 @@
 <template>
   <div class="inputGroup" :class="{'inputGroup--error': errors.length}">
-    <label for class="inputGroup__label">
+    <label :for="'textInput__' + label.toLowerCase()" class="inputGroup__label">
       {{label}}
       <span class="inputGroup__label--error" v-if="errors.length">{{ errors[0].msg }}</span>
     </label>
-    <select class="inputGroup__input" :name="label" id :value="value" @input="$emit('input', $event.target.value)">
+    <select
+      :id="'textInput__' + label.toLowerCase()"
+      class="inputGroup__input"
+      :name="label"
+      :value="value"
+      @input="$emit('input', $event.target.value)"
+    >
       <option
         v-for="(option, index) in options"
         :key="index"
@@ -34,8 +40,8 @@ export default {
       required: true,
     },
     plural: {
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
   data() {
     return {
@@ -84,7 +90,7 @@ export default {
 
     // Using the prefix '~' enforces Webpack to treat it as a module request,
     // similar to require in JS
-    background-image: url('~@/assets/sort-arrow-reversed.svg');
+    background-image: url("~@/assets/sort-arrow-reversed.svg");
     background-repeat: no-repeat;
     background-position: right 16px top 50%;
     background-size: 10px auto;

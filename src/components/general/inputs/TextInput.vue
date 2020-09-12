@@ -1,10 +1,11 @@
 <template>
   <div class="inputGroup" :class="{'inputGroup--error': errors.length}">
-    <label for class="inputGroup__label">
+    <label :for="'textInput__' + label.toLowerCase()" class="inputGroup__label">
       {{label}}
       <span class="inputGroup__label--error" v-if="errors.length">{{ errors[0].msg }}</span>
     </label>
     <input
+      :id="'textInput__' + label.toLowerCase()"
       class="inputGroup__input"
       :placeholder="placeholder"
       :type="type"
