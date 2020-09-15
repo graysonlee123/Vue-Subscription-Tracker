@@ -8,7 +8,8 @@ To start vue webpack server, run `npm run dev` from the client folder.
 ## TODOs
 ### Priority
 
-
+[] Fix user avatar loading when opening options menu
+[] Fix clicking off of navigation button's menus (can click through dark area onto subscription)
 
 ### General
 
@@ -19,7 +20,6 @@ To start vue webpack server, run `npm run dev` from the client folder.
 
 ### Low Priority
 [] "Flash" subscription on update / creation in list
-[] Fix user avatar loading when opening options menu
 
 ### Done
 
